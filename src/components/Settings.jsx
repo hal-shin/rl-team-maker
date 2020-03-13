@@ -18,43 +18,63 @@ const useStyles = makeStyles(theme => ({
 
 const Container = styled.div`
   display: flex;
-  align-items: center; 
+  align-items: center;
 `;
 
 export default function Settings() {
   const classes = useStyles();
   const [gameMode, setGameMode] = useState("2v2");
-  const { teams, setTeams, numberOfTeams, setNumberOfTeams } = useContext(
-    TeamContext
+  const {
+    teams,
+    setTeams,
+    numberOfTeams,
+    setNumberOfTeams,
+    teamOrder,
+    setTeamOrder
+  } = useContext(TeamContext);
+  const { players, setPlayers, playerOrder, setPlayerOrder } = useContext(
+    PlayerContext
   );
-  const { playerOrder, setPlayerOrder } = useContext(PlayerContext);
 
-  const reset = () => {
+  const reset = numOfTeams => {
     // move any current players on teams to player list
-    const newPlayerOrder = [...playerOrder];
-    for (let teamId in teams) {
-      newPlayerOrder.splice(
-        newPlayerOrder.length - 1,
-        0,
-        ...teams[teamId].members
-      );
+    if (Object.keys(players).length !== playerOrder.length) {
+      const newPlayerOrder = [...playerOrder];
+      for (let teamId in teams) {
+        newPlayerOrder.splice(
+          newPlayerOrder.length - 1,
+          0,
+          ...teams[teamId].members
+        );
+      }
+      setPlayerOrder(newPlayerOrder);
     }
-    setPlayerOrder(newPlayerOrder);
 
     // reset teams based on number of teams
     const newTeams = {};
-    for (let i = 1; i < numberOfTeams + 1; i++) {
+    const newTeamOrder = [];
+    for (let i = 1; i < numOfTeams + 1; i++) {
       newTeams[`team-${i}`] = {
         id: `team-${i}`,
         teamName: `Team ${i}`,
         members: []
       };
+      newTeamOrder.push(`team-${i}`);
     }
+    setTeamOrder(newTeamOrder);
     setTeams(newTeams);
   };
 
   const handleGameModeChange = event => {
     setGameMode(event.target.value);
+    let mode = event.target.value === "2v2" ? 2 : 3;
+    let numOfTeams = Math.ceil(Object.keys(players).length / mode);
+    setNumberOfTeams(numOfTeams);
+    reset(numOfTeams);
+  };
+
+  const handleReset = () => {
+    reset(numberOfTeams);
   };
 
   return (
@@ -71,7 +91,7 @@ export default function Settings() {
           <MenuItem value="3v3">3v3</MenuItem>
         </Select>
       </FormControl>
-      <Button variant="contained" color="secondary" onClick={reset}>
+      <Button variant="contained" color="secondary" onClick={handleReset}>
         Reset
       </Button>
     </Container>

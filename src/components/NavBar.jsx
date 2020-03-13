@@ -4,6 +4,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import MenuIcon from "@material-ui/icons/Menu";
 import { ThemeContext } from "../contexts/ThemeContext";
@@ -14,6 +15,9 @@ const useStyles = makeStyles(theme => ({
   },
   menuButton: {
     marginRight: theme.spacing(2)
+  },
+  title: {
+    flexGrow: 1
   }
 }));
 
@@ -33,13 +37,19 @@ export default function NavBar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" color="inherit">
+          <Typography variant="h6" color="inherit" className={classes.title}>
             Rocket League Team Maker
           </Typography>
-          <Switch
-            checked={isDarkMode}
-            onChange={toggleIsDarkMode}
-            aria-label="Dark Mode"
+          <FormControlLabel
+            control={
+              <Switch
+                checked={isDarkMode}
+                onChange={toggleIsDarkMode}
+                aria-label="Dark Mode"
+              />
+            }
+            label="Dark Mode"
+            labelPlacement="start"
           />
         </Toolbar>
       </AppBar>

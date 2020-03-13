@@ -1,19 +1,23 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import EditIcon from "@material-ui/icons/Edit";
 import { TeamContext } from "../contexts/TeamContext";
 import { Droppable } from "react-beautiful-dnd";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 import Player from "./Player";
+import useToggle from "../hooks/useToggleState";
 
 const Container = styled.div`
   background: white;
-  min-height: 363px;
+  min-height: 378px;
   max-height: calc(100vh - 160px);
   width: 280px;
   margin-right: 10px;
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 4px;
   overflow: scroll;
+  flex-shrink: 0;
 `;
 
 const TeamName = styled.div`
@@ -40,28 +44,95 @@ const TeamName = styled.div`
       color: grey;
     }
   }
+  > input {
+    width: 80% !important;
+  }
 `;
 
 const Teammates = styled.div`
   background-color: ${props => (props.isDraggingOver ? "lightgrey" : "white")};
-  height: calc(100% - 50px);
+  min-height: 292px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 25px 0 25px;
+  margin: 0 25px 20px 25px;
   transition: all 0.2s ease;
 `;
 
+const buttonStyles = {
+  maxWidth: "30px",
+  maxHeight: "30px",
+  minWidth: "30px",
+  minHeight: "30px",
+  marginLeft: "5px",
+  boxShadow: "none"
+};
+
 function Team(props) {
-  const { teams } = useContext(TeamContext);
+  const { teams, setTeams } = useContext(TeamContext);
   const team = teams[props.id];
+  const [isEditing, toggleIsEditing] = useToggle(false);
+  const [tempTeamName, setTempTeamName] = useState(team.teamName);
+
+  const handleEditTeamName = evt => {
+    setTempTeamName(evt.target.value);
+  };
+
+  const handleCancelTeamName = () => {
+    setTempTeamName(team.teamName);
+    toggleIsEditing();
+  };
+
+  const handleSaveTeamName = () => {
+    const newTeams = { ...teams };
+    newTeams[props.id].teamName = tempTeamName;
+    setTeams(newTeams);
+    toggleIsEditing();
+  };
+
+  const renderTeamName = () => {
+    if (isEditing) {
+      return (
+        <TeamName>
+          <TextField
+            id="standard-basic"
+            defaultValue={team.teamName}
+            onChange={handleEditTeamName}
+            onBlur={handleCancelTeamName}
+            autoFocus
+          />
+          <Button
+            variant="contained"
+            color="secondary"
+            size="small"
+            onClick={handleCancelTeamName}
+            style={buttonStyles}
+          >
+            X
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={handleSaveTeamName}
+            style={buttonStyles}
+          >
+            ✓
+          </Button>
+        </TeamName>
+      );
+    }
+    return (
+      <TeamName>
+        <EditIcon fontSize="small" onClick={toggleIsEditing} />
+        <h3>{team.teamName}</h3>
+      </TeamName>
+    );
+  };
 
   return (
     <Container>
-      <TeamName>
-        <EditIcon fontSize="small" />
-        <h3>{team.teamName}</h3>
-      </TeamName>
+      {renderTeamName()}
 
       <Droppable droppableId={team.id} direction="vertical">
         {(provided, snapshot) => (

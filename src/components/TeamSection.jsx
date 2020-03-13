@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import TeamBoard from "./TeamBoard";
 import Settings from "./Settings";
+import { TeamContext } from "../contexts/TeamContext";
+import AddNewTeam from "./AddNewTeam";
 
 const Container = styled.div`
   width: 80%;
@@ -12,21 +14,32 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 20px 0 20px 0;
+`;
+
+const TeamHeader = styled.div`
+  display: flex;
+  align-content: center;
   > h1 {
-    margin: 0;
+    margin: 0 20px 0 0;
   }
+`;
+
+const ButtonDiv = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 export default function TeamSection() {
   return (
     <Container>
       <Header>
-        <h1>Teams</h1>
-        <Settings>
-          <Button variant="contained" color="secondary">
-            Reset
-          </Button>
-        </Settings>
+        <TeamHeader>
+          <h1>Teams</h1>
+          <ButtonDiv>
+            <AddNewTeam />
+          </ButtonDiv>
+        </TeamHeader>
+        <Settings />
       </Header>
       <TeamBoard />
     </Container>
