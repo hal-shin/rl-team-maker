@@ -34,7 +34,7 @@ export default function NavBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" color="inherit">
-            Photos
+            Rocket League Team Maker
           </Typography>
           <Switch
             checked={isDarkMode}

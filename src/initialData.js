@@ -37,7 +37,8 @@ const initialData = {
     wundero: {
       id: "wundero",
       tag: "wundero",
-      icon: "",
+      icon:
+        "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/27/27b6b7b672518bd344253fa648dfad9c2835b238_full.jpg",
       ranks: {
         ones: 1100,
         twos: 1500,

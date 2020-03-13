@@ -12,7 +12,9 @@ import { Draggable } from "react-beautiful-dnd";
 
 const useStyles = makeStyles({
   root: {
+    flexShrink: 0,
     width: 225,
+    height: 312,
     marginBottom: "15px"
   },
   rankTable: {

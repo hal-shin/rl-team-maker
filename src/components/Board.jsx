@@ -6,6 +6,7 @@ import styled from "styled-components";
 import PlayerSection from "./PlayerSection";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { PlayerContext } from "../contexts/PlayerContext";
+import { TeamContext } from "../contexts/TeamContext";
 
 const BoardStyles = styled.div`
   background: ${props => (props.isDarkMode ? "rgb(41,41,41)" : "white")};
@@ -17,12 +18,10 @@ const BoardStyles = styled.div`
 export default function Board() {
   const { isDarkMode } = useContext(ThemeContext);
   const { playerOrder, setPlayerOrder } = useContext(PlayerContext);
-  console.log("IS DARK MODE: ", isDarkMode);
+  const { teams, setTeams } = useContext(TeamContext);
 
   const onDragEnd = result => {
     const { destination, source, draggableId } = result;
-    const start = source.droppableId;
-    const finish = destination.droppableId;
 
     if (!destination) return;
     if (
@@ -32,12 +31,67 @@ export default function Board() {
       return;
     }
 
+    const start = source.droppableId;
+    const finish = destination.droppableId;
+
+    // Moving players within the player list
     if (start === finish && finish === "player-column") {
-      console.log("Same column transfer.");
       const newPlayerOrderArray = Array.from(playerOrder);
       newPlayerOrderArray.splice(source.index, 1);
       newPlayerOrderArray.splice(destination.index, 0, draggableId);
       setPlayerOrder([...newPlayerOrderArray]);
+      return;
+    }
+
+    // Moving a player from player list to a team
+    if (start === "player-column" && finish.includes("team")) {
+      const newPlayerList = [...playerOrder];
+      const newTeams = { ...teams };
+      newPlayerList.splice(source.index, 1);
+      newTeams[destination.droppableId].members.splice(
+        destination.index,
+        0,
+        draggableId
+      );
+      setPlayerOrder(newPlayerList);
+      setTeams(newTeams);
+      return;
+    }
+
+    // Moving a player within their team
+    if (start === finish && finish.includes("team")) {
+      const newTeams = { ...teams };
+      newTeams[source.droppableId].members.splice(source.index, 1);
+      newTeams[source.droppableId].members.splice(
+        destination.index,
+        0,
+        draggableId
+      );
+      setTeams(newTeams);
+      return;
+    }
+
+    // Moving a player across teams
+    if (start.includes("team") && finish.includes("team")) {
+      const newTeams = { ...teams };
+      newTeams[source.droppableId].members.splice(source.index, 1);
+      newTeams[destination.droppableId].members.splice(
+        destination.index,
+        0,
+        draggableId
+      );
+      setTeams(newTeams);
+      return;
+    }
+
+    // Moving a player from a team to player list
+    if (start.includes("team") && finish === "player-column") {
+      const newPlayerList = [...playerOrder];
+      const newTeams = { ...teams };
+      newPlayerList.splice(destination.index, 0, draggableId);
+      newTeams[source.droppableId].members.splice(source.index, 1);
+      setPlayerOrder(newPlayerList);
+      setTeams(newTeams);
       return;
     }
   };
