@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import styled from "styled-components";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import NavBar from "./components/NavBar";
+import Board from "./components/Board";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { PlayerProvider } from "./contexts/PlayerContext";
+import { TeamProvider } from "./contexts/TeamContext";
+
+const Application = styled.div``;
+
+class App extends Component {
+  render() {
+    return (
+      <ThemeProvider>
+        <TeamProvider>
+          <PlayerProvider>
+            <Application>
+              <NavBar />
+              <Board />
+            </Application>
+          </PlayerProvider>
+        </TeamProvider>
+      </ThemeProvider>
+    );
+  }
 }
 
 export default App;
