@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import initialData from "../initialData";
 import TeamSection from "./TeamSection";
 import styled from "styled-components";
 import PlayerSection from "./PlayerSection";

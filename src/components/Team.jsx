@@ -17,6 +17,10 @@ const Container = styled.div`
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 4px;
   overflow: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    width: 0 !important;
+  }
   flex-shrink: 0;
 `;
 
@@ -56,6 +60,7 @@ const Teammates = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 0 25px 0 25px;
+
   transition: background-color 0.2s ease;
 `;
 

@@ -15,6 +15,10 @@ const Header = styled.div`
   > h1 {
     margin: 0;
     cursor: pointer;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
   }
   display: flex;
   justify-content: space-between;
@@ -33,6 +37,10 @@ const PlayerBox = styled.div`
   padding: 5px 8px 0 8px;
   transition: background-color 0.2s ease;
   overflow: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    width: 0 !important;
+  }
 `;
 
 export default function PlayerSection() {

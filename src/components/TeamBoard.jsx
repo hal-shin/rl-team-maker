@@ -7,6 +7,10 @@ import { Droppable } from "react-beautiful-dnd";
 const Container = styled.div`
   display: flex;
   overflow: scroll;
+  ::-webkit-scrollbar {
+    width: 0 !important;
+  }
+  -ms-overflow-style: none;
 `;
 
 export default function TeamBoard() {
@@ -14,7 +18,7 @@ export default function TeamBoard() {
 
   return (
     <Droppable droppableId="team-board" type="team" direction="horizontal">
-      {(provided, ) => (
+      {provided => (
         <Container {...provided.droppableProps} ref={provided.innerRef}>
           {teamOrder.map((team, index) => (
             <Team key={team} id={team} index={index} />

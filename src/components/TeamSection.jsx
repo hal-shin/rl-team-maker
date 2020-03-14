@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import TeamBoard from "./TeamBoard";
 import Settings from "./Settings";
 import AddNewTeam from "./AddNewTeam";
+import { TeamContext } from "../contexts/TeamContext";
 
 const Container = styled.div`
   width: 80%;
@@ -28,11 +29,12 @@ const ButtonDiv = styled.div`
 `;
 
 export default function TeamSection() {
+  const { teams } = useContext(TeamContext);
   return (
     <Container>
       <Header>
         <TeamHeader>
-          <h1>Teams</h1>
+          <h1>Teams ({Object.keys(teams).length})</h1>
           <ButtonDiv>
             <AddNewTeam />
           </ButtonDiv>
