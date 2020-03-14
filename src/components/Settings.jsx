@@ -40,9 +40,6 @@ export default function Settings() {
   }, [gameMode]);
 
   const prepTeams = () => {
-    const mode = gameMode === "twos" ? 2 : 3;
-    if (Object.keys(players).length % mode !== 0)
-      alert("Insufficient number of players for this mode.");
     const numberOfTeams = determineNumberOfTeams();
     const [newTeams, newTeamOrder] = generateBlankTeams(numberOfTeams);
     let workingPlayerOrder = Object.keys(players).sort((a, b) => {
@@ -52,6 +49,11 @@ export default function Settings() {
   };
 
   const balanceTeams = () => {
+    const mode = gameMode === "twos" ? 2 : 3;
+    if (Object.keys(players).length % mode !== 0) {
+      alert("Insufficient number of players for this mode.");
+      return;
+    }
     const [
       numberOfTeams,
       workingPlayerOrder,
@@ -84,6 +86,11 @@ export default function Settings() {
   };
 
   const captainsDraft = () => {
+    const mode = gameMode === "twos" ? 2 : 3;
+    if (Object.keys(players).length % mode !== 0) {
+      alert("Insufficient number of players for this mode.");
+      return;
+    }
     const [
       numberOfTeams,
       workingPlayerOrder,
