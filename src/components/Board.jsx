@@ -18,10 +18,10 @@ const BoardStyles = styled.div`
 export default function Board() {
   const { isDarkMode } = useContext(ThemeContext);
   const { playerOrder, setPlayerOrder } = useContext(PlayerContext);
-  const { teams, setTeams } = useContext(TeamContext);
+  const { teams, setTeams, teamOrder, setTeamOrder } = useContext(TeamContext);
 
   const onDragEnd = result => {
-    const { destination, source, draggableId } = result;
+    const { destination, source, draggableId, type } = result;
 
     if (!destination) return;
     if (
@@ -33,6 +33,15 @@ export default function Board() {
 
     const start = source.droppableId;
     const finish = destination.droppableId;
+
+    // Moving teams around
+    if (type === "team") {
+      const newTeamOrder = [...teamOrder];
+      newTeamOrder.splice(source.index, 1);
+      newTeamOrder.splice(destination.index, 0, draggableId);
+      setTeamOrder(newTeamOrder);
+      return;
+    }
 
     // Moving players within the player list
     if (start === finish && finish === "player-column") {
@@ -99,8 +108,8 @@ export default function Board() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <BoardStyles isDarkMode={isDarkMode}>
-        <TeamSection teams={initialData.teams} />
-        <PlayerSection data={initialData} />
+        <TeamSection />
+        <PlayerSection />
       </BoardStyles>
     </DragDropContext>
   );

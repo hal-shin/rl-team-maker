@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import EditIcon from "@material-ui/icons/Edit";
 import { TeamContext } from "../contexts/TeamContext";
-import { Droppable } from "react-beautiful-dnd";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Player from "./Player";
@@ -55,8 +55,8 @@ const Teammates = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 25px 20px 25px;
-  transition: all 0.2s ease;
+  padding: 0 25px 0 25px;
+  transition: background-color 0.2s ease;
 `;
 
 const buttonStyles = {
@@ -105,7 +105,7 @@ function Team(props) {
             variant="contained"
             color="secondary"
             size="small"
-            onClick={handleCancelTeamName}
+            onMouseDown={handleCancelTeamName}
             style={buttonStyles}
           >
             X
@@ -114,7 +114,7 @@ function Team(props) {
             variant="contained"
             color="primary"
             size="small"
-            onClick={handleSaveTeamName}
+            onMouseDown={handleSaveTeamName}
             style={buttonStyles}
           >
             ✓
@@ -131,24 +131,27 @@ function Team(props) {
   };
 
   return (
-    <Container>
-      {renderTeamName()}
-
-      <Droppable droppableId={team.id} direction="vertical">
-        {(provided, snapshot) => (
-          <Teammates
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            isDraggingOver={snapshot.isDraggingOver}
-          >
-            {team.members.map((playerId, index) => (
-              <Player key={playerId} id={playerId} index={index} />
-            ))}
-            {provided.placeholder}
-          </Teammates>
-        )}
-      </Droppable>
-    </Container>
+    <Draggable draggableId={team.id} index={props.index}>
+      {provided => (
+        <Container {...provided.draggableProps} ref={provided.innerRef}>
+          <div {...provided.dragHandleProps}>{renderTeamName()}</div>
+          <Droppable droppableId={team.id} direction="vertical">
+            {(provided, snapshot) => (
+              <Teammates
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                isDraggingOver={snapshot.isDraggingOver}
+              >
+                {team.members.map((playerId, index) => (
+                  <Player key={playerId} id={playerId} index={index} />
+                ))}
+                {provided.placeholder}
+              </Teammates>
+            )}
+          </Droppable>
+        </Container>
+      )}
+    </Draggable>
   );
 }
 

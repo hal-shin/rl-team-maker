@@ -4,6 +4,7 @@ import { PlayerContext } from "../contexts/PlayerContext";
 import styled from "styled-components";
 import { Droppable } from "react-beautiful-dnd";
 import AddNewPlayer from "./AddNewPlayer";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 const Container = styled.div`
   width: 250px;
@@ -13,6 +14,7 @@ const Header = styled.div`
   margin: 20px 0 20px 0;
   > h1 {
     margin: 0;
+    cursor: pointer;
   }
   display: flex;
   justify-content: space-between;
@@ -26,18 +28,29 @@ const PlayerBox = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  min-height: 100px;
   height: calc(100vh - 160px);
-  padding-top: 5px;
-  transition: all 0.2s ease;
+  padding: 5px 8px 0 8px;
+  transition: background-color 0.2s ease;
   overflow: scroll;
 `;
 
 export default function PlayerSection() {
-  const { playerOrder } = useContext(PlayerContext);
+  const { players, playerOrder, setPlayerOrder } = useContext(PlayerContext);
+  const { gameMode } = useContext(ThemeContext);
+
+  const handleSortPlayerList = () => {
+    let newPlayerOrder = [...playerOrder];
+    newPlayerOrder.sort((a, b) => {
+      return players[b].ranks[gameMode] - players[a].ranks[gameMode];
+    });
+    setPlayerOrder(newPlayerOrder);
+  };
+
   return (
     <Container>
       <Header>
-        <h1>Players</h1>
+        <h1 onClick={handleSortPlayerList}>Players ({playerOrder.length})</h1>
         <AddNewPlayer />
       </Header>
       <Droppable droppableId="player-column">

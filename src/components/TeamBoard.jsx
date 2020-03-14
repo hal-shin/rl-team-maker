@@ -14,10 +14,10 @@ export default function TeamBoard() {
 
   return (
     <Droppable droppableId="team-board" type="team" direction="horizontal">
-      {provided => (
+      {(provided, ) => (
         <Container {...provided.droppableProps} ref={provided.innerRef}>
-          {teamOrder.map(team => (
-            <Team key={team} id={team} />
+          {teamOrder.map((team, index) => (
+            <Team key={team} id={team} index={index} />
           ))}
           {provided.placeholder}
         </Container>
