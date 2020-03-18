@@ -7,10 +7,13 @@ const trackerUrl = "https://rocketleague.tracker.network/profile/steam/";
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-app.get("/", (req, res) => {
-  console.log("Requested!");
-  res.send("You've reached the backend.");
-});
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, "client/build")));
+
+// app.get("/", (req, res) => {
+//   console.log("Requested!");
+//   res.send("You've reached the backend.");
+// });
 
 app.get("/search/:id", (req, res) => {
   const id = req.params.id;
@@ -126,5 +129,11 @@ app.get("/search/:id", (req, res) => {
 //
 //   })
 //   .catch(console.error);
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/client/build/index.html"));
+});
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
