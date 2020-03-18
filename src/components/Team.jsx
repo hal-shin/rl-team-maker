@@ -7,6 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Player from "./Player";
 import useToggle from "../hooks/useToggleState";
+import { PlayerContext } from "../contexts/PlayerContext";
 
 const Container = styled.div`
   background: white;
@@ -75,6 +76,7 @@ const buttonStyles = {
 
 function Team(props) {
   const { teams, setTeams } = useContext(TeamContext);
+  const { players } = useContext(PlayerContext);
   const team = teams[props.id];
   const [isEditing, toggleIsEditing] = useToggle(false);
   const [tempTeamName, setTempTeamName] = useState(team.teamName);
@@ -95,6 +97,12 @@ function Team(props) {
     toggleIsEditing();
   };
 
+  const handleKeyPress = event => {
+    if (event.charCode == 13) {
+      handleSaveTeamName();
+    }
+  };
+
   const renderTeamName = () => {
     if (isEditing) {
       return (
@@ -104,6 +112,7 @@ function Team(props) {
             defaultValue={team.teamName}
             onChange={handleEditTeamName}
             onBlur={handleCancelTeamName}
+            onKeyPress={handleKeyPress}
             autoFocus
           />
           <Button
@@ -148,7 +157,12 @@ function Team(props) {
                 isDraggingOver={snapshot.isDraggingOver}
               >
                 {team.members.map((playerId, index) => (
-                  <Player key={playerId} id={playerId} index={index} />
+                  <Player
+                    key={playerId}
+                    id={playerId}
+                    index={index}
+                    player={players[playerId]}
+                  />
                 ))}
                 {provided.placeholder}
               </Teammates>

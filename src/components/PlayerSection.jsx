@@ -69,7 +69,12 @@ export default function PlayerSection() {
             isDraggingOver={snapshot.isDraggingOver}
           >
             {playerOrder.map((player, index) => (
-              <Player key={player} id={player} index={index} />
+              <Player
+                key={player}
+                id={player}
+                player={players[player]}
+                index={index}
+              />
             ))}
             {provided.placeholder}
           </PlayerBox>

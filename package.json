@@ -41,5 +41,6 @@
   "devDependencies": {
     "gh-pages": "^2.2.0"
   },
-  "homepage": "http://communitybicycle.github.io/rl-team-maker"
+  "homepage": "http://communitybicycle.github.io/rl-team-maker",
+  "proxy": "http://localhost:5000"
 }

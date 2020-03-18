@@ -10,10 +10,16 @@ import Grid from "@material-ui/core/Grid";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import styled from "styled-components";
 import { PlayerContext } from "../contexts/PlayerContext";
+import PlayerStatic from "./PlayerStatic";
 
 const Container = styled.div`
   display: flex;
   align-items: center;
+`;
+
+const CenterContents = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 export default function AddNewPlayer() {
@@ -21,6 +27,10 @@ export default function AddNewPlayer() {
     PlayerContext
   );
   const [open, setOpen] = useState(false);
+  const [steamId, setSteamId] = useState("");
+  const [uniqueId, setUniqueId] = useState(false);
+  const [reasonableRank, setReasonableRank] = useState(false);
+  const [searchedPlayer, setSearchedPlayer] = useState({});
   const [manualPlayer, setManualPlayer] = useState({});
 
   const handleClickOpen = () => {
@@ -28,7 +38,50 @@ export default function AddNewPlayer() {
   };
 
   const handleClose = () => {
+    setSearchedPlayer({});
     setOpen(false);
+  };
+
+  const handleSearchInput = event => {
+    setSteamId(event.target.value);
+    if (Object.keys(players).includes(event.target.value)) {
+      setUniqueId(true);
+    } else {
+      setUniqueId(false);
+    }
+  };
+
+  const handleKeyPress = event => {
+    if (event.charCode == 13) {
+      handleSearchPlayer();
+    }
+  };
+
+  const handleSearchPlayer = () => {
+    setOpen("automatic");
+    fetch(`/search/${steamId}`)
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        const newPlayer = data.newPlayer;
+        setSearchedPlayer({ ...newPlayer });
+        console.log("Added new player to state.");
+      });
+  };
+
+  const handleAddNewAutomaticPlayer = () => {
+    const newPlayers = { ...players };
+    const newPlayerOrder = [...playerOrder];
+    console.log("Adding new player...", { ...searchedPlayer });
+    newPlayers[searchedPlayer.id] = { ...searchedPlayer };
+    newPlayerOrder.unshift(searchedPlayer.id);
+    setPlayers(newPlayers);
+    setPlayerOrder(newPlayerOrder);
+    setOpen(false);
+    setSearchedPlayer({});
+
+    updateLocalStorage();
   };
 
   const handleOpenManual = () => {
@@ -39,9 +92,28 @@ export default function AddNewPlayer() {
     const newManualPlayer = { ...manualPlayer };
     newManualPlayer[event.target.id] = event.target.value;
     setManualPlayer(newManualPlayer);
+    // unique id checker
+    if (Object.keys(players).includes(event.target.value)) {
+      setUniqueId(true);
+    } else {
+      setUniqueId(false);
+    }
+    // reasonable rank checker
+    if (
+      event.target.id === "ones" ||
+      event.target.id === "twos" ||
+      event.target.id === "threes"
+    ) {
+      if (event.target.value < 1 || event.target.value > 3000) {
+        setReasonableRank(true);
+      } else {
+        setReasonableRank(false);
+      }
+    }
   };
 
   const handleAddNewManualPlayer = () => {
+    console.log(manualPlayer);
     const newPlayers = { ...players };
     const newPlayerOrder = [...playerOrder];
     newPlayers[manualPlayer.tag] = {
@@ -53,7 +125,9 @@ export default function AddNewPlayer() {
         ones: manualPlayer.ones,
         twos: manualPlayer.twos,
         threes: manualPlayer.threes
-      }
+      },
+      steamUrl: "",
+      trackerUrl: ""
     };
     newPlayerOrder.unshift(manualPlayer.tag);
     setPlayers(newPlayers);
@@ -66,6 +140,13 @@ export default function AddNewPlayer() {
     const defaultPlayerOrder = Object.keys(players);
     localStorage.setItem("rl-players", JSON.stringify(players));
     localStorage.setItem("rl-playerOrder", JSON.stringify(defaultPlayerOrder));
+  };
+
+  const renderSearchedPlayer = () => {
+    if (searchedPlayer && Object.keys(searchedPlayer).length > 0) {
+      return <PlayerStatic player={searchedPlayer} />;
+    }
+    return <div>Searching...</div>;
   };
 
   useEffect(() => {
@@ -90,9 +171,13 @@ export default function AddNewPlayer() {
           </DialogContentText>
           <TextField
             autoFocus
+            error={uniqueId}
+            helperText="Steam ID must be unique and at least 2 characters long"
             margin="dense"
             id="steam-id"
             label="Steam ID"
+            onChange={handleSearchInput}
+            onKeyPress={handleKeyPress}
             fullWidth
           />
         </DialogContent>
@@ -107,8 +192,34 @@ export default function AddNewPlayer() {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button
+            onClick={handleSearchPlayer}
+            color="primary"
+            disabled={steamId.length < 3 || uniqueId}
+          >
             Search
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/*AUTOMATIC ADDITION DIALOG*/}
+      <Dialog
+        open={open === "automatic"}
+        onClose={handleClose}
+        aria-labelledby="add-player-automatically-dialog-title"
+      >
+        <DialogTitle id="add-player-automatically-dialog-title">
+          Add Player Automatically
+        </DialogTitle>
+        <DialogContent>
+          <CenterContents>{renderSearchedPlayer()}</CenterContents>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleAddNewAutomaticPlayer} color="primary">
+            Add
           </Button>
         </DialogActions>
       </Dialog>
@@ -118,13 +229,16 @@ export default function AddNewPlayer() {
         open={open === "manual"}
         onClose={handleClose}
         aria-labelledby="add-player-manually-dialog-title"
+        maxWidth="sm"
       >
         <DialogTitle id="add-player-manually-dialog-title">
           Add Player Manually
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Please add player details manually in the fields below.
+            Please add player details manually in the fields below. The in-game
+            name must be unique and the player's ranks must be between 1 and
+            3000.
           </DialogContentText>
           <Grid container spacing={1} alignItems="flex-end">
             <Grid item xs={1}>
@@ -136,7 +250,8 @@ export default function AddNewPlayer() {
                 required
                 margin="dense"
                 id="tag"
-                label="Username"
+                label="In-game name"
+                error={uniqueId}
                 onChange={handleManualInput}
                 fullWidth
               />
@@ -145,29 +260,38 @@ export default function AddNewPlayer() {
           <Grid container spacing={3} alignItems="center">
             <Grid item xs={4}>
               <TextField
+                error={reasonableRank}
                 margin="dense"
                 id="ones"
                 label="1v1 Rank"
                 type="number"
+                inputProps={{ min: "1", max: "3000", step: "1" }}
+                style={{ width: "100%" }}
                 onChange={handleManualInput}
               />
             </Grid>
             <Grid item xs={4}>
               <TextField
+                error={reasonableRank}
                 margin="dense"
                 id="twos"
                 label="2v2 Rank"
                 type="number"
+                inputProps={{ min: "1", max: "3000", step: "1" }}
+                style={{ width: "100%" }}
                 onChange={handleManualInput}
                 required
               />
             </Grid>
             <Grid item xs={4}>
               <TextField
+                error={reasonableRank}
                 margin="dense"
                 id="threes"
                 label="3v3 Rank"
                 type="number"
+                inputProps={{ min: "1", max: "3000", step: "1" }}
+                style={{ width: "100%" }}
                 onChange={handleManualInput}
                 required
               />
@@ -178,7 +302,11 @@ export default function AddNewPlayer() {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleAddNewManualPlayer} color="primary">
+          <Button
+            onClick={handleAddNewManualPlayer}
+            color="primary"
+            disabled={reasonableRank || uniqueId}
+          >
             Add
           </Button>
         </DialogActions>
