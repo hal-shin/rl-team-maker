@@ -6,6 +6,7 @@ export const ThemeContext = createContext();
 export function ThemeProvider(props) {
   const [isDarkMode, toggleIsDarkMode] = useToggle(false);
   const [gameMode, setGameMode] = useState("twos");
+  const [viewMode, setViewMode] = useState("card");
 
   return (
     <ThemeContext.Provider
@@ -13,7 +14,9 @@ export function ThemeProvider(props) {
         isDarkMode,
         toggleIsDarkMode,
         gameMode,
-        setGameMode
+        setGameMode,
+        viewMode,
+        setViewMode
       }}
     >
       {props.children}

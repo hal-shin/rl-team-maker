@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="9ed1acfa-b242-4c05-960b-076aa18868e5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/rl-team-maker.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/components/TeamMaker.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/components/dialogs/Dialogs.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/components/dialogs/Help.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/contexts/DialogContext.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/AddNewPlayer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/AddNewPlayer.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/Board.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Board.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/NavBar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/NavBar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/Player.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Player.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/Team.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Team.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/TeamSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/TeamSection.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/contexts/ThemeContext.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/contexts/ThemeContext.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1ZJi1Oscq4ej9y74I72egUchvmL" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\Hal Shin\Desktop\Projects\rl-team-maker\node_modules\prettier" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9ed1acfa-b242-4c05-960b-076aa18868e5" name="Default Changelist" comment="" />
+      <created>1584563381437</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1584563381437</updated>
+      <workItem from="1584563385119" duration="7990000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="-2033" y="0" width="1535" height="1091" key="dock-window-1" timestamp="1584567788459">
+      <screen x="-2560" y="0" width="2048" height="1112" />
+    </state>
+    <state x="-2033" y="0" width="1535" height="1091" key="dock-window-1/0.0.2048.1112/2560.356.1920.1040/-2560.0.2048.1112@0.0.2048.1112" timestamp="1584567788459" />
+  </component>
+</project>

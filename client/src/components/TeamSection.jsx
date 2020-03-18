@@ -7,6 +7,7 @@ import { TeamContext } from "../contexts/TeamContext";
 
 const Container = styled.div`
   width: 80%;
+  margin-right: 40px;
 `;
 
 const Header = styled.div`

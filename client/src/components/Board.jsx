@@ -6,6 +6,7 @@ import PlayerSection from "./PlayerSection";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { PlayerContext } from "../contexts/PlayerContext";
 import { TeamContext } from "../contexts/TeamContext";
+import Dialogs from "./dialogs/Dialogs";
 
 const BoardStyles = styled.div`
   background: ${props => (props.isDarkMode ? "rgb(41,41,41)" : "white")};
@@ -109,6 +110,7 @@ export default function Board() {
       <BoardStyles isDarkMode={isDarkMode}>
         <TeamSection />
         <PlayerSection />
+        <Dialogs />
       </BoardStyles>
     </DragDropContext>
   );

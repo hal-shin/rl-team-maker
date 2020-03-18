@@ -60,7 +60,7 @@ const Teammates = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 25px 0 25px;
+  padding: 10px 25px 0 25px;
 
   transition: background-color 0.2s ease;
 `;

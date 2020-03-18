@@ -9,8 +9,10 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import styled from "styled-components";
-import { PlayerContext } from "../contexts/PlayerContext";
 import PlayerStatic from "./PlayerStatic";
+
+import { PlayerContext } from "../contexts/PlayerContext";
+import { DialogContext } from "../contexts/DialogContext";
 
 const Container = styled.div`
   display: flex;
@@ -26,7 +28,7 @@ export default function AddNewPlayer() {
   const { players, setPlayers, playerOrder, setPlayerOrder } = useContext(
     PlayerContext
   );
-  const [open, setOpen] = useState(false);
+  const { open, setOpen } = useContext(DialogContext);
   const [steamId, setSteamId] = useState("");
   const [uniqueId, setUniqueId] = useState(false);
   const [reasonableRank, setReasonableRank] = useState(false);
@@ -52,7 +54,7 @@ export default function AddNewPlayer() {
   };
 
   const handleKeyPress = event => {
-    if (event.charCode == 13) {
+    if (event.charCode === 13) {
       handleSearchPlayer();
     }
   };
@@ -66,21 +68,24 @@ export default function AddNewPlayer() {
       .then(data => {
         const newPlayer = data.newPlayer;
         setSearchedPlayer({ ...newPlayer });
-        console.log("Added new player to state.");
       });
+  };
+
+  const handleKeyPressAutomatic = event => {
+    if (event.charCode === 13) {
+      handleAddNewAutomaticPlayer();
+    }
   };
 
   const handleAddNewAutomaticPlayer = () => {
     const newPlayers = { ...players };
     const newPlayerOrder = [...playerOrder];
-    console.log("Adding new player...", { ...searchedPlayer });
     newPlayers[searchedPlayer.id] = { ...searchedPlayer };
     newPlayerOrder.unshift(searchedPlayer.id);
     setPlayers(newPlayers);
     setPlayerOrder(newPlayerOrder);
     setOpen(false);
     setSearchedPlayer({});
-
     updateLocalStorage();
   };
 
@@ -206,6 +211,7 @@ export default function AddNewPlayer() {
       <Dialog
         open={open === "automatic"}
         onClose={handleClose}
+        onKeyPress={handleKeyPressAutomatic}
         aria-labelledby="add-player-automatically-dialog-title"
       >
         <DialogTitle id="add-player-automatically-dialog-title">

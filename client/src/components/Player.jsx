@@ -13,12 +13,13 @@ import { TeamContext } from "../contexts/TeamContext";
 import useToggle from "../hooks/useToggleState";
 import TextField from "@material-ui/core/TextField";
 import EditIcon from "@material-ui/icons/Edit";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 const useStyles = makeStyles({
   root: {
     flexShrink: 0,
     width: 225,
-    height: 312,
+    maxHeight: 312,
     marginBottom: "15px"
   },
   rankTable: {
@@ -59,6 +60,7 @@ export default function Player(props) {
     PlayerContext
   );
   const { teams, setTeams } = useContext(TeamContext);
+  const { viewMode } = useContext(ThemeContext);
   const [isEditing, toggleIsEditing] = useToggle(false);
   const [playerTag, setPlayerTag] = useState(player.tag || player.id);
 
@@ -163,53 +165,92 @@ export default function Player(props) {
     );
   };
 
-  return (
-    <Draggable draggableId={id} index={index}>
-      {provided => (
-        <Card
-          className={classes.root}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          ref={provided.innerRef}
-        >
-          <CardMedia
-            component="img"
-            alt="Contemplative Reptile"
-            height="140"
-            image={player.icon}
-            title="Contemplative Reptile"
-          />
-          <CardContent>
-            {renderPlayerName()}
-            <div className={classes.rankTable}>
-              <div className={classes.rank}>
-                <h4>Ones</h4>
-                <p>{player.ranks.ones}</p>
-              </div>
-              <div className={classes.rank}>
-                <h4>Twos</h4>
-                <p>{player.ranks.twos}</p>
-              </div>
-              <div className={classes.rank}>
-                <h4>Threes</h4>
-                <p>{player.ranks.threes}</p>
-              </div>
-            </div>
-          </CardContent>
-          <CardActions>
-            <Button size="small" color="primary" onClick={handleOpenSteam}>
-              Steam
-            </Button>
-            <Button size="small" color="primary" onClick={handleOpenTracker}>
-              Ranks
-            </Button>
-            <Button size="small" color="secondary" onClick={handleDelete}>
-              Delete
-            </Button>
-            {/*<DeleteIcon onClick={handleDelete} />*/}
-          </CardActions>
-        </Card>
-      )}
-    </Draggable>
-  );
+  const renderPlayer = () => {
+    if (viewMode === "card") {
+      return (
+        <Draggable draggableId={id} index={index}>
+          {provided => (
+            <Card
+              className={classes.root}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              ref={provided.innerRef}
+            >
+              <CardMedia
+                component="img"
+                alt="Contemplative Reptile"
+                height="140"
+                image={player.icon}
+                title="Contemplative Reptile"
+              />
+              <CardContent>
+                {renderPlayerName()}
+                <div className={classes.rankTable}>
+                  <div className={classes.rank}>
+                    <h4>Ones</h4>
+                    <p>{player.ranks.ones}</p>
+                  </div>
+                  <div className={classes.rank}>
+                    <h4>Twos</h4>
+                    <p>{player.ranks.twos}</p>
+                  </div>
+                  <div className={classes.rank}>
+                    <h4>Threes</h4>
+                    <p>{player.ranks.threes}</p>
+                  </div>
+                </div>
+              </CardContent>
+              <CardActions>
+                <Button size="small" color="primary" onClick={handleOpenSteam}>
+                  Steam
+                </Button>
+                <Button
+                  size="small"
+                  color="primary"
+                  onClick={handleOpenTracker}
+                >
+                  Ranks
+                </Button>
+                <Button size="small" color="secondary" onClick={handleDelete}>
+                  Delete
+                </Button>
+              </CardActions>
+            </Card>
+          )}
+        </Draggable>
+      );
+    } else if (viewMode === "condensed") {
+      return (
+        <Draggable draggableId={id} index={index}>
+          {provided => (
+            <Card
+              className={classes.root}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              ref={provided.innerRef}
+            >
+              <CardContent>{renderPlayerName()}</CardContent>
+              <CardActions>
+                <Button size="small" color="primary" onClick={handleOpenSteam}>
+                  Steam
+                </Button>
+                <Button
+                  size="small"
+                  color="primary"
+                  onClick={handleOpenTracker}
+                >
+                  Ranks
+                </Button>
+                <Button size="small" color="secondary" onClick={handleDelete}>
+                  Delete
+                </Button>
+              </CardActions>
+            </Card>
+          )}
+        </Draggable>
+      );
+    }
+  };
+
+  return renderPlayer();
 }

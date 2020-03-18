@@ -11,11 +11,6 @@ const cheerio = require("cheerio");
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, "client/build")));
 
-// app.get("/", (req, res) => {
-//   console.log("Requested!");
-//   res.send("You've reached the backend.");
-// });
-
 app.get("/search/:id", (req, res) => {
   const id = req.params.id;
 
@@ -88,48 +83,6 @@ app.get("/search/:id", (req, res) => {
       console.error(errors);
     });
 });
-
-// axios(steamUrl + id)
-//   .then(steamResponse => {
-//     let html = response.data;
-//     let $ = cheerio.load(html);
-//     const profileImg = $(
-//       "body > div.responsive_page_frame.with_header > div.responsive_page_content > div.responsive_page_template_content > div > div.profile_header_bg > div > div > div > div.playerAvatar.profile_header_size.offline > div > img"
-//     ).attr("src");
-//
-//   })
-
-// axios(trackerUrl + id)
-//   .then(response => {
-//     const html = response.data;
-//     const $ = cheerio.load(html);
-//     const rankTable = $("#season-13 > table:nth-child(2) > tbody");
-//
-//     const newPlayer = {
-//       id: id,
-//       tag: id,
-//       icon: profileImg || "https://images.idgesg.net/images/article/2018/06/steam_logo2-100691182-orig-100761992-large.3x2.jpg",
-//       ranks: {}
-//     };
-//
-//     newPlayer.ranks.ones = rankTable
-//       .find("tr:nth-child(2) > td:nth-child(4)")
-//       .text()
-//       .split("\n")[1];
-//     newPlayer.ranks.twos = rankTable
-//       .find("tr:nth-child(3) > td:nth-child(4)")
-//       .text()
-//       .split("\n")[1];
-//     newPlayer.ranks.threes = rankTable
-//       .find("tr:nth-child(5) > td:nth-child(4)")
-//       .text()
-//       .split("\n")[1];
-//
-//     console.log(newPlayer);
-//     res.json({newPlayer});
-//
-//   })
-//   .catch(console.error);
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
