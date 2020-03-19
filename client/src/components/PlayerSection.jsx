@@ -1,10 +1,29 @@
 import React, { useContext } from "react";
+import { Droppable } from "react-beautiful-dnd";
+import { makeStyles } from "@material-ui/core/styles";
+import styled from "styled-components";
 import Player from "./Player";
 import { PlayerContext } from "../contexts/PlayerContext";
-import styled from "styled-components";
-import { Droppable } from "react-beautiful-dnd";
 import AddNewPlayer from "./AddNewPlayer";
 import { ThemeContext } from "../contexts/ThemeContext";
+import { Paper } from "@material-ui/core";
+
+const useStyles = makeStyles(theme => ({
+  root: {},
+  playerBox: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    minHeight: "100px",
+    height: "calc(100vh - 160px)",
+    padding: "5px 8px 0 8px",
+    transition: "background-color 0.2s ease",
+    overflow: "scroll",
+    msOverflowStyle: "none",
+    "::-webkit-scrollbar": { width: "0 !important" }
+  }
+}));
 
 const Container = styled.div`
   width: 250px;
@@ -44,6 +63,7 @@ const PlayerBox = styled.div`
 `;
 
 export default function PlayerSection() {
+  const classes = useStyles();
   const { players, playerOrder, setPlayerOrder } = useContext(PlayerContext);
   const { gameMode } = useContext(ThemeContext);
 
@@ -63,7 +83,9 @@ export default function PlayerSection() {
       </Header>
       <Droppable droppableId="player-column">
         {(provided, snapshot) => (
-          <PlayerBox
+          <Paper
+            variant="outlined"
+            className={classes.playerBox}
             {...provided.droppableProps}
             ref={provided.innerRef}
             isDraggingOver={snapshot.isDraggingOver}
@@ -77,7 +99,7 @@ export default function PlayerSection() {
               />
             ))}
             {provided.placeholder}
-          </PlayerBox>
+          </Paper>
         )}
       </Droppable>
     </Container>

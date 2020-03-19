@@ -2,15 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9ed1acfa-b242-4c05-960b-076aa18868e5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/client/src/components/dialogs/TeamError.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/AddNewPlayer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/AddNewPlayer.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Player.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Player.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Settings.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Settings.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/Board.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Board.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/PlayerSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/PlayerSection.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/Team.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Team.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/TeamMaker.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/TeamMaker.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/dialogs/Dialogs.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/dialogs/Dialogs.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +43,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1584563381437</updated>
-      <workItem from="1584563385119" duration="13139000" />
+      <workItem from="1584563385119" duration="16151000" />
     </task>
     <servers />
   </component>
@@ -58,9 +55,9 @@
       <screen x="-2560" y="0" width="2048" height="1112" />
     </state>
     <state x="-2294" y="8" width="1535" height="1091" key="dock-window-1/0.0.2048.1112/2560.356.1920.1040/-2560.0.2048.1112@0.0.2048.1112" timestamp="1584575192285" />
-    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup" timestamp="1584578250335">
+    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup" timestamp="1584578962111">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup/0.0.2048.1112/2560.356.1920.1040/-2560.0.2048.1112@0.0.2048.1112" timestamp="1584578250335" />
+    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup/0.0.2048.1112/2560.356.1920.1040/-2560.0.2048.1112@0.0.2048.1112" timestamp="1584578962111" />
   </component>
 </project>

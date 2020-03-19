@@ -7,15 +7,27 @@ import { ThemeContext } from "../contexts/ThemeContext";
 import { PlayerContext } from "../contexts/PlayerContext";
 import { TeamContext } from "../contexts/TeamContext";
 import Dialogs from "./dialogs/Dialogs";
+import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
 
-const BoardStyles = styled.div`
-  background: ${props => (props.isDarkMode ? "rgb(41,41,41)" : "white")};
-  padding: 0 5% 0 5%;
-  display: flex;
-  justify-content: space-around;
-`;
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: "flex",
+    padding: "0 5% 0 5%",
+    justifyContent: "space-around",
+    height: "calc(100vh - 48px)"
+  }
+}));
+
+// const BoardStyles = styled.div`
+//   background: ${props => (props.isDarkMode ? "rgb(41,41,41)" : "white")};
+//   padding: 0 5% 0 5%;
+//   display: flex;
+//   justify-content: space-around;
+// `;
 
 export default function Board() {
+  const classes = useStyles();
   const { isDarkMode } = useContext(ThemeContext);
   const { playerOrder, setPlayerOrder } = useContext(PlayerContext);
   const { teams, setTeams, teamOrder, setTeamOrder } = useContext(TeamContext);
@@ -107,11 +119,11 @@ export default function Board() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <BoardStyles isDarkMode={isDarkMode}>
+      <Paper elevation={0} className={classes.root}>
         <TeamSection />
         <PlayerSection />
         <Dialogs />
-      </BoardStyles>
+      </Paper>
     </DragDropContext>
   );
 }

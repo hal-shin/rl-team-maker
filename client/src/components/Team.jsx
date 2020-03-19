@@ -1,29 +1,61 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
-import EditIcon from "@material-ui/icons/Edit";
-import { TeamContext } from "../contexts/TeamContext";
+import { makeStyles } from "@material-ui/core/styles";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+
 import Player from "./Player";
 import useToggle from "../hooks/useToggleState";
+import { TeamContext } from "../contexts/TeamContext";
 import { PlayerContext } from "../contexts/PlayerContext";
 
-const Container = styled.div`
-  background: white;
-  min-height: 378px;
-  max-height: calc(100vh - 160px);
-  width: 280px;
-  margin-right: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 4px;
-  overflow: scroll;
-  -ms-overflow-style: none;
-  ::-webkit-scrollbar {
-    width: 0 !important;
+const useStyles = makeStyles(theme => ({
+  root: {
+    minHeight: "378px",
+    maxHeight: "calc(100vh - 160px)",
+    width: "280px",
+    marginRight: "10px",
+    overflow: "scroll",
+    msOverflowStyle: "none",
+    "::-webkit-scrollbar": { width: "0 !important" },
+    flexShrink: "0"
+  },
+  teamName: {
+    position: "sticky",
+    top: "0",
+    padding: "10px 0 15px 0",
+    display: "flex",
+    justifyContent: "center",
+    "> input": { width: "80% !important" }
+  },
+  teammates: {
+    minHeight: "292px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "10px 25px 0 25px",
+    transition: "background-color 0.2s ease"
   }
-  flex-shrink: 0;
-`;
+}));
+
+// const Container = styled.div`
+//   background: white;
+//   min-height: 378px;
+//   max-height: calc(100vh - 160px);
+//   width: 280px;
+//   margin-right: 10px;
+//   border: 1px solid rgba(0, 0, 0, 0.12);
+//   border-radius: 4px;
+//   overflow: scroll;
+//   -ms-overflow-style: none;
+//   ::-webkit-scrollbar {
+//     width: 0 !important;
+//   }
+//   flex-shrink: 0;
+// `;
 
 const TeamName = styled.div`
   position: sticky;
@@ -75,6 +107,7 @@ const buttonStyles = {
 };
 
 function Team(props) {
+  const classes = useStyles();
   const { teams, setTeams } = useContext(TeamContext);
   const { players } = useContext(PlayerContext);
   const team = teams[props.id];
@@ -106,7 +139,7 @@ function Team(props) {
   const renderTeamName = () => {
     if (isEditing) {
       return (
-        <TeamName>
+        <div className={classes.teamName}>
           <TextField
             id="standard-basic"
             defaultValue={team.teamName}
@@ -133,25 +166,32 @@ function Team(props) {
           >
             ✓
           </Button>
-        </TeamName>
+        </div>
       );
     }
     return (
-      <TeamName>
-        <EditIcon fontSize="small" onClick={toggleIsEditing} />
-        <h3>{team.teamName}</h3>
-      </TeamName>
+      <div className={classes.teamName}>
+        <Typography variant="h5" onClick={toggleIsEditing}>
+          {team.teamName}
+        </Typography>
+      </div>
     );
   };
 
   return (
     <Draggable draggableId={team.id} index={props.index}>
       {provided => (
-        <Container {...provided.draggableProps} ref={provided.innerRef}>
+        <Paper
+          className={classes.root}
+          variant="outlined"
+          {...provided.draggableProps}
+          ref={provided.innerRef}
+        >
           <div {...provided.dragHandleProps}>{renderTeamName()}</div>
           <Droppable droppableId={team.id} direction="vertical">
             {(provided, snapshot) => (
-              <Teammates
+              <div
+                className={classes.teammates}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
                 isDraggingOver={snapshot.isDraggingOver}
@@ -166,10 +206,10 @@ function Team(props) {
                   />
                 ))}
                 {provided.placeholder}
-              </Teammates>
+              </div>
             )}
           </Droppable>
-        </Container>
+        </Paper>
       )}
     </Draggable>
   );

@@ -5,8 +5,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
 import MenuIcon from "@material-ui/icons/Menu";
 import HelpIcon from "@material-ui/icons/Help";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -22,10 +20,35 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import Board from "./Board";
-import { DialogContext } from "../contexts/DialogContext";
+import { DialogContext, DialogProvider } from "../contexts/DialogContext";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
+import {
+  amber,
+  blue,
+  blueGrey,
+  grey,
+  indigo,
+  lightBlue,
+  orange,
+  red
+} from "@material-ui/core/colors";
+
+const lightTheme = createMuiTheme({
+  palette: {
+    primary: indigo,
+    secondary: red,
+    type: "light"
+  }
+});
+
+const darkTheme = createMuiTheme({
+  palette: {
+    primary: red,
+    secondary: amber,
+    type: "dark"
+  }
+});
 
 const drawerWidth = 240;
 
@@ -130,94 +153,96 @@ export default function TeamMaker() {
   };
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        color="inherit"
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: menuOpen
-        })}
-      >
-        <Toolbar variant="dense">
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, menuOpen && classes.hide)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            RL Team Maker
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="left"
-        open={menuOpen}
-        classes={{
-          paper: classes.drawerPaper
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        </div>
-        <Divider />
-        <List>
-          <ListItem button onClick={handleChangeViewMode}>
-            <ListItemIcon>
-              <ViewAgendaIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary={
-                viewMode === "card"
-                  ? "Condensed View"
-                  : viewMode === "condensed"
-                  ? "Name View"
-                  : "Card View"
-              }
-            />
-          </ListItem>
-          <ListItem button disabled onClick={toggleIsDarkMode}>
-            <ListItemIcon>
-              <Brightness4Icon />
-            </ListItemIcon>
-            <ListItemText primary={isDarkMode ? "Light Mode" : "Dark Mode"} />
-          </ListItem>
-        </List>
-        <Divider />
-        <List>
-          <ListItem button key="Help" onClick={handleOpenHelpDialog}>
-            <ListItemIcon>
-              <HelpIcon />
-            </ListItemIcon>
-            <ListItemText primary="Help" />
-          </ListItem>
-        </List>
-        <div className={classes.footer}>
-          <Typography variant="overline" align="center">
-            Made with <FavoriteIcon fontSize="inherit" /> by HS
-          </Typography>
-        </div>
-      </Drawer>
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: menuOpen
-        })}
-      >
-        <div className={classes.drawerHeader} />
-        <Board />
-      </main>
-    </div>
+    <MuiThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar
+          color="primary"
+          position="fixed"
+          className={clsx(classes.appBar, {
+            [classes.appBarShift]: menuOpen
+          })}
+        >
+          <Toolbar variant="dense">
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              className={clsx(classes.menuButton, menuOpen && classes.hide)}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap>
+              RL Team Maker
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          className={classes.drawer}
+          variant="persistent"
+          anchor="left"
+          open={menuOpen}
+          classes={{
+            paper: classes.drawerPaper
+          }}
+        >
+          <div className={classes.drawerHeader}>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "ltr" ? (
+                <ChevronLeftIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+            </IconButton>
+          </div>
+          <Divider />
+          <List>
+            <ListItem button onClick={handleChangeViewMode}>
+              <ListItemIcon>
+                <ViewAgendaIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  viewMode === "card"
+                    ? "Condensed View"
+                    : viewMode === "condensed"
+                    ? "Name View"
+                    : "Card View"
+                }
+              />
+            </ListItem>
+            <ListItem button onClick={toggleIsDarkMode}>
+              <ListItemIcon>
+                <Brightness4Icon />
+              </ListItemIcon>
+              <ListItemText primary={isDarkMode ? "Light Mode" : "Dark Mode"} />
+            </ListItem>
+          </List>
+          <Divider />
+          <List>
+            <ListItem button key="Help" onClick={handleOpenHelpDialog}>
+              <ListItemIcon>
+                <HelpIcon />
+              </ListItemIcon>
+              <ListItemText primary="Help" />
+            </ListItem>
+          </List>
+          <div className={classes.footer}>
+            <Typography variant="overline" align="center">
+              Made with <FavoriteIcon fontSize="inherit" /> by HS
+            </Typography>
+          </div>
+        </Drawer>
+        <main
+          className={clsx(classes.content, {
+            [classes.contentShift]: menuOpen
+          })}
+        >
+          <div className={classes.drawerHeader} />
+          <Board />
+        </main>
+      </div>
+    </MuiThemeProvider>
   );
 }
