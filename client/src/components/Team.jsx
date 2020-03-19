@@ -162,6 +162,7 @@ function Team(props) {
                     id={playerId}
                     index={index}
                     player={players[playerId]}
+                    isCaptain={index === 0}
                   />
                 ))}
                 {provided.placeholder}

@@ -123,6 +123,8 @@ export default function TeamMaker() {
     if (viewMode === "card") {
       setViewMode("condensed");
     } else if (viewMode === "condensed") {
+      setViewMode("name");
+    } else if (viewMode === "name") {
       setViewMode("card");
     }
   };
@@ -177,14 +179,20 @@ export default function TeamMaker() {
               <ViewAgendaIcon />
             </ListItemIcon>
             <ListItemText
-              primary={viewMode === "card" ? "Condensed View" : "Card View"}
+              primary={
+                viewMode === "card"
+                  ? "Condensed View"
+                  : viewMode === "condensed"
+                  ? "Name View"
+                  : "Card View"
+              }
             />
           </ListItem>
-          <ListItem button>
+          <ListItem button disabled onClick={toggleIsDarkMode}>
             <ListItemIcon>
               <Brightness4Icon />
             </ListItemIcon>
-            <ListItemText primary="Dark Mode" />
+            <ListItemText primary={isDarkMode ? "Light Mode" : "Dark Mode"} />
           </ListItem>
         </List>
         <Divider />

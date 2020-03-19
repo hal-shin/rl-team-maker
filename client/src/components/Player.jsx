@@ -5,14 +5,13 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
+import SecurityIcon from "@material-ui/icons/Security";
 import Typography from "@material-ui/core/Typography";
-import DeleteIcon from "@material-ui/icons/Delete";
 import { Draggable } from "react-beautiful-dnd";
 import { PlayerContext } from "../contexts/PlayerContext";
 import { TeamContext } from "../contexts/TeamContext";
 import useToggle from "../hooks/useToggleState";
 import TextField from "@material-ui/core/TextField";
-import EditIcon from "@material-ui/icons/Edit";
 import { ThemeContext } from "../contexts/ThemeContext";
 
 const useStyles = makeStyles({
@@ -114,7 +113,7 @@ export default function Player(props) {
   };
 
   const handleKeyPress = event => {
-    if (event.charCode == 13) {
+    if (event.charCode === 13) {
       handleSavePlayerTag();
     }
   };
@@ -155,11 +154,12 @@ export default function Player(props) {
     }
     return (
       <Typography
-        gutterBottom
+        gutterBottom={viewMode === "name" ? false : true}
         variant="h5"
         component="h2"
         onClick={toggleIsEditing}
       >
+        {props.isCaptain ? <SecurityIcon fontSize="inherit" /> : ""}
         {player.tag}
       </Typography>
     );
@@ -245,6 +245,21 @@ export default function Player(props) {
                   Delete
                 </Button>
               </CardActions>
+            </Card>
+          )}
+        </Draggable>
+      );
+    } else if (viewMode === "name") {
+      return (
+        <Draggable draggableId={id} index={index}>
+          {provided => (
+            <Card
+              className={classes.root}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              ref={provided.innerRef}
+            >
+              <CardContent>{renderPlayerName()}</CardContent>
             </Card>
           )}
         </Draggable>

@@ -10,6 +10,7 @@ import styled from "styled-components";
 import { TeamContext } from "../contexts/TeamContext";
 import { PlayerContext } from "../contexts/PlayerContext";
 import { ThemeContext } from "../contexts/ThemeContext";
+import { DialogContext } from "../contexts/DialogContext";
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -30,6 +31,7 @@ export default function Settings() {
   const classes = useStyles();
   const { gameMode, setGameMode } = useContext(ThemeContext);
   const [gameModeSelector, setGameModeSelector] = useState("2v2");
+  const { setOpen } = useContext(DialogContext);
   const { teams, setTeams, teamOrder, setTeamOrder } = useContext(TeamContext);
   const { players, setPlayers, playerOrder, setPlayerOrder } = useContext(
     PlayerContext
@@ -51,7 +53,7 @@ export default function Settings() {
   const balanceTeams = () => {
     const mode = gameMode === "twos" ? 2 : 3;
     if (Object.keys(players).length % mode !== 0) {
-      alert("Insufficient number of players for this mode.");
+      setOpen("team-error");
       return;
     }
     const [
@@ -88,7 +90,7 @@ export default function Settings() {
   const captainsDraft = () => {
     const mode = gameMode === "twos" ? 2 : 3;
     if (Object.keys(players).length % mode !== 0) {
-      alert("Insufficient number of players for this mode.");
+      setOpen("team-error");
       return;
     }
     const [

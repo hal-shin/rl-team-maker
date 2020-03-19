@@ -14,6 +14,24 @@ import PlayerStatic from "./PlayerStatic";
 import { PlayerContext } from "../contexts/PlayerContext";
 import { DialogContext } from "../contexts/DialogContext";
 
+function timeoutPromise(ms, promise) {
+  return new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      reject(new Error("promise timeout"));
+    }, ms);
+    promise.then(
+      res => {
+        clearTimeout(timeoutId);
+        resolve(res);
+      },
+      err => {
+        clearTimeout(timeoutId);
+        reject(err);
+      }
+    );
+  });
+}
+
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -33,7 +51,12 @@ export default function AddNewPlayer() {
   const [uniqueId, setUniqueId] = useState(false);
   const [reasonableRank, setReasonableRank] = useState(false);
   const [searchedPlayer, setSearchedPlayer] = useState({});
-  const [manualPlayer, setManualPlayer] = useState({});
+  const [manualPlayer, setManualPlayer] = useState({
+    tag: "",
+    twos: 0,
+    threes: 0
+  });
+  const [loadingMessage, setLoadingMessage] = useState("Searching...");
 
   const handleClickOpen = () => {
     setOpen("steam");
@@ -41,6 +64,7 @@ export default function AddNewPlayer() {
 
   const handleClose = () => {
     setSearchedPlayer({});
+    setLoadingMessage("Searching...");
     setOpen(false);
   };
 
@@ -61,13 +85,17 @@ export default function AddNewPlayer() {
 
   const handleSearchPlayer = () => {
     setOpen("automatic");
-    fetch(`/search/${steamId}`)
+    timeoutPromise(6000, fetch(`/search/${steamId}`))
       .then(response => {
         return response.json();
       })
       .then(data => {
         const newPlayer = data.newPlayer;
         setSearchedPlayer({ ...newPlayer });
+      })
+      .catch(err => {
+        console.error(err);
+        setLoadingMessage("Player could not be found. Please try again.");
       });
   };
 
@@ -151,7 +179,7 @@ export default function AddNewPlayer() {
     if (searchedPlayer && Object.keys(searchedPlayer).length > 0) {
       return <PlayerStatic player={searchedPlayer} />;
     }
-    return <div>Searching...</div>;
+    return <div>{loadingMessage}</div>;
   };
 
   useEffect(() => {
@@ -243,8 +271,8 @@ export default function AddNewPlayer() {
         <DialogContent>
           <DialogContentText>
             Please add player details manually in the fields below. The in-game
-            name must be unique and the player's ranks must be between 1 and
-            3000.
+            name must be unique and at least 3 characters in length. The
+            player's ranks must be between 1 and 3000.
           </DialogContentText>
           <Grid container spacing={1} alignItems="flex-end">
             <Grid item xs={1}>
@@ -311,7 +339,13 @@ export default function AddNewPlayer() {
           <Button
             onClick={handleAddNewManualPlayer}
             color="primary"
-            disabled={reasonableRank || uniqueId}
+            disabled={
+              manualPlayer.tag.length < 3 ||
+              manualPlayer.twos === 0 ||
+              manualPlayer.threes === 0 ||
+              reasonableRank ||
+              uniqueId
+            }
           >
             Add
           </Button>

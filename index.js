@@ -75,6 +75,9 @@ app.get("/search/:id", (req, res) => {
             .split("\n")[1]
             .replace(/,/g, "")
         );
+        if (newPlayer.ranks.twos === undefined) {
+          throw new Error("Rank not found.");
+        }
         console.log(newPlayer);
         res.json({ newPlayer });
       })
