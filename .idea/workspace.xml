@@ -2,12 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9ed1acfa-b242-4c05-960b-076aa18868e5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/client/src/components/Chat.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/contexts/SocketContext.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/AddNewPlayer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/AddNewPlayer.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/Board.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Board.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/Player.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Player.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/PlayerSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/PlayerSection.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/Settings.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Settings.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/Team.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Team.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/TeamMaker.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/TeamMaker.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/dialogs/Help.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/dialogs/Help.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/contexts/DialogContext.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/contexts/DialogContext.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/contexts/PlayerContext.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/contexts/PlayerContext.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +56,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1584563381437</updated>
-      <workItem from="1584563385119" duration="16151000" />
+      <workItem from="1584563385119" duration="16376000" />
+      <workItem from="1584602574995" duration="599000" />
+      <workItem from="1584652863519" duration="18503000" />
     </task>
     <servers />
   </component>
@@ -51,13 +66,21 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="-2294" y="8" width="1535" height="1091" key="dock-window-1" timestamp="1584575192285">
-      <screen x="-2560" y="0" width="2048" height="1112" />
-    </state>
-    <state x="-2294" y="8" width="1535" height="1091" key="dock-window-1/0.0.2048.1112/2560.356.1920.1040/-2560.0.2048.1112@0.0.2048.1112" timestamp="1584575192285" />
-    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup" timestamp="1584578962111">
+    <state x="647" y="61" key="CommitChangelistDialog2" timestamp="1584664759637">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup/0.0.2048.1112/2560.356.1920.1040/-2560.0.2048.1112@0.0.2048.1112" timestamp="1584578962111" />
+    <state x="647" y="61" key="CommitChangelistDialog2/0.0.2048.1112/2560.356.1920.1040/-2560.0.2048.1112@0.0.2048.1112" timestamp="1584664759637" />
+    <state x="-2294" y="8" width="1535" height="1091" key="dock-window-1" timestamp="1584652883659">
+      <screen x="-2560" y="0" width="2048" height="1112" />
+    </state>
+    <state x="-2294" y="8" width="1535" height="1091" key="dock-window-1/0.0.2048.1112/2560.356.1920.1040/-2560.0.2048.1112@0.0.2048.1112" timestamp="1584652883659" />
+    <state x="681" y="259" key="run.anything.popup" timestamp="1584665752072">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="681" y="259" key="run.anything.popup/0.0.2048.1112/2560.356.1920.1040/-2560.0.2048.1112@0.0.2048.1112" timestamp="1584665752072" />
+    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup" timestamp="1584671952786">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup/0.0.2048.1112/2560.356.1920.1040/-2560.0.2048.1112@0.0.2048.1112" timestamp="1584671952786" />
   </component>
 </project>

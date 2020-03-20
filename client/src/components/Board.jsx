@@ -1,9 +1,7 @@
 import React, { useContext } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import TeamSection from "./TeamSection";
-import styled from "styled-components";
 import PlayerSection from "./PlayerSection";
-import { ThemeContext } from "../contexts/ThemeContext";
 import { PlayerContext } from "../contexts/PlayerContext";
 import { TeamContext } from "../contexts/TeamContext";
 import Dialogs from "./dialogs/Dialogs";
@@ -12,6 +10,7 @@ import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles(theme => ({
   root: {
+    backgroundColor: theme.palette.background.default,
     display: "flex",
     padding: "0 5% 0 5%",
     justifyContent: "space-around",
@@ -19,16 +18,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-// const BoardStyles = styled.div`
-//   background: ${props => (props.isDarkMode ? "rgb(41,41,41)" : "white")};
-//   padding: 0 5% 0 5%;
-//   display: flex;
-//   justify-content: space-around;
-// `;
-
 export default function Board() {
   const classes = useStyles();
-  const { isDarkMode } = useContext(ThemeContext);
   const { playerOrder, setPlayerOrder } = useContext(PlayerContext);
   const { teams, setTeams, teamOrder, setTeamOrder } = useContext(TeamContext);
 

@@ -10,6 +10,19 @@ import { Paper } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {},
+  header: {
+    margin: "20px 0 20px 0",
+    "& h1": {
+      margin: "0",
+      cursor: "pointer",
+      WebkitUserSelect: "none",
+      MozUserSelect: "none",
+      msUserSelect: "none",
+      userSelect: "none"
+    },
+    display: "flex",
+    justifyContent: "space-between"
+  },
   playerBox: {
     display: "flex",
     flexDirection: "column",
@@ -18,48 +31,14 @@ const useStyles = makeStyles(theme => ({
     minHeight: "100px",
     height: "calc(100vh - 160px)",
     padding: "5px 8px 0 8px",
-    transition: "background-color 0.2s ease",
     overflow: "scroll",
     msOverflowStyle: "none",
-    "::-webkit-scrollbar": { width: "0 !important" }
+    "&::-webkit-scrollbar": { width: "0 !important" }
   }
 }));
 
 const Container = styled.div`
   width: 250px;
-`;
-
-const Header = styled.div`
-  margin: 20px 0 20px 0;
-  > h1 {
-    margin: 0;
-    cursor: pointer;
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE10+/Edge */
-    user-select: none; /* Standard */
-  }
-  display: flex;
-  justify-content: space-between;
-`;
-
-const PlayerBox = styled.div`
-  background-color: ${props => (props.isDraggingOver ? "lightgrey" : "white")};
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  min-height: 100px;
-  height: calc(100vh - 160px);
-  padding: 5px 8px 0 8px;
-  transition: background-color 0.2s ease;
-  overflow: scroll;
-  -ms-overflow-style: none;
-  ::-webkit-scrollbar {
-    width: 0 !important;
-  }
 `;
 
 export default function PlayerSection() {
@@ -77,10 +56,10 @@ export default function PlayerSection() {
 
   return (
     <Container>
-      <Header>
+      <div className={classes.header}>
         <h1 onClick={handleSortPlayerList}>Players ({playerOrder.length})</h1>
         <AddNewPlayer />
-      </Header>
+      </div>
       <Droppable droppableId="player-column">
         {(provided, snapshot) => (
           <Paper
@@ -88,7 +67,7 @@ export default function PlayerSection() {
             className={classes.playerBox}
             {...provided.droppableProps}
             ref={provided.innerRef}
-            isDraggingOver={snapshot.isDraggingOver}
+            // isDraggingOver={snapshot.isDraggingOver}
           >
             {playerOrder.map((player, index) => (
               <Player

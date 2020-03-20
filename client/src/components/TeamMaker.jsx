@@ -21,31 +21,23 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Board from "./Board";
-import { DialogContext, DialogProvider } from "../contexts/DialogContext";
+import { DialogContext } from "../contexts/DialogContext";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
-import {
-  amber,
-  blue,
-  blueGrey,
-  grey,
-  indigo,
-  lightBlue,
-  orange,
-  red
-} from "@material-ui/core/colors";
+import { amber, blue, indigo, orange, red } from "@material-ui/core/colors";
+import Chat from "./Chat";
 
 const lightTheme = createMuiTheme({
   palette: {
-    primary: indigo,
-    secondary: red,
+    primary: blue,
+    secondary: orange,
     type: "light"
   }
 });
 
 const darkTheme = createMuiTheme({
   palette: {
-    primary: red,
-    secondary: amber,
+    primary: blue,
+    secondary: orange,
     type: "dark"
   }
 });
@@ -124,11 +116,12 @@ const useStyles = makeStyles(theme => ({
 export default function TeamMaker() {
   const classes = useStyles();
   const theme = useTheme();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const { open, setOpen } = useContext(DialogContext);
+  const { setOpen } = useContext(DialogContext);
   const { isDarkMode, toggleIsDarkMode, viewMode, setViewMode } = useContext(
     ThemeContext
   );
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleDrawerOpen = () => {
     setMenuOpen(true);
@@ -157,7 +150,7 @@ export default function TeamMaker() {
       <div className={classes.root}>
         <CssBaseline />
         <AppBar
-          color="primary"
+          color="transparent"
           position="fixed"
           className={clsx(classes.appBar, {
             [classes.appBarShift]: menuOpen
@@ -173,9 +166,10 @@ export default function TeamMaker() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap>
+            <Typography variant="h6" noWrap style={{ flexGrow: 1 }}>
               RL Team Maker
             </Typography>
+            <Chat />
           </Toolbar>
         </AppBar>
         <Drawer
@@ -221,6 +215,12 @@ export default function TeamMaker() {
           </List>
           <Divider />
           <List>
+            <ListItem button key="Live">
+              <ListItemIcon>
+                <HelpIcon />
+              </ListItemIcon>
+              <ListItemText primary="Live" />
+            </ListItem>
             <ListItem button key="Help" onClick={handleOpenHelpDialog}>
               <ListItemIcon>
                 <HelpIcon />

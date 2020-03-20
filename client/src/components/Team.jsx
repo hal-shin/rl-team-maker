@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import styled from "styled-components";
 import { makeStyles } from "@material-ui/core/styles";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TextField from "@material-ui/core/TextField";
@@ -20,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     marginRight: "10px",
     overflow: "scroll",
     msOverflowStyle: "none",
-    "::-webkit-scrollbar": { width: "0 !important" },
+    "&::-webkit-scrollbar": { width: "0 !important" },
     flexShrink: "0"
   },
   teamName: {
@@ -29,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     padding: "10px 0 15px 0",
     display: "flex",
     justifyContent: "center",
-    "> input": { width: "80% !important" }
+    "& input": { width: "80% !important" }
   },
   teammates: {
     minHeight: "292px",
@@ -40,62 +39,6 @@ const useStyles = makeStyles(theme => ({
     transition: "background-color 0.2s ease"
   }
 }));
-
-// const Container = styled.div`
-//   background: white;
-//   min-height: 378px;
-//   max-height: calc(100vh - 160px);
-//   width: 280px;
-//   margin-right: 10px;
-//   border: 1px solid rgba(0, 0, 0, 0.12);
-//   border-radius: 4px;
-//   overflow: scroll;
-//   -ms-overflow-style: none;
-//   ::-webkit-scrollbar {
-//     width: 0 !important;
-//   }
-//   flex-shrink: 0;
-// `;
-
-const TeamName = styled.div`
-  position: sticky;
-  top: 0;
-  background-color: white;
-  text-align: center;
-  padding: 10px 0 15px 0;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  > h3 {
-    margin: 0;
-    font-size: 24px;
-    line-height: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  > svg {
-    color: lightgrey;
-    margin-right: 5px;
-    :hover {
-      color: grey;
-    }
-  }
-  > input {
-    width: 80% !important;
-  }
-`;
-
-const Teammates = styled.div`
-  background-color: ${props => (props.isDraggingOver ? "lightgrey" : "white")};
-  min-height: 292px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px 25px 0 25px;
-
-  transition: background-color 0.2s ease;
-`;
 
 const buttonStyles = {
   maxWidth: "30px",
@@ -131,7 +74,7 @@ function Team(props) {
   };
 
   const handleKeyPress = event => {
-    if (event.charCode == 13) {
+    if (event.charCode === 13) {
       handleSaveTeamName();
     }
   };
@@ -194,7 +137,7 @@ function Team(props) {
                 className={classes.teammates}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                isDraggingOver={snapshot.isDraggingOver}
+                // isDraggingOver={snapshot.isDraggingOver}
               >
                 {team.members.map((playerId, index) => (
                   <Player

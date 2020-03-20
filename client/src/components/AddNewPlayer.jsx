@@ -13,6 +13,7 @@ import PlayerStatic from "./PlayerStatic";
 
 import { PlayerContext } from "../contexts/PlayerContext";
 import { DialogContext } from "../contexts/DialogContext";
+import { CircularProgress } from "@material-ui/core";
 
 function timeoutPromise(ms, promise) {
   return new Promise((resolve, reject) => {
@@ -56,7 +57,7 @@ export default function AddNewPlayer() {
     twos: 0,
     threes: 0
   });
-  const [loadingMessage, setLoadingMessage] = useState("Searching...");
+  const [loading, setLoading] = useState("loading");
 
   const handleClickOpen = () => {
     setOpen("steam");
@@ -64,8 +65,8 @@ export default function AddNewPlayer() {
 
   const handleClose = () => {
     setSearchedPlayer({});
-    setLoadingMessage("Searching...");
     setOpen(false);
+    setLoading("loading");
   };
 
   const handleSearchInput = event => {
@@ -95,7 +96,7 @@ export default function AddNewPlayer() {
       })
       .catch(err => {
         console.error(err);
-        setLoadingMessage("Player could not be found. Please try again.");
+        setLoading("error");
       });
   };
 
@@ -179,10 +180,26 @@ export default function AddNewPlayer() {
     if (searchedPlayer && Object.keys(searchedPlayer).length > 0) {
       return <PlayerStatic player={searchedPlayer} />;
     }
-    return <div>{loadingMessage}</div>;
+    return (
+      <div>
+        {loading === "loading" ? (
+          <CircularProgress />
+        ) : (
+          "Player could not be found. Please try again."
+        )}
+      </div>
+    );
   };
 
   useEffect(() => {
+    const updateLocalStorage = () => {
+      const defaultPlayerOrder = Object.keys(players);
+      localStorage.setItem("rl-players", JSON.stringify(players));
+      localStorage.setItem(
+        "rl-playerOrder",
+        JSON.stringify(defaultPlayerOrder)
+      );
+    };
     updateLocalStorage();
   }, [players]);
 

@@ -3,6 +3,40 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Websocket
+const server = require("http").createServer();
+const io = require("socket.io")(server, {
+  transports: ["websocket", "polling"]
+});
+const users = {};
+io.on("connection", client => {
+  console.log("A user connected.");
+  client.on("username", username => {
+    const user = {
+      name: username,
+      id: client.id
+    };
+    users[client.id] = user;
+    io.emit("connected", user);
+    io.emit("users", Object.values(users));
+  });
+  client.on("send", message => {
+    io.emit("message", {
+      text: message,
+      user: users[client.id]
+    });
+  });
+
+  client.on("disconnect", () => {
+    const username = users[client.id];
+    delete users[client.id];
+    io.emit("disconnected", client.id);
+  });
+});
+
+server.listen(8000);
+
+// Web scraping
 const steamUrl = "https://steamcommunity.com/id/";
 const trackerUrl = "https://rocketleague.tracker.network/profile/steam/";
 const axios = require("axios");

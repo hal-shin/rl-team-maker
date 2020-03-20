@@ -32,10 +32,8 @@ export default function Settings() {
   const { gameMode, setGameMode } = useContext(ThemeContext);
   const [gameModeSelector, setGameModeSelector] = useState("2v2");
   const { setOpen } = useContext(DialogContext);
-  const { teams, setTeams, teamOrder, setTeamOrder } = useContext(TeamContext);
-  const { players, setPlayers, playerOrder, setPlayerOrder } = useContext(
-    PlayerContext
-  );
+  const { teams, setTeams, setTeamOrder } = useContext(TeamContext);
+  const { players, playerOrder, setPlayerOrder } = useContext(PlayerContext);
 
   useEffect(() => {
     reset();
@@ -122,6 +120,18 @@ export default function Settings() {
     return [newTeams, newTeamOrder];
   };
 
+  const handleGameModeChange = event => {
+    setGameModeSelector(event.target.value);
+    event.target.value === "2v2" ? setGameMode("twos") : setGameMode("threes");
+  };
+
+  const determineNumberOfTeams = () => {
+    let mode = gameMode === "twos" ? 2 : 3;
+    let calcNumberOfTeams = Math.ceil(Object.keys(players).length / mode);
+    return calcNumberOfTeams;
+    // setNumberOfTeams(calcNumberOfTeams);
+  };
+
   const reset = () => {
     // move any current players on teams to player list
     if (Object.keys(players).length !== playerOrder.length) {
@@ -135,24 +145,11 @@ export default function Settings() {
       }
       setPlayerOrder(newPlayerOrder);
     }
-
     // reset teams based on number of teams
     const numberOfTeams = determineNumberOfTeams();
     const [newTeams, newTeamOrder] = generateBlankTeams(numberOfTeams);
     setTeamOrder(newTeamOrder);
     setTeams(newTeams);
-  };
-
-  const handleGameModeChange = event => {
-    setGameModeSelector(event.target.value);
-    event.target.value === "2v2" ? setGameMode("twos") : setGameMode("threes");
-  };
-
-  const determineNumberOfTeams = () => {
-    let mode = gameMode === "twos" ? 2 : 3;
-    let calcNumberOfTeams = Math.ceil(Object.keys(players).length / mode);
-    return calcNumberOfTeams;
-    // setNumberOfTeams(calcNumberOfTeams);
   };
 
   const handleReset = () => {
