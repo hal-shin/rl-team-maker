@@ -5,16 +5,10 @@ import InputBase from "@material-ui/core/InputBase";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import SendIcon from "@material-ui/icons/Send";
-import io from "socket.io-client";
 import { SocketContext } from "../contexts/SocketContext";
 import { DialogContext } from "../contexts/DialogContext";
 import { Paper } from "@material-ui/core";
-
-const username = "anonymous";
-
-const socket = io("http://localhost:8000", {
-  transports: ["websocket", "polling"]
-});
+import { chat } from "../contexts/SocketContext";
 
 const ChatMenu = withStyles({
   paper: {
@@ -44,6 +38,7 @@ const ChatMenu = withStyles({
 ));
 
 const useStyles = makeStyles(theme => ({
+  chatButton: {},
   header: {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
@@ -91,7 +86,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Chat() {
-  const classes = useStyles();
   const messagesEndRef = useRef(null);
   const {
     users,
@@ -99,13 +93,42 @@ export default function Chat() {
     message,
     setMessage,
     messages,
-    setMessages
+    setMessages,
+    usernameLive,
+    roomNameLive
   } = useContext(SocketContext);
   const { chatOpen, setChatOpen } = useContext(DialogContext);
-
+  const [connected, setConnected] = useState(false);
+  const classes = useStyles();
 
   const handleClick = event => {
     setChatOpen(event.currentTarget);
+    if (!connected) {
+      connectToChat();
+      setConnected(true);
+    }
+  };
+
+  const connectToChat = () => {
+    chat.emit("username", usernameLive);
+
+    chat.on("users", users => {
+      setUsers(users);
+    });
+
+    chat.on("message", message => {
+      setMessages(messages => [...messages, message]);
+    });
+
+    chat.on("connected", user => {
+      setUsers(users => [...users, user]);
+    });
+
+    chat.on("disconnected", id => {
+      setUsers(users => {
+        return users.filter(user => user.id !== id);
+      });
+    });
   };
 
   const handleClose = () => {
@@ -119,59 +142,30 @@ export default function Chat() {
   const submitMessage = event => {
     event.preventDefault();
     if (message === "") return;
-    socket.emit("send", message);
+    chat.emit("sendMessage", message);
     setMessage("");
   };
-
-  useEffect(() => {
-    socket.on("connect", () => {
-      socket.emit("username", username);
-    });
-
-    socket.on("users", users => {
-      setUsers(users);
-    });
-
-    socket.on("message", message => {
-      setMessages(messages => [...messages, message]);
-    });
-
-    socket.on("connected", user => {
-      setUsers(users => [...users, user]);
-    });
-
-    socket.on("disconnected", id => {
-      setUsers(users => {
-        return users.filter(user => user.id !== id);
-      });
-    });
-  }, []);
-
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      console.log("YES!");
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
 
   const handleKeyPress = event => {
     if (message === "") return;
     if (event.charCode === 13) {
-      socket.emit("send", message);
+      chat.emit("sendMessage", message);
       setMessage("");
     }
   };
 
   return (
     <div>
-      <Button
-        aria-controls="simple-menu"
-        aria-haspopup="true"
-        color="inherit"
-        onClick={handleClick}
-      >
-        Open Chat
-      </Button>
+      {usernameLive !== "" && (
+        <Button
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          color="inherit"
+          onClick={handleClick}
+        >
+          Open Chat
+        </Button>
+      )}
       <ChatMenu
         id="simple-menu"
         className={classes.menu}

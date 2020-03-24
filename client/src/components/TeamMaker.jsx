@@ -8,6 +8,8 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import HelpIcon from "@material-ui/icons/Help";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import PeopleIcon from "@material-ui/icons/People";
+import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import ViewAgendaIcon from "@material-ui/icons/ViewAgenda";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
 import { ThemeContext } from "../contexts/ThemeContext";
@@ -25,6 +27,7 @@ import { DialogContext } from "../contexts/DialogContext";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 import { amber, blue, indigo, orange, red } from "@material-ui/core/colors";
 import Chat from "./Chat";
+import { SocketContext } from "../contexts/SocketContext";
 
 const lightTheme = createMuiTheme({
   palette: {
@@ -120,7 +123,7 @@ export default function TeamMaker() {
   const { isDarkMode, toggleIsDarkMode, viewMode, setViewMode } = useContext(
     ThemeContext
   );
-
+  const { roomNameLive } = useContext(SocketContext);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleDrawerOpen = () => {
@@ -129,10 +132,6 @@ export default function TeamMaker() {
 
   const handleDrawerClose = () => {
     setMenuOpen(false);
-  };
-
-  const handleOpenHelpDialog = () => {
-    setOpen("help");
   };
 
   const handleChangeViewMode = () => {
@@ -214,14 +213,31 @@ export default function TeamMaker() {
             </ListItem>
           </List>
           <Divider />
+
           <List>
-            <ListItem button key="Live">
+            <ListItem
+              button
+              onClick={() => setOpen("host")}
+              key="Host"
+              disabled={roomNameLive !== ""}
+            >
               <ListItemIcon>
-                <HelpIcon />
+                <MeetingRoomIcon />
               </ListItemIcon>
-              <ListItemText primary="Live" />
+              <ListItemText primary="Host" />
             </ListItem>
-            <ListItem button key="Help" onClick={handleOpenHelpDialog}>
+            <ListItem
+              button
+              onClick={() => setOpen("join")}
+              key="Join"
+              disabled={roomNameLive !== ""}
+            >
+              <ListItemIcon>
+                <PeopleIcon />
+              </ListItemIcon>
+              <ListItemText primary="Join" />
+            </ListItem>
+            <ListItem button key="Help" onClick={() => setOpen("help")}>
               <ListItemIcon>
                 <HelpIcon />
               </ListItemIcon>
