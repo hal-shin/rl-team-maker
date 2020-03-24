@@ -110,7 +110,7 @@ export default function Chat() {
   };
 
   const connectToChat = () => {
-    chat.emit("username", usernameLive);
+    chat.emit("initialize", { username: usernameLive, room: roomNameLive });
 
     chat.on("users", users => {
       setUsers(users);

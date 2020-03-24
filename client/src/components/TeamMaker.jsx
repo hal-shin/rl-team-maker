@@ -219,7 +219,7 @@ export default function TeamMaker() {
               button
               onClick={() => setOpen("host")}
               key="Host"
-              disabled={roomNameLive !== ""}
+              disabled
             >
               <ListItemIcon>
                 <MeetingRoomIcon />

@@ -2,17 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9ed1acfa-b242-4c05-960b-076aa18868e5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/client/src/components/SocketHeader.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/components/dialogs/Host.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/components/dialogs/Join.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/socketFunctions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/socket.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/tracker.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/Chat.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Chat.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/TeamMaker.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/TeamMaker.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/dialogs/Dialogs.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/dialogs/Dialogs.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/contexts/SocketContext.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/contexts/SocketContext.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -57,7 +49,7 @@
       <workItem from="1584914255988" duration="3829000" />
       <workItem from="1584995519245" duration="5851000" />
       <workItem from="1585076621265" duration="3076000" />
-      <workItem from="1585082299451" duration="9798000" />
+      <workItem from="1585082299451" duration="10808000" />
     </task>
     <servers />
   </component>
@@ -79,10 +71,10 @@
     </state>
     <state x="681" y="259" key="run.anything.popup/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1585091651114" />
     <state x="681" y="259" key="run.anything.popup/0.0.2048.1112/2560.356.1920.1040/-2560.0.2048.1112@0.0.2048.1112" timestamp="1584665752072" />
-    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup" timestamp="1585090513436">
+    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup" timestamp="1585092406219">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1585090513436" />
+    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1585092406219" />
     <state x="687" y="243" width="672" height="678" key="search.everywhere.popup/0.0.2048.1112/2560.356.1920.1040/-2560.0.2048.1112@0.0.2048.1112" timestamp="1584742048117" />
   </component>
 </project>
