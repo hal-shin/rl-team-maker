@@ -7,13 +7,13 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
+import { CircularProgress } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import styled from "styled-components";
-import PlayerStatic from "./PlayerStatic";
 
 import { PlayerContext } from "../contexts/PlayerContext";
 import { DialogContext } from "../contexts/DialogContext";
-import { CircularProgress } from "@material-ui/core";
+import PlayerStatic from "./PlayerStatic";
 
 function timeoutPromise(ms, promise) {
   return new Promise((resolve, reject) => {

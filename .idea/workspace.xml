@@ -3,9 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="9ed1acfa-b242-4c05-960b-076aa18868e5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Chat.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Chat.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/TeamMaker.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/TeamMaker.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/AddNewPlayer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/AddNewPlayer.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/SocketHeader.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/hooks/useLocalStorageState.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/contexts/PlayerContext.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/contexts/PlayerContext.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/initialData.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/initialData.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +51,9 @@
       <workItem from="1584914255988" duration="3829000" />
       <workItem from="1584995519245" duration="5851000" />
       <workItem from="1585076621265" duration="3076000" />
-      <workItem from="1585082299451" duration="10808000" />
+      <workItem from="1585082299451" duration="11464000" />
+      <workItem from="1585099031744" duration="4068000" />
+      <workItem from="1585165077389" duration="3728000" />
     </task>
     <servers />
   </component>
