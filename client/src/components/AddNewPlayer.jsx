@@ -65,12 +65,17 @@ export default function AddNewPlayer() {
     setOpen(false);
     setSteamId("");
     setSearchedPlayer({});
+    setUniqueId(false);
     setLoading("loading");
   };
 
   const handleSearchInput = event => {
     setSteamId(event.target.value);
-    if (Object.keys(players).includes(event.target.value)) {
+    checkUniqueId(event.target.value);
+  };
+
+  const checkUniqueId = checkId => {
+    if (Object.keys(players).includes(checkId)) {
       setUniqueId(true);
     } else {
       setUniqueId(false);
@@ -86,6 +91,7 @@ export default function AddNewPlayer() {
   const handleClickChip = name => {
     setSteamId(name);
     handleSearchPlayer(platform, name);
+    checkUniqueId(name);
   };
 
   const handleDeleteChip = name => {
@@ -93,6 +99,19 @@ export default function AddNewPlayer() {
   };
 
   const handleSearchPlayer = (searchPlatform, searchId) => {
+    // update recent search history
+    let newRecentSearches = [...recentSearches];
+    if (!newRecentSearches.includes(searchId)) {
+      newRecentSearches.unshift(steamId);
+    } else {
+      newRecentSearches = newRecentSearches.filter(name => name !== searchId);
+      newRecentSearches.unshift(searchId);
+    }
+    if (newRecentSearches.length > 5) {
+      newRecentSearches = newRecentSearches.slice(0, 5);
+    }
+    setRecentSearches(newRecentSearches);
+
     setOpen("automatic");
     timeoutPromise(10000, fetch(`/search/${searchPlatform}/${searchId}`))
       .then(response => {
@@ -109,21 +128,12 @@ export default function AddNewPlayer() {
   };
 
   const handleKeyPressAutomatic = event => {
-    if (event.charCode === 13) {
+    if (event.charCode === 13 && uniqueId === false) {
       handleAddNewAutomaticPlayer();
     }
   };
 
   const handleAddNewAutomaticPlayer = () => {
-    let newRecentSearches = [...recentSearches];
-    if (!newRecentSearches.includes(steamId)) {
-      newRecentSearches.unshift(steamId);
-    }
-    if (newRecentSearches.length > 5) {
-      newRecentSearches = newRecentSearches.slice(0, 5);
-    }
-    setRecentSearches(newRecentSearches);
-
     const newPlayers = { ...players };
     const newPlayerOrder = [...playerOrder];
     newPlayers[searchedPlayer.id] = { ...searchedPlayer };
@@ -296,7 +306,11 @@ export default function AddNewPlayer() {
             Cancel
           </Button>
           {Object.keys(searchedPlayer).length > 0 && (
-            <Button onClick={handleAddNewAutomaticPlayer} color="primary">
+            <Button
+              disabled={uniqueId}
+              onClick={handleAddNewAutomaticPlayer}
+              color="primary"
+            >
               Add
             </Button>
           )}
