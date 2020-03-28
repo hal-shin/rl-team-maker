@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -7,6 +8,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
+import Chip from "@material-ui/core/Chip";
 import { CircularProgress } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import styled from "styled-components";
@@ -14,24 +16,13 @@ import styled from "styled-components";
 import { PlayerContext } from "../contexts/PlayerContext";
 import { DialogContext } from "../contexts/DialogContext";
 import PlayerStatic from "./PlayerStatic";
+import { timeoutPromise } from "../helpers";
 
-function timeoutPromise(ms, promise) {
-  return new Promise((resolve, reject) => {
-    const timeoutId = setTimeout(() => {
-      reject(new Error("promise timeout"));
-    }, ms);
-    promise.then(
-      res => {
-        clearTimeout(timeoutId);
-        resolve(res);
-      },
-      err => {
-        clearTimeout(timeoutId);
-        reject(err);
-      }
-    );
-  });
-}
+const useStyles = makeStyles(theme => ({
+  chips: {
+    margin: theme.spacing(0.5)
+  }
+}));
 
 const Container = styled.div`
   display: flex;
@@ -44,12 +35,19 @@ const CenterContents = styled.div`
 `;
 
 export default function AddNewPlayer() {
-  const { players, setPlayers, playerOrder, setPlayerOrder } = useContext(
-    PlayerContext
-  );
+  const classes = useStyles();
+  const {
+    players,
+    setPlayers,
+    playerOrder,
+    setPlayerOrder,
+    recentSearches,
+    setRecentSearches
+  } = useContext(PlayerContext);
   const { open, setOpen } = useContext(DialogContext);
   const [steamId, setSteamId] = useState("");
   const [uniqueId, setUniqueId] = useState(false);
+  const [platform, setPlatform] = useState("steam");
   const [reasonableRank, setReasonableRank] = useState(false);
   const [searchedPlayer, setSearchedPlayer] = useState({});
   const [manualPlayer, setManualPlayer] = useState({
@@ -64,8 +62,9 @@ export default function AddNewPlayer() {
   };
 
   const handleClose = () => {
-    setSearchedPlayer({});
     setOpen(false);
+    setSteamId("");
+    setSearchedPlayer({});
     setLoading("loading");
   };
 
@@ -80,13 +79,22 @@ export default function AddNewPlayer() {
 
   const handleKeyPress = event => {
     if (event.charCode === 13) {
-      handleSearchPlayer();
+      handleSearchPlayer(platform, steamId);
     }
   };
 
-  const handleSearchPlayer = () => {
+  const handleClickChip = name => {
+    setSteamId(name);
+    handleSearchPlayer(platform, name);
+  };
+
+  const handleDeleteChip = name => {
+    setRecentSearches([...recentSearches].filter(search => search !== name));
+  };
+
+  const handleSearchPlayer = (searchPlatform, searchId) => {
     setOpen("automatic");
-    timeoutPromise(6000, fetch(`/search/${steamId}`))
+    timeoutPromise(10000, fetch(`/search/${searchPlatform}/${searchId}`))
       .then(response => {
         return response.json();
       })
@@ -107,6 +115,15 @@ export default function AddNewPlayer() {
   };
 
   const handleAddNewAutomaticPlayer = () => {
+    let newRecentSearches = [...recentSearches];
+    if (!newRecentSearches.includes(steamId)) {
+      newRecentSearches.unshift(steamId);
+    }
+    if (newRecentSearches.length > 5) {
+      newRecentSearches = newRecentSearches.slice(0, 5);
+    }
+    setRecentSearches(newRecentSearches);
+
     const newPlayers = { ...players };
     const newPlayerOrder = [...playerOrder];
     newPlayers[searchedPlayer.id] = { ...searchedPlayer };
@@ -156,9 +173,16 @@ export default function AddNewPlayer() {
       icon:
         "https://images.idgesg.net/images/article/2018/06/steam_logo2-100691182-orig-100761992-large.3x2.jpg",
       ranks: {
-        ones: manualPlayer.ones,
-        twos: manualPlayer.twos,
-        threes: manualPlayer.threes
+        currentSeason: {
+          ones: manualPlayer.ones,
+          twos: manualPlayer.twos,
+          threes: manualPlayer.threes
+        },
+        lastSeason: {
+          ones: manualPlayer.ones,
+          twos: manualPlayer.twos,
+          threes: manualPlayer.threes
+        }
       },
       steamUrl: "",
       trackerUrl: ""
@@ -191,18 +215,6 @@ export default function AddNewPlayer() {
     );
   };
 
-  useEffect(() => {
-    const updateLocalStorage = () => {
-      const defaultPlayerOrder = Object.keys(players);
-      localStorage.setItem("rl-players", JSON.stringify(players));
-      localStorage.setItem(
-        "rl-playerOrder",
-        JSON.stringify(defaultPlayerOrder)
-      );
-    };
-    updateLocalStorage();
-  }, [players]);
-
   return (
     <Container>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
@@ -230,6 +242,20 @@ export default function AddNewPlayer() {
             onKeyPress={handleKeyPress}
             fullWidth
           />
+          <div>
+            {recentSearches.map(name => {
+              return (
+                <Chip
+                  key={name}
+                  label={name}
+                  size="small"
+                  className={classes.chips}
+                  onClick={() => handleClickChip(name)}
+                  onDelete={() => handleDeleteChip(name)}
+                />
+              );
+            })}
+          </div>
         </DialogContent>
         <DialogActions>
           <div
@@ -269,9 +295,11 @@ export default function AddNewPlayer() {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleAddNewAutomaticPlayer} color="primary">
-            Add
-          </Button>
+          {Object.keys(searchedPlayer).length > 0 && (
+            <Button onClick={handleAddNewAutomaticPlayer} color="primary">
+              Add
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
 

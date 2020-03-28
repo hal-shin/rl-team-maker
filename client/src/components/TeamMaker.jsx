@@ -28,6 +28,7 @@ import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 import { amber, blue, indigo, orange, red } from "@material-ui/core/colors";
 import Chat from "./Chat";
 import { SocketContext } from "../contexts/SocketContext";
+import ChatAvatars from "./ChatAvatars";
 
 const lightTheme = createMuiTheme({
   palette: {

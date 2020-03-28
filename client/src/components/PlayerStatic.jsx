@@ -63,15 +63,15 @@ export default function PlayerStatic(props) {
         <div className={classes.rankTable}>
           <div className={classes.rank}>
             <h4>Ones</h4>
-            <p>{player.ranks.ones}</p>
+            <p>{player.ranks.currentSeason.ones}</p>
           </div>
           <div className={classes.rank}>
             <h4>Twos</h4>
-            <p>{player.ranks.twos}</p>
+            <p>{player.ranks.currentSeason.twos}</p>
           </div>
           <div className={classes.rank}>
             <h4>Threes</h4>
-            <p>{player.ranks.threes}</p>
+            <p>{player.ranks.currentSeason.threes}</p>
           </div>
         </div>
       </CardContent>

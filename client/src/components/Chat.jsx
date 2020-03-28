@@ -9,6 +9,7 @@ import { SocketContext } from "../contexts/SocketContext";
 import { DialogContext } from "../contexts/DialogContext";
 import { Paper } from "@material-ui/core";
 import { chat } from "../contexts/SocketContext";
+import ChatAvatars from "./ChatAvatars";
 
 const ChatMenu = withStyles({
   paper: {
@@ -38,7 +39,9 @@ const ChatMenu = withStyles({
 ));
 
 const useStyles = makeStyles(theme => ({
-  chatButton: {},
+  chatButton: {
+    display: "flex"
+  },
   header: {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
@@ -141,6 +144,7 @@ export default function Chat() {
 
   const submitMessage = event => {
     event.preventDefault();
+    console.log("USERS:", users);
     if (message === "") return;
     chat.emit("sendMessage", message);
     setMessage("");
@@ -157,14 +161,17 @@ export default function Chat() {
   return (
     <div>
       {usernameLive !== "" && (
-        <Button
-          aria-controls="simple-menu"
-          aria-haspopup="true"
-          color="inherit"
-          onClick={handleClick}
-        >
-          Open Chat
-        </Button>
+        <div className={classes.chatButton}>
+          <ChatAvatars />
+          <Button
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            color="inherit"
+            onClick={handleClick}
+          >
+            Open Chat
+          </Button>
+        </div>
       )}
       <ChatMenu
         id="simple-menu"

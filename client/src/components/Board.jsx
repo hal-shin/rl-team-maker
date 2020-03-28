@@ -38,13 +38,13 @@ export default function Board() {
     const finish = destination.droppableId;
 
     // Moving teams around
-    if (type === "team") {
-      const newTeamOrder = [...teamOrder];
-      newTeamOrder.splice(source.index, 1);
-      newTeamOrder.splice(destination.index, 0, draggableId);
-      setTeamOrder(newTeamOrder);
-      return;
-    }
+    // if (type === "team") {
+    //   const newTeamOrder = [...teamOrder];
+    //   newTeamOrder.splice(source.index, 1);
+    //   newTeamOrder.splice(destination.index, 0, draggableId);
+    //   setTeamOrder(newTeamOrder);
+    //   return;
+    // }
 
     // Moving players within the player list
     if (start === finish && finish === "player-column") {

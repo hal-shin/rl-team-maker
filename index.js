@@ -52,8 +52,6 @@ const chat = io.of("/chat").on("connection", client => {
     delete users[client.id];
     client.emit("disconnected", client.id);
   });
-
-  console.log(users);
 });
 
 // Tracker route

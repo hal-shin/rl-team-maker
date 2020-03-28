@@ -13,19 +13,25 @@ import { PlayerContext } from "../contexts/PlayerContext";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    minHeight: "378px",
-    maxHeight: "calc(100vh - 160px)",
+    height: "378px",
+    // maxHeight: "calc(100vh - 160px)",
+    paddingBottom: "8px",
     width: "280px",
-    marginRight: "10px",
+    margin: "0 10px 10px 0",
     overflow: "scroll",
     msOverflowStyle: "none",
     "&::-webkit-scrollbar": { width: "0 !important" },
     flexShrink: "0"
   },
-  teamName: {
+  header: {
     position: "sticky",
-    top: "0",
-    padding: "10px 0 15px 0",
+    height: "47px",
+    width: "278px",
+    background: theme.palette.background.paper,
+    zIndex: 1
+  },
+  teamName: {
+    padding: "10px 0 5px 0",
     display: "flex",
     justifyContent: "center",
     "& input": { width: "80% !important" }
@@ -50,7 +56,7 @@ const buttonStyles = {
 };
 
 function Team(props) {
-  const classes = useStyles();
+  const classes = useStyles(props);
   const { teams, setTeams } = useContext(TeamContext);
   const { players } = useContext(PlayerContext);
   const team = teams[props.id];
@@ -114,7 +120,11 @@ function Team(props) {
     }
     return (
       <div className={classes.teamName}>
-        <Typography variant="h5" onClick={toggleIsEditing}>
+        <Typography
+          variant="h5"
+          onClick={toggleIsEditing}
+          style={{ cursor: "pointer" }}
+        >
           {team.teamName}
         </Typography>
       </div>
@@ -122,39 +132,30 @@ function Team(props) {
   };
 
   return (
-    <Draggable draggableId={team.id} index={props.index}>
-      {provided => (
-        <Paper
-          className={classes.root}
-          variant="outlined"
-          {...provided.draggableProps}
-          ref={provided.innerRef}
-        >
-          <div {...provided.dragHandleProps}>{renderTeamName()}</div>
-          <Droppable droppableId={team.id} direction="vertical">
-            {(provided, snapshot) => (
-              <div
-                className={classes.teammates}
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                // isDraggingOver={snapshot.isDraggingOver}
-              >
-                {team.members.map((playerId, index) => (
-                  <Player
-                    key={playerId}
-                    id={playerId}
-                    index={index}
-                    player={players[playerId]}
-                    isCaptain={index === 0}
-                  />
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </Paper>
-      )}
-    </Draggable>
+    <Paper className={classes.root} variant="outlined">
+      <div className={classes.header}>{renderTeamName()}</div>
+      <Droppable droppableId={team.id} direction="vertical">
+        {(provided, snapshot) => (
+          <div
+            className={classes.teammates}
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            // isDraggingOver={snapshot.isDraggingOver}
+          >
+            {team.members.map((playerId, index) => (
+              <Player
+                key={playerId}
+                id={playerId}
+                index={index}
+                player={players[playerId]}
+                isCaptain={index === 0}
+              />
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </Paper>
   );
 }
 

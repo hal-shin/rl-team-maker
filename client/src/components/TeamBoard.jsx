@@ -2,11 +2,16 @@ import React, { useContext } from "react";
 import { TeamContext } from "../contexts/TeamContext";
 import styled from "styled-components";
 import Team from "./Team";
-import { Droppable } from "react-beautiful-dnd";
 
 const Container = styled.div`
+  height: calc(100% - 110px);
   display: flex;
-  overflow: scroll;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  justify-content: flex-start;
+  overflow-y: scroll;
+
   ::-webkit-scrollbar {
     width: 0 !important;
   }
@@ -17,15 +22,10 @@ export default function TeamBoard() {
   const { teamOrder } = useContext(TeamContext);
 
   return (
-    <Droppable droppableId="team-board" type="team" direction="horizontal">
-      {provided => (
-        <Container {...provided.droppableProps} ref={provided.innerRef}>
-          {teamOrder.map((team, index) => (
-            <Team key={team} id={team} index={index} />
-          ))}
-          {provided.placeholder}
-        </Container>
-      )}
-    </Droppable>
+    <Container>
+      {teamOrder.map(team => (
+        <Team key={team} id={team} />
+      ))}
+    </Container>
   );
 }

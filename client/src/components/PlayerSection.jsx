@@ -7,6 +7,7 @@ import { PlayerContext } from "../contexts/PlayerContext";
 import AddNewPlayer from "./AddNewPlayer";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { Paper } from "@material-ui/core";
+import PlayerContextMenu from "./PlayerContextMenu";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -60,6 +61,7 @@ export default function PlayerSection() {
         <h1 onClick={handleSortPlayerList}>Players ({playerOrder.length})</h1>
         <AddNewPlayer />
       </div>
+      <PlayerContextMenu />
       <Droppable droppableId="player-column">
         {(provided, snapshot) => (
           <Paper
