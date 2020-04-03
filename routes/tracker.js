@@ -82,17 +82,14 @@ router.get("/:platform/:id", (req, res) => {
               .split("\n")[1]
               .replace(/,/g, "")
           );
-          newPlayer.ranks.lastSeason[mode[0]] = parseInt(
-            lastSeasonRankTable
-              .find(
-                `tr:nth-child(${mode[1] - 1 + onesIndex}) > td:nth-child(3)`
-              )
-              .text()
-              .split("\n")[1]
-              .replace(/,/g, "")
-          );
         }
-
+        newPlayer.ranks.lastSeason.ones = parseInt(
+          lastSeasonRankTable
+            .find(`tr:nth-child(${mode[1] - 1 + onesIndex}) > td:nth-child(3)`)
+            .text()
+            .split("\n")[1]
+            .replace(/,/g, "")
+        );
         console.log("Adding the following player:", newPlayer);
 
         if (newPlayer.ranks.currentSeason.twos === undefined) {

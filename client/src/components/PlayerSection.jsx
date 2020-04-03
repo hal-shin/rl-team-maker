@@ -50,7 +50,10 @@ export default function PlayerSection() {
   const handleSortPlayerList = () => {
     let newPlayerOrder = [...playerOrder];
     newPlayerOrder.sort((a, b) => {
-      return players[b].ranks[gameMode] - players[a].ranks[gameMode];
+      return (
+        players[b].ranks.currentSeason[gameMode] -
+        players[a].ranks.currentSeason[gameMode]
+      );
     });
     setPlayerOrder(newPlayerOrder);
   };

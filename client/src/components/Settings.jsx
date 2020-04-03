@@ -43,7 +43,10 @@ export default function Settings() {
     const numberOfTeams = determineNumberOfTeams();
     const [newTeams, newTeamOrder] = generateBlankTeams(numberOfTeams);
     let workingPlayerOrder = Object.keys(players).sort((a, b) => {
-      return players[b].ranks[gameMode] - players[a].ranks[gameMode];
+      return (
+        players[b].ranks.currentSeason[gameMode] -
+        players[a].ranks.currentSeason[gameMode]
+      );
     });
     return [numberOfTeams, workingPlayerOrder, newTeams, newTeamOrder];
   };
