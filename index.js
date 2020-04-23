@@ -12,13 +12,6 @@ server.listen(port, () => {
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, "client/build")));
-// const server = app.listen(port, () =>
-//   console.log(`Server is running on port ${PORT}`)
-// );
-
-// const io = require("socket.io")(server, {
-//   transports: ["websocket", "polling"]
-// });
 
 const users = {};
 const rooms = {};
