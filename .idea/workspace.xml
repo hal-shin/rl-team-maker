@@ -2,18 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9ed1acfa-b242-4c05-960b-076aa18868e5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/client/src/actions/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/reducers/boardReducer.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/reducers/chatReducer.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/reducers/dialogReducer.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/reducers/players.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/reducers/rootReducer.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/reducers/sessionReducer.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/reducers/themeReducer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/App.test.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/AddNewPlayer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/AddNewPlayer.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/dialogs/Join.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/dialogs/Join.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/dialogs/TeamError.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/dialogs/TeamError.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/serviceWorker.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/setupTests.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/socketFunctions.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/tracker.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/tracker.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +51,7 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="prettierjs.PrettierConfiguration.NodeInterpreter" value="project" />
     <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\Hal\AppData\Roaming\npm\node_modules\prettier" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Color Scheme Font" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -96,12 +98,35 @@
       <workItem from="1586461403245" duration="269000" />
       <workItem from="1586461680084" duration="2000" />
       <workItem from="1586461807101" duration="628000" />
-      <workItem from="1587609637008" duration="1709000" />
+      <workItem from="1587609637008" duration="3539000" />
+      <workItem from="1587677032605" duration="1451000" />
+      <workItem from="1588041025123" duration="2383000" />
+      <workItem from="1588103679341" duration="4027000" />
     </task>
+    <task id="LOCAL-00001" summary="Clean up unused code">
+      <created>1587611502694</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1587611502694</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Clean up unused code">
+      <created>1587611877342</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1587611877342</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="2" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <MESSAGE value="Clean up unused code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Clean up unused code" />
   </component>
   <component name="WindowStateProjectService">
     <state x="954" y="417" key="#Notifications" timestamp="1586330019841">
@@ -120,10 +145,11 @@
       <screen x="0" y="0" width="2137" height="1162" />
     </state>
     <state x="798" y="327" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1587610756681" />
-    <state x="647" y="61" key="CommitChangelistDialog2" timestamp="1584664759637">
-      <screen x="0" y="0" width="2048" height="1112" />
+    <state x="675" y="64" key="CommitChangelistDialog2" timestamp="1587611877044">
+      <screen x="0" y="0" width="2137" height="1162" />
     </state>
     <state x="647" y="61" key="CommitChangelistDialog2/0.0.2048.1112/2560.356.1920.1040/-2560.0.2048.1112@0.0.2048.1112" timestamp="1584664759637" />
+    <state x="675" y="64" key="CommitChangelistDialog2/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1587611877044" />
     <state x="367" y="424" key="EditFileWatcherDialog" timestamp="1586303652619">
       <screen x="0" y="0" width="2137" height="1162" />
     </state>
@@ -148,33 +174,37 @@
       <screen x="0" y="0" width="2137" height="1162" />
     </state>
     <state width="2115" height="322" key="GridCell.Tab.0.right/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1586303401057" />
-    <state x="735" y="174" key="SettingsEditor" timestamp="1586462037079">
+    <state x="735" y="174" key="SettingsEditor" timestamp="1587611812629">
       <screen x="0" y="0" width="2137" height="1162" />
     </state>
-    <state x="735" y="174" key="SettingsEditor/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1586462037079" />
+    <state x="735" y="174" key="SettingsEditor/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1587611812629" />
     <state x="781" y="342" key="SettingsEditor/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1585943055858" />
+    <state x="660" y="309" key="Vcs.Push.Dialog.v2" timestamp="1587611886439">
+      <screen x="0" y="0" width="2137" height="1162" />
+    </state>
+    <state x="660" y="309" key="Vcs.Push.Dialog.v2/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1587611886439" />
     <state x="629" y="432" key="cloudConfig.SelfSettingsDialog" timestamp="1586329755013">
       <screen x="0" y="0" width="2137" height="1162" />
     </state>
     <state x="629" y="432" key="cloudConfig.SelfSettingsDialog/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1586329755013" />
-    <state x="-2567" y="0" width="1082" height="588" key="dock-window-1" timestamp="1587610509333">
+    <state x="-1498" y="0" width="1082" height="1169" key="dock-window-1" timestamp="1588114743470">
       <screen x="-2560" y="0" width="2137" height="1162" />
     </state>
     <state x="101" y="184" width="849" height="606" key="dock-window-1/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1585000157792" />
     <state x="-2294" y="8" width="1535" height="1091" key="dock-window-1/0.0.2048.1112/2560.356.1920.1040/-2560.0.2048.1112@0.0.2048.1112" timestamp="1584652883659" />
-    <state x="-2567" y="0" width="1082" height="588" key="dock-window-1/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1587610509332" />
-    <state x="-1498" y="0" width="1082" height="581" key="dock-window-2" timestamp="1587610509333">
+    <state x="-1498" y="0" width="1082" height="1169" key="dock-window-1/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1588114743470" />
+    <state x="-1498" y="0" width="1082" height="581" key="dock-window-2" timestamp="1588104101457">
       <screen x="-2560" y="0" width="2137" height="1162" />
     </state>
-    <state x="-1498" y="0" width="1082" height="581" key="dock-window-2/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1587610509333" />
-    <state x="-2567" y="581" width="1082" height="588" key="dock-window-3" timestamp="1587610509333">
+    <state x="-1498" y="0" width="1082" height="581" key="dock-window-2/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1588104101457" />
+    <state x="-2567" y="581" width="1082" height="588" key="dock-window-3" timestamp="1588104101457">
       <screen x="-2560" y="0" width="2137" height="1162" />
     </state>
-    <state x="-2567" y="581" width="1082" height="588" key="dock-window-3/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1587610509333" />
-    <state x="-1498" y="574" width="1082" height="594" key="dock-window-4" timestamp="1587610509333">
+    <state x="-2567" y="581" width="1082" height="588" key="dock-window-3/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1588104101457" />
+    <state x="-1498" y="574" width="1082" height="594" key="dock-window-4" timestamp="1588104101457">
       <screen x="-2560" y="0" width="2137" height="1162" />
     </state>
-    <state x="-1498" y="574" width="1082" height="594" key="dock-window-4/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1587610509333" />
+    <state x="-1498" y="574" width="1082" height="594" key="dock-window-4/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1588104101457" />
     <state x="413" y="460" key="jetbrains.nodejs.interpreters-dialog" timestamp="1586303692737">
       <screen x="0" y="0" width="2137" height="1162" />
     </state>
