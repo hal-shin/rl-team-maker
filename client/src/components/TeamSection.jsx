@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import TeamBoard from "./TeamBoard";
 import Settings from "./Settings";
@@ -29,7 +30,12 @@ const ButtonDiv = styled.div`
   align-items: center;
 `;
 
+const useStyles = makeStyles(theme => {
+
+})
+
 export default function TeamSection() {
+  const classes = useStyles();
   const { teams } = useContext(TeamContext);
   return (
     <Container>
