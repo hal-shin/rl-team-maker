@@ -8,14 +8,14 @@ import Dialogs from "./dialogs/Dialogs";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.default,
     display: "flex",
     padding: "0 5% 0 5%",
     justifyContent: "space-around",
-    height: "calc(100vh - 48px)"
-  }
+    height: "calc(100vh - 48px)",
+  },
 }));
 
 export default function Board() {
@@ -23,7 +23,7 @@ export default function Board() {
   const { playerOrder, setPlayerOrder } = useContext(PlayerContext);
   const { teams, setTeams, teamOrder, setTeamOrder } = useContext(TeamContext);
 
-  const onDragEnd = result => {
+  const onDragEnd = (result) => {
     /* logic for drag-and-drop functions */
     const { destination, source, draggableId, type } = result;
 

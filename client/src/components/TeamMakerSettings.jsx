@@ -27,7 +27,7 @@ const Child = styled.div`
   margin-left: 10px;
 `;
 
-export default function Settings() {
+export default function TeamMakerSettings() {
   const classes = useStyles();
   const { gameMode, setGameMode } = useContext(ThemeContext);
   const [gameModeSelector, setGameModeSelector] = useState("2v2");
