@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -11,39 +12,39 @@ import Grid from "@material-ui/core/Grid";
 import Chip from "@material-ui/core/Chip";
 import { CircularProgress } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import styled from "styled-components";
 
 import { PlayerContext } from "../contexts/PlayerContext";
 import { DialogContext } from "../contexts/DialogContext";
 import PlayerStatic from "./PlayerStatic";
 import { timeoutPromise } from "../helpers";
+import {
+  setPlayers,
+  setPlayerOrder,
+  setRecentSearches,
+} from "../actions/boardActions";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: "flex",
+    alignItems: "center",
+  },
+  centerContents: {
+    display: "flex",
+    justifyContent: "center",
+  },
   chips: {
-    margin: theme.spacing(0.5)
-  }
+    margin: theme.spacing(0.5),
+  },
 }));
-
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const CenterContents = styled.div`
-  display: flex;
-  justify-content: center;
-`;
 
 export default function AddNewPlayer() {
   const classes = useStyles();
-  const {
-    players,
-    setPlayers,
-    playerOrder,
-    setPlayerOrder,
-    recentSearches,
-    setRecentSearches
-  } = useContext(PlayerContext);
+  const dispatch = useDispatch();
+  const { players, playerOrder } = useSelector((state) => state.board.player);
+  const recentSearches = useSelector(
+    (state) => state.board.meta.recentSearches
+  );
+
   const { open, setOpen } = useContext(DialogContext);
   const [steamId, setSteamId] = useState("");
   const [uniqueId, setUniqueId] = useState(false);
@@ -53,7 +54,7 @@ export default function AddNewPlayer() {
   const [manualPlayer, setManualPlayer] = useState({
     tag: "",
     twos: 0,
-    threes: 0
+    threes: 0,
   });
   const [loading, setLoading] = useState("loading");
 
@@ -69,12 +70,12 @@ export default function AddNewPlayer() {
     setLoading("loading");
   };
 
-  const handleSearchInput = event => {
+  const handleSearchInput = (event) => {
     setSteamId(event.target.value);
     checkUniqueId(event.target.value);
   };
 
-  const checkUniqueId = checkId => {
+  const checkUniqueId = (checkId) => {
     if (Object.keys(players).includes(checkId)) {
       setUniqueId(true);
     } else {
@@ -82,20 +83,22 @@ export default function AddNewPlayer() {
     }
   };
 
-  const handleKeyPress = event => {
+  const handleKeyPress = (event) => {
     if (event.charCode === 13) {
       handleSearchPlayer(platform, steamId);
     }
   };
 
-  const handleClickChip = name => {
+  const handleClickChip = (name) => {
     setSteamId(name);
     handleSearchPlayer(platform, name);
     checkUniqueId(name);
   };
 
-  const handleDeleteChip = name => {
-    setRecentSearches([...recentSearches].filter(search => search !== name));
+  const handleDeleteChip = (name) => {
+    dispatch(
+      setRecentSearches([...recentSearches].filter((search) => search !== name))
+    );
   };
 
   const handleSearchPlayer = (searchPlatform, searchId) => {
@@ -104,30 +107,33 @@ export default function AddNewPlayer() {
     if (!newRecentSearches.includes(searchId)) {
       newRecentSearches.unshift(steamId);
     } else {
-      newRecentSearches = newRecentSearches.filter(name => name !== searchId);
+      newRecentSearches = newRecentSearches.filter((name) => name !== searchId);
       newRecentSearches.unshift(searchId);
     }
     if (newRecentSearches.length > 5) {
       newRecentSearches = newRecentSearches.slice(0, 5);
     }
-    setRecentSearches(newRecentSearches);
+    dispatch(setRecentSearches(newRecentSearches));
 
     setOpen("automatic");
-    timeoutPromise(10000, fetch(`/search/${searchPlatform}/${searchId}`))
-      .then(response => {
+    timeoutPromise(
+      10000,
+      fetch(`/search/${searchId}${"?platform=" + platform}`)
+    )
+      .then((response) => {
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         const newPlayer = data.newPlayer;
         setSearchedPlayer({ ...newPlayer });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         setLoading("error");
       });
   };
 
-  const handleKeyPressAutomatic = event => {
+  const handleKeyPressAutomatic = (event) => {
     if (event.charCode === 13 && uniqueId === false) {
       handleAddNewAutomaticPlayer();
     }
@@ -138,8 +144,8 @@ export default function AddNewPlayer() {
     const newPlayerOrder = [...playerOrder];
     newPlayers[searchedPlayer.id] = { ...searchedPlayer };
     newPlayerOrder.unshift(searchedPlayer.id);
-    setPlayers(newPlayers);
-    setPlayerOrder(newPlayerOrder);
+    dispatch(setPlayers(newPlayers));
+    dispatch(setPlayerOrder(newPlayerOrder));
     setOpen(false);
     setSearchedPlayer({});
     updateLocalStorage();
@@ -149,7 +155,7 @@ export default function AddNewPlayer() {
     setOpen("manual");
   };
 
-  const handleManualInput = event => {
+  const handleManualInput = (event) => {
     const newManualPlayer = { ...manualPlayer };
     newManualPlayer[event.target.id] = event.target.value;
     setManualPlayer(newManualPlayer);
@@ -174,7 +180,8 @@ export default function AddNewPlayer() {
   };
 
   const handleAddNewManualPlayer = () => {
-    console.log(manualPlayer);
+    console.log("Current Players:", players);
+    console.log("Manual RAW", manualPlayer);
     const newPlayers = { ...players };
     const newPlayerOrder = [...playerOrder];
     newPlayers[manualPlayer.tag] = {
@@ -186,20 +193,20 @@ export default function AddNewPlayer() {
         currentSeason: {
           ones: manualPlayer.ones,
           twos: manualPlayer.twos,
-          threes: manualPlayer.threes
+          threes: manualPlayer.threes,
         },
         lastSeason: {
           ones: manualPlayer.ones,
           twos: manualPlayer.twos,
-          threes: manualPlayer.threes
-        }
+          threes: manualPlayer.threes,
+        },
       },
       steamUrl: "",
-      trackerUrl: ""
+      trackerUrl: "",
     };
     newPlayerOrder.unshift(manualPlayer.tag);
-    setPlayers(newPlayers);
-    setPlayerOrder(newPlayerOrder);
+    dispatch(setPlayers(newPlayers));
+    dispatch(setPlayerOrder(newPlayerOrder));
     setOpen(false);
     updateLocalStorage();
   };
@@ -226,7 +233,7 @@ export default function AddNewPlayer() {
   };
 
   return (
-    <Container>
+    <div className={classes.container}>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
         New
       </Button>
@@ -253,7 +260,7 @@ export default function AddNewPlayer() {
             fullWidth
           />
           <div>
-            {recentSearches.map(name => {
+            {recentSearches.map((name) => {
               return (
                 <Chip
                   key={name}
@@ -299,7 +306,7 @@ export default function AddNewPlayer() {
           Add Player Automatically
         </DialogTitle>
         <DialogContent>
-          <CenterContents>{renderSearchedPlayer()}</CenterContents>
+          <div className={classes.centerContents}>{renderSearchedPlayer()}</div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
@@ -410,6 +417,6 @@ export default function AddNewPlayer() {
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </div>
   );
 }

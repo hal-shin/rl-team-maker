@@ -1,48 +1,48 @@
-import React, { useContext } from "react";
-import styled from "styled-components";
+import React from "react";
+import { useSelector } from "react-redux";
+import { makeStyles } from "@material-ui/core/styles";
 import TeamBoard from "./TeamBoard";
-import Settings from "./Settings";
+import TeamMakerSettings from "./TeamMakerSettings";
 import AddNewTeam from "./AddNewTeam";
-import { TeamContext } from "../contexts/TeamContext";
 
-const Container = styled.div`
-  width: 80%;
-  margin-right: 40px;
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 0 20px 0;
-`;
-
-const TeamHeader = styled.div`
-  display: flex;
-  align-content: center;
-  > h1 {
-    margin: 0 20px 0 0;
-  }
-`;
-
-const ButtonDiv = styled.div`
-  display: flex;
-  align-items: center;
-`;
+const useStyles = makeStyles((theme) => ({
+  container: {
+    width: "80%",
+    marginRight: "40px",
+  },
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+    margin: "20px 0 20px 0",
+  },
+  teamHeader: {
+    display: "flex",
+    alignContent: "center",
+    "& h1": {
+      margin: "0 20px 0 0",
+    },
+  },
+  buttonDiv: {
+    display: "flex",
+    alignItems: "center",
+  },
+}));
 
 export default function TeamSection() {
-  const { teams } = useContext(TeamContext);
+  const classes = useStyles();
+  const teams = useSelector((state) => state.board.team.teams);
   return (
-    <Container>
-      <Header>
-        <TeamHeader>
+    <div className={classes.container}>
+      <div className={classes.header}>
+        <div className={classes.teamHeader}>
           <h1>Teams ({Object.keys(teams).length})</h1>
-          <ButtonDiv>
+          <div className={classes.buttonDiv}>
             <AddNewTeam />
-          </ButtonDiv>
-        </TeamHeader>
-        <Settings />
-      </Header>
+          </div>
+        </div>
+        <TeamMakerSettings />
+      </div>
       <TeamBoard />
-    </Container>
+    </div>
   );
 }

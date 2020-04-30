@@ -8,9 +8,10 @@ const cheerio = require("cheerio");
 
 const currentSeason = 14;
 
-router.get("/:platform/:id", (req, res) => {
-  console.log("Searching for a new player...");
-  const { id, platform } = req.params;
+router.get("/:id", (req, res) => {
+  const {id} = req.params;
+  let {platform} = req.query;
+  if (!platform) platform = "steam";
 
   const steamProfile = steamUrl + id;
   const trackerProfile = trackerUrl + platform + "/" + id;
@@ -47,10 +48,10 @@ router.get("/:platform/:id", (req, res) => {
             "https://images.idgesg.net/images/article/2018/06/steam_logo2-100691182-orig-100761992-large.3x2.jpg",
           ranks: {
             currentSeason: {},
-            lastSeason: {}
+            lastSeason: {},
           },
           steamUrl: steamProfile,
-          trackerUrl: trackerProfile
+          trackerUrl: trackerProfile,
         };
 
         const currSeasonRankTable = $tracker(
@@ -64,10 +65,9 @@ router.get("/:platform/:id", (req, res) => {
         const playlists = [
           ["ones", 2],
           ["twos", 3],
-          ["threes", 5]
+          ["threes", 5],
         ];
 
-        // onesIndex finds the index of the row at which 1v1 appears.
         // This position changes per player for some unknown reason.
         let onesIndex =
           $tracker(
@@ -96,10 +96,10 @@ router.get("/:platform/:id", (req, res) => {
           throw new Error("Rank not found.");
         }
 
-        res.json({ newPlayer });
+        res.json({newPlayer});
       })
     )
-    .catch(errors => {
+    .catch((errors) => {
       console.error(errors);
     });
 });

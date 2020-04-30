@@ -9,7 +9,6 @@ import TextField from "@material-ui/core/TextField";
 import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
 import { DialogContext } from "../../contexts/DialogContext";
-import { joinChatroom } from "../../socketFunctions";
 import { SocketContext } from "../../contexts/SocketContext";
 
 const useStyles = makeStyles(theme => ({

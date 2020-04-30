@@ -21,7 +21,7 @@ export default function TeamError() {
 
   return (
     <Dialog
-      open={open === "team-error"}
+      open={open === "sort-team-error"}
       TransitionComponent={Transition}
       keepMounted
       onClose={handleClose}

@@ -4,7 +4,7 @@ import TeamError from "./TeamError";
 import Host from "./Host";
 import Join from "./Join";
 
-function Dialogs() {
+export default function Dialogs() {
   return (
     <div>
       <Help />
@@ -14,5 +14,3 @@ function Dialogs() {
     </div>
   );
 }
-
-export default Dialogs;

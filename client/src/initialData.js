@@ -1,7 +1,6 @@
 const initialData = {
   teams: {},
   players: {},
-  teamOrder: [],
   playerOrder: []
 };
 

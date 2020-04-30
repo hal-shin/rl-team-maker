@@ -1,26 +1,27 @@
 import React, { useContext } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { DialogContext } from "../contexts/DialogContext";
 import { PlayerContext } from "../contexts/PlayerContext";
 import { TeamContext } from "../contexts/TeamContext";
+import { setPlayers, setPlayerOrder, setTeams } from "../actions/boardActions";
 
 const initialState = {
   mouseX: null,
-  mouseY: null
+  mouseY: null,
 };
 
 export default function PlayerContextMenu() {
+  const dispatch = useDispatch();
+  const { players, playerOrder } = useSelector((state) => state.board.player);
+  const teams = useSelector((state) => state.board.team.teams);
   const {
     setOpen,
     openPlayerContextMenu,
     setOpenPlayerContextMenu,
-    currentPlayerContext
+    currentPlayerContext,
   } = useContext(DialogContext);
-  const { players, setPlayers, playerOrder, setPlayerOrder } = useContext(
-    PlayerContext
-  );
-  const { teams, setTeams } = useContext(TeamContext);
 
   const handleClose = () => {
     setOpenPlayerContextMenu(initialState);
@@ -41,16 +42,16 @@ export default function PlayerContextMenu() {
     for (let i = 1; i < Object.keys(newTeams).length + 1; i++) {
       if (newTeams[`team-${i}`].members.includes(id)) {
         newTeams[`team-${i}`].members = newTeams[`team-${i}`].members.filter(
-          member => member !== id
+          (member) => member !== id
         );
       }
     }
     if (newPlayerOrder.includes(id)) {
-      newPlayerOrder = newPlayerOrder.filter(player => player !== id);
+      newPlayerOrder = newPlayerOrder.filter((player) => player !== id);
     }
-    setPlayers(newPlayers);
-    setPlayerOrder(newPlayerOrder);
-    setTeams(newTeams);
+    dispatch(setPlayers(newPlayers));
+    dispatch(setPlayerOrder(newPlayerOrder));
+    dispatch(setTeams(newTeams));
     handleClose();
   };
 
@@ -67,7 +68,7 @@ export default function PlayerContextMenu() {
           openPlayerContextMenu.mouseX !== null
             ? {
                 top: openPlayerContextMenu.mouseY,
-                left: openPlayerContextMenu.mouseX
+                left: openPlayerContextMenu.mouseX,
               }
             : undefined
         }
