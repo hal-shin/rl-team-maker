@@ -1,12 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
 import TeamSection from "./TeamSection";
 import PlayerSection from "./PlayerSection";
-import { PlayerContext } from "../contexts/PlayerContext";
-import { TeamContext } from "../contexts/TeamContext";
 import Dialogs from "./dialogs/Dialogs";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
+
+import { setPlayerOrder, setTeams } from "../actions/boardActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,8 +21,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Board() {
   const classes = useStyles();
-  const { playerOrder, setPlayerOrder } = useContext(PlayerContext);
-  const { teams, setTeams, teamOrder, setTeamOrder } = useContext(TeamContext);
+  const playerOrder = useSelector((state) => state.board.player.playerOrder);
+  const teams = useSelector((state) => state.board.team.teams);
+  const dispatch = useDispatch();
 
   const onDragEnd = (result) => {
     /* logic for drag-and-drop functions */
@@ -40,10 +42,10 @@ export default function Board() {
 
     // Moving players within the player list
     if (start === finish && finish === "player-column") {
-      const newPlayerOrderArray = Array.from(playerOrder);
+      const newPlayerOrderArray = [...playerOrder];
       newPlayerOrderArray.splice(source.index, 1);
       newPlayerOrderArray.splice(destination.index, 0, draggableId);
-      setPlayerOrder([...newPlayerOrderArray]);
+      dispatch(setPlayerOrder(newPlayerOrderArray));
       return;
     }
 
@@ -57,8 +59,8 @@ export default function Board() {
         0,
         draggableId
       );
-      setPlayerOrder(newPlayerList);
-      setTeams(newTeams);
+      dispatch(setPlayerOrder(newPlayerList));
+      dispatch(setTeams(newTeams));
       return;
     }
 
@@ -71,7 +73,7 @@ export default function Board() {
         0,
         draggableId
       );
-      setTeams(newTeams);
+      dispatch(setTeams(newTeams));
       return;
     }
 
@@ -84,7 +86,7 @@ export default function Board() {
         0,
         draggableId
       );
-      setTeams(newTeams);
+      dispatch(setTeams(newTeams));
       return;
     }
 
@@ -94,8 +96,8 @@ export default function Board() {
       const newTeams = { ...teams };
       newPlayerList.splice(destination.index, 0, draggableId);
       newTeams[source.droppableId].members.splice(source.index, 1);
-      setPlayerOrder(newPlayerList);
-      setTeams(newTeams);
+      dispatch(setPlayerOrder(newPlayerList));
+      dispatch(setTeams(newTeams));
       return;
     }
   };

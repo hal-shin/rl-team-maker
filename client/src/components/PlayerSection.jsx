@@ -1,16 +1,18 @@
-import React, { useContext } from "react";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Droppable } from "react-beautiful-dnd";
 import { makeStyles } from "@material-ui/core/styles";
-import styled from "styled-components";
-import Player from "./Player";
-import { PlayerContext } from "../contexts/PlayerContext";
-import AddNewPlayer from "./AddNewPlayer";
-import { ThemeContext } from "../contexts/ThemeContext";
 import { Paper } from "@material-ui/core";
-import PlayerContextMenu from "./PlayerContextMenu";
 
-const useStyles = makeStyles(theme => ({
-  root: {},
+import Player from "./Player";
+import AddNewPlayer from "./AddNewPlayer";
+import PlayerContextMenu from "./PlayerContextMenu";
+import { setPlayerOrder } from "../actions/boardActions";
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    width: "250px",
+  },
   header: {
     margin: "20px 0 20px 0",
     "& h1": {
@@ -19,10 +21,10 @@ const useStyles = makeStyles(theme => ({
       WebkitUserSelect: "none",
       MozUserSelect: "none",
       msUserSelect: "none",
-      userSelect: "none"
+      userSelect: "none",
     },
     display: "flex",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   playerBox: {
     display: "flex",
@@ -34,18 +36,15 @@ const useStyles = makeStyles(theme => ({
     padding: "5px 8px 0 8px",
     overflow: "scroll",
     msOverflowStyle: "none",
-    "&::-webkit-scrollbar": { width: "0 !important" }
-  }
+    "&::-webkit-scrollbar": { width: "0 !important" },
+  },
 }));
-
-const Container = styled.div`
-  width: 250px;
-`;
 
 export default function PlayerSection() {
   const classes = useStyles();
-  const { players, playerOrder, setPlayerOrder } = useContext(PlayerContext);
-  const { gameMode } = useContext(ThemeContext);
+  const dispatch = useDispatch();
+  const { players, playerOrder } = useSelector((state) => state.board.player);
+  const gameMode = useSelector((state) => state.board.meta.gameMode);
 
   const handleSortPlayerList = () => {
     let newPlayerOrder = [...playerOrder];
@@ -55,11 +54,11 @@ export default function PlayerSection() {
         players[a].ranks.currentSeason[gameMode]
       );
     });
-    setPlayerOrder(newPlayerOrder);
+    dispatch(setPlayerOrder(newPlayerOrder));
   };
 
   return (
-    <Container>
+    <div className={classes.container}>
       <div className={classes.header}>
         <h1 onClick={handleSortPlayerList}>Players ({playerOrder.length})</h1>
         <AddNewPlayer />
@@ -86,6 +85,6 @@ export default function PlayerSection() {
           </Paper>
         )}
       </Droppable>
-    </Container>
+    </div>
   );
 }

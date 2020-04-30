@@ -1,15 +1,9 @@
-/*
-
-  Main team section for the RL Team Maker
-
-*/
-
-import React, { useContext } from "react";
+import React from "react";
+import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import TeamBoard from "./TeamBoard";
 import TeamMakerSettings from "./TeamMakerSettings";
 import AddNewTeam from "./AddNewTeam";
-import { TeamContext } from "../contexts/TeamContext";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -36,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TeamSection() {
   const classes = useStyles();
-  const { teams } = useContext(TeamContext);
+  const teams = useSelector((state) => state.board.team.teams);
   return (
     <div className={classes.container}>
       <div className={classes.header}>

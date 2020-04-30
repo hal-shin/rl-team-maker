@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Draggable } from "react-beautiful-dnd";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -15,33 +16,34 @@ import { TeamContext } from "../contexts/TeamContext";
 import useToggle from "../hooks/useToggleState";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { DialogContext } from "../contexts/DialogContext";
+import {setPlayerOrder, setPlayers, setTeams} from "../actions/boardActions";
 
 const useStyles = makeStyles({
   root: {
     flexShrink: 0,
     width: 225,
     maxHeight: 312,
-    marginBottom: "15px"
+    marginBottom: "15px",
   },
   rankTable: {
     display: "flex",
-    justifyContent: "space-around"
+    justifyContent: "space-around",
   },
   rank: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     "& p": {
-      margin: 0
+      margin: 0,
     },
     "& h4": {
-      margin: "5px"
-    }
+      margin: "5px",
+    },
   },
   textfieldTag: {
     width: "133px",
-    paddingBottom: "9px"
-  }
+    paddingBottom: "9px",
+  },
 });
 
 const buttonStyles = {
@@ -51,16 +53,16 @@ const buttonStyles = {
   minHeight: "25px",
   marginLeft: "5px",
   lineHeight: "1.15px",
-  boxShadow: "none"
+  boxShadow: "none",
 };
 
 export default function Player(props) {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const { player, id, index } = props;
-  const { players, setPlayers, playerOrder, setPlayerOrder } = useContext(
-    PlayerContext
-  );
-  const { teams, setTeams } = useContext(TeamContext);
+
+  const { players, playerOrder } = useSelector((state) => state.board.player);
+  const teams = useSelector(state => state.board.team.teams);
   const { viewMode } = useContext(ThemeContext);
   const { setOpenPlayerContextMenu, setCurrentPlayerContext } = useContext(
     DialogContext
@@ -68,37 +70,44 @@ export default function Player(props) {
   const [isEditing, toggleIsEditing] = useToggle(false);
   const [playerTag, setPlayerTag] = useState(player.tag || player.id);
 
+  // STEAM LINK BUTTON
   const handleOpenSteam = () => {
     if (player.steamUrl) {
       window.open(player.steamUrl);
     }
   };
 
+  // TRACKER LINK BUTTON
   const handleOpenTracker = () => {
     if (player.trackerUrl) {
       window.open(player.trackerUrl);
     }
   };
 
+  // DELETE PLAYER
   const handleDelete = () => {
     const newPlayers = { ...players };
     let newPlayerOrder = [...playerOrder];
     const newTeams = { ...teams };
 
     delete newPlayers[id];
+
+    // check if player was part of a team, if so, remove from team
     for (let i = 1; i < Object.keys(newTeams).length + 1; i++) {
       if (newTeams[`team-${i}`].members.includes(id)) {
         newTeams[`team-${i}`].members = newTeams[`team-${i}`].members.filter(
-          member => member !== id
+          (member) => member !== id
         );
       }
     }
+
+    // if player was not on a team, remove from player list
     if (newPlayerOrder.includes(id)) {
-      newPlayerOrder = newPlayerOrder.filter(player => player !== id);
+      newPlayerOrder = newPlayerOrder.filter((player) => player !== id);
     }
-    setPlayers(newPlayers);
-    setPlayerOrder(newPlayerOrder);
-    setTeams(newTeams);
+    dispatch(setPlayers(newPlayers));
+    dispatch(setPlayerOrder(newPlayerOrder));
+    dispatch(setTeams(newTeams));
   };
 
   const handleCancelEdit = () => {
@@ -110,26 +119,26 @@ export default function Player(props) {
     toggleIsEditing();
     const newPlayers = { ...players };
     newPlayers[id].tag = playerTag;
-    setPlayers(newPlayers);
+    dispatch(setPlayers(newPlayers));
   };
 
-  const handleEditPlayerTag = event => {
+  const handleEditPlayerTag = (event) => {
     setPlayerTag(event.target.value);
   };
 
-  const handleKeyPress = event => {
+  const handleKeyPress = (event) => {
     if (event.charCode === 13) {
       handleSavePlayerTag();
     }
   };
 
-  const handleContextMenu = event => {
+  const handleContextMenu = (event) => {
     event.stopPropagation();
     event.preventDefault();
     setCurrentPlayerContext(player);
     setOpenPlayerContextMenu({
       mouseX: event.clientX - 2,
-      mouseY: event.clientY - 4
+      mouseY: event.clientY - 4,
     });
   };
 
@@ -246,7 +255,7 @@ export default function Player(props) {
 
   return (
     <Draggable draggableId={id} index={index}>
-      {provided => (
+      {(provided) => (
         <Card
           className={classes.root}
           {...provided.draggableProps}

@@ -1,15 +1,16 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import InputBase from "@material-ui/core/InputBase";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import SendIcon from "@material-ui/icons/Send";
-import { SocketContext } from "../contexts/SocketContext";
-import { DialogContext } from "../contexts/DialogContext";
 import { Paper } from "@material-ui/core";
-import { chat } from "../contexts/SocketContext";
+
 import ChatAvatars from "./ChatAvatars";
+import { DialogContext } from "../contexts/DialogContext";
+import { SocketContext } from "../contexts/SocketContext";
+import { chat } from "../contexts/SocketContext";
 
 const ChatMenu = withStyles({
   paper: {
