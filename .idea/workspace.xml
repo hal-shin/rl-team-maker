@@ -23,7 +23,12 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/AddNewPlayer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/AddNewPlayer.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/reducers/boardReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/reducers/boardReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/tracker.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/tracker.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/reducers/players.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/reducers/rootReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/reducers/rootReducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/reducers/themeReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" /
+
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -162,6 +167,9 @@
     <MESSAGE value="Clean up unused code" />
     <MESSAGE value="Convert data structure to use redux and convert all styled components to makeStyles" />
     <option name="LAST_COMMIT_MESSAGE" value="Convert data structure to use redux and convert all styled components to makeStyles" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="954" y="417" key="#Notifications" timestamp="1586330019841">
