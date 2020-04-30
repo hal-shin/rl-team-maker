@@ -9,9 +9,8 @@ const cheerio = require("cheerio");
 const currentSeason = 14;
 
 router.get("/:id", (req, res) => {
-  const {id} = req.params;
-  let {platform} = req.query;
-  if (!platform) platform = "steam";
+  const { id } = req.params;
+  let { platform } = req.query || "steam";
 
   const steamProfile = steamUrl + id;
   const trackerProfile = trackerUrl + platform + "/" + id;
@@ -50,6 +49,7 @@ router.get("/:id", (req, res) => {
             currentSeason: {},
             lastSeason: {},
           },
+          platform,
           steamUrl: steamProfile,
           trackerUrl: trackerProfile,
         };
@@ -63,26 +63,41 @@ router.get("/:id", (req, res) => {
         );
 
         const playlists = [
-          ["ones", 2],
-          ["twos", 3],
-          ["threes", 5],
+          ["Ranked Duel 1v1", "ones"],
+          ["Ranked Doubles 2v2", "twos"],
+          ["Ranked Standard 3v3", "threes"],
         ];
 
-        // This position changes per player for some unknown reason.
-        let onesIndex =
-          $tracker(
-            `#season-${currentSeason - 1} > table > tbody > tr:contains(2v2)`
-          ).index() - 1;
-
+        // Add current season ranks
         for (let mode of playlists) {
-          newPlayer.ranks.currentSeason[mode[0]] = parseInt(
+          const row = $tracker(
+            `#season-${currentSeason} > table:nth-child(2) > tbody > tr:contains(${mode[0]})`
+          ).index();
+          newPlayer.ranks.currentSeason[mode[1]] = parseInt(
             currSeasonRankTable
-              .find(`tr:nth-child(${mode[1]}) > td:nth-child(4)`)
+              .find(`tr:nth-child(${row + 1}) > td:nth-child(4)`)
               .text()
               .split("\n")[1]
               .replace(/,/g, "")
           );
         }
+
+        // Add last season ranks
+        for (let mode of playlists) {
+          const row = $tracker(
+            `#season-${currentSeason - 1} > table > tbody > tr:contains(${
+              mode[0]
+            })`
+          ).index();
+          newPlayer.ranks.lastSeason[mode[1]] = parseInt(
+            lastSeasonRankTable
+              .find(`tr:nth-child(${row + 1}) > td:nth-child(3)`)
+              .text()
+              .split("\n")[1]
+              .replace(/,/g, "")
+          );
+        }
+
         // newPlayer.ranks.lastSeason.ones = parseInt(
         //   lastSeasonRankTable
         //     .find(`tr:nth-child(${mode[1] - 1 + onesIndex}) > td:nth-child(3)`)
@@ -96,7 +111,10 @@ router.get("/:id", (req, res) => {
           throw new Error("Rank not found.");
         }
 
-        res.json({newPlayer});
+        // mark player as verified by RL Tracker
+        newPlayer.verified = true;
+
+        res.json({ newPlayer });
       })
     )
     .catch((errors) => {

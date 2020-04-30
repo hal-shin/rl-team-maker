@@ -19,33 +19,16 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ed1acfa-b242-4c05-960b-076aa18868e5" name="Default Changelist" comment="">
+    <list default="true" id="9ed1acfa-b242-4c05-960b-076aa18868e5" name="Default Changelist" comment="Convert data structure to use redux and convert all styled components to makeStyles">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/actions/boardActions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/actions/index.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/AddNewPlayer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/AddNewPlayer.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/AddNewTeam.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/AddNewTeam.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Board.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Board.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Chat.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Chat.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Player.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Player.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/PlayerContextMenu.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/PlayerContextMenu.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/PlayerSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/PlayerSection.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Team.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Team.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/TeamBoard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/TeamBoard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/TeamMakerSettings.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/TeamMakerSettings.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/TeamSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/TeamSection.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/dialogs/Dialogs.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/dialogs/Dialogs.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/contexts/ThemeContext.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/contexts/ThemeContext.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/initialData.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/initialData.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/reducers/boardReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/reducers/boardReducer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/reducers/players.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/reducers/rootReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/reducers/rootReducer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/reducers/themeReducer.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" /
+
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,7 +121,7 @@
       <workItem from="1588196102060" duration="296000" />
       <workItem from="1588196405390" duration="732000" />
       <workItem from="1588197891392" duration="981000" />
-      <workItem from="1588216651755" duration="3944000" />
+      <workItem from="1588216651755" duration="8525000" />
     </task>
     <task id="LOCAL-00001" summary="Clean up unused code">
       <created>1587611502694</created>
@@ -154,7 +137,14 @@
       <option name="project" value="LOCAL" />
       <updated>1587611877342</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Convert data structure to use redux and convert all styled components to makeStyles">
+      <created>1588220920475</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1588220920475</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -175,7 +165,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="Clean up unused code" />
-    <option name="LAST_COMMIT_MESSAGE" value="Clean up unused code" />
+    <MESSAGE value="Convert data structure to use redux and convert all styled components to makeStyles" />
+    <option name="LAST_COMMIT_MESSAGE" value="Convert data structure to use redux and convert all styled components to makeStyles" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="oldMeFiltersMigrated" value="true" />
@@ -244,10 +235,10 @@
     <state x="401" y="76" width="981" height="710" key="SettingsEditor/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1588215930960" />
     <state x="735" y="174" key="SettingsEditor/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1587611812629" />
     <state x="781" y="342" key="SettingsEditor/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1585943055858" />
-    <state x="633" y="296" key="Vcs.Push.Dialog.v2" timestamp="1588220882916">
+    <state x="633" y="296" key="Vcs.Push.Dialog.v2" timestamp="1588233383146">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="633" y="296" key="Vcs.Push.Dialog.v2/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1588220882916" />
+    <state x="633" y="296" key="Vcs.Push.Dialog.v2/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1588233383146" />
     <state x="660" y="309" key="Vcs.Push.Dialog.v2/0.0.2137.1162/-2560.0.2137.1162@0.0.2137.1162" timestamp="1587611886439" />
     <state x="629" y="432" key="cloudConfig.SelfSettingsDialog" timestamp="1586329755013">
       <screen x="0" y="0" width="2137" height="1162" />

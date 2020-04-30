@@ -3,6 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -13,7 +17,6 @@ import Chip from "@material-ui/core/Chip";
 import { CircularProgress } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 
-import { PlayerContext } from "../contexts/PlayerContext";
 import { DialogContext } from "../contexts/DialogContext";
 import PlayerStatic from "./PlayerStatic";
 import { timeoutPromise } from "../helpers";
@@ -27,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
     alignItems: "center",
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
   },
   centerContents: {
     display: "flex",
@@ -46,7 +53,7 @@ export default function AddNewPlayer() {
   );
 
   const { open, setOpen } = useContext(DialogContext);
-  const [steamId, setSteamId] = useState("");
+  const [searchId, setSearchId] = useState("");
   const [uniqueId, setUniqueId] = useState(false);
   const [platform, setPlatform] = useState("steam");
   const [reasonableRank, setReasonableRank] = useState(false);
@@ -64,14 +71,14 @@ export default function AddNewPlayer() {
 
   const handleClose = () => {
     setOpen(false);
-    setSteamId("");
+    setSearchId("");
     setSearchedPlayer({});
     setUniqueId(false);
     setLoading("loading");
   };
 
   const handleSearchInput = (event) => {
-    setSteamId(event.target.value);
+    setSearchId(event.target.value);
     checkUniqueId(event.target.value);
   };
 
@@ -85,30 +92,35 @@ export default function AddNewPlayer() {
 
   const handleKeyPress = (event) => {
     if (event.charCode === 13) {
-      handleSearchPlayer(platform, steamId);
+      handleSearchPlayer(platform, searchId);
     }
   };
 
   const handleClickChip = (name) => {
-    setSteamId(name);
+    setSearchId(name);
     handleSearchPlayer(platform, name);
     checkUniqueId(name);
   };
 
   const handleDeleteChip = (name) => {
     dispatch(
-      setRecentSearches([...recentSearches].filter((search) => search !== name))
+      setRecentSearches(
+        [...recentSearches].filter((search) => search.query !== name)
+      )
     );
   };
 
   const handleSearchPlayer = (searchPlatform, searchId) => {
     // update recent search history
     let newRecentSearches = [...recentSearches];
-    if (!newRecentSearches.includes(searchId)) {
-      newRecentSearches.unshift(steamId);
+    const latestSearch = { query: searchId, platform: searchPlatform };
+    if (!newRecentSearches.find((search) => search.query === searchId)) {
+      newRecentSearches.unshift(latestSearch);
     } else {
-      newRecentSearches = newRecentSearches.filter((name) => name !== searchId);
-      newRecentSearches.unshift(searchId);
+      newRecentSearches = newRecentSearches.filter(
+        (search) => search.query !== searchId
+      );
+      newRecentSearches.unshift(latestSearch);
     }
     if (newRecentSearches.length > 5) {
       newRecentSearches = newRecentSearches.slice(0, 5);
@@ -180,8 +192,6 @@ export default function AddNewPlayer() {
   };
 
   const handleAddNewManualPlayer = () => {
-    console.log("Current Players:", players);
-    console.log("Manual RAW", manualPlayer);
     const newPlayers = { ...players };
     const newPlayerOrder = [...playerOrder];
     newPlayers[manualPlayer.tag] = {
@@ -217,6 +227,10 @@ export default function AddNewPlayer() {
     localStorage.setItem("rl-playerOrder", JSON.stringify(defaultPlayerOrder));
   };
 
+  const handlePlatformChange = (event) => {
+    setPlatform(event.target.value);
+  };
+
   const renderSearchedPlayer = () => {
     if (searchedPlayer && Object.keys(searchedPlayer).length > 0) {
       return <PlayerStatic player={searchedPlayer} />;
@@ -248,17 +262,34 @@ export default function AddNewPlayer() {
           <DialogContentText>
             To add a new player, please enter the player's Steam ID.
           </DialogContentText>
-          <TextField
-            autoFocus
-            error={uniqueId}
-            helperText="Steam ID must be unique and at least 2 characters long"
-            margin="dense"
-            id="steam-id"
-            label="Steam ID"
-            onChange={handleSearchInput}
-            onKeyPress={handleKeyPress}
-            fullWidth
-          />
+          <div>
+            <FormControl className={classes.formControl}>
+              <TextField
+                autoFocus
+                error={uniqueId}
+                helperText="ID must be unique and at least 2 characters long"
+                // margin="dense"
+                id="player-id"
+                label="Player ID"
+                onChange={handleSearchInput}
+                onKeyPress={handleKeyPress}
+                // fullWidth
+              />
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <InputLabel id="platform-select-label">Platform</InputLabel>
+              <Select
+                labelId="platform-select-label"
+                id="platform-simple-select"
+                value={platform}
+                onChange={handlePlatformChange}
+              >
+                <MenuItem value={"steam"}>Steam</MenuItem>
+                <MenuItem value={"ps"}>PlayStation</MenuItem>
+                <MenuItem value={"xbox"}>Xbox</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
           <div>
             {recentSearches.map((name) => {
               return (
@@ -288,7 +319,7 @@ export default function AddNewPlayer() {
           <Button
             onClick={handleSearchPlayer}
             color="primary"
-            disabled={steamId.length < 3 || uniqueId}
+            disabled={searchId.length < 3 || uniqueId}
           >
             Search
           </Button>
