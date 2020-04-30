@@ -9,7 +9,11 @@ const initialData = {
   },
   meta: {
     gameMode: "twos",
-    recentSearches: ["thewarriorofblue", "sql_lall", "wundero"],
+    recentSearches: [
+      { query: "thewarriorofblue", platform: "steam" },
+      { query: "sql_lall", platform: "steam" },
+      { query: "wundero", platform: "steam" },
+    ],
   },
 };
 
