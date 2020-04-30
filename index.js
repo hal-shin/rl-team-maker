@@ -59,7 +59,8 @@ app.get("/create/:room", (req, res) => {
   } else {
     rooms[room] = {
       users: []
-    };git 
+    };
+    git;
     res.send("Room created");
   }
 });
@@ -77,5 +78,5 @@ app.get("/join/:room", (req, res) => {
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/client/build/index.html"));
+  res.sendFile(path.join(__dirname + "/client/public/index.html"));
 });

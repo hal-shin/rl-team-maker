@@ -7,36 +7,33 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
-import { TeamContext } from "../contexts/TeamContext";
-import { PlayerContext } from "../contexts/PlayerContext";
-import { ThemeContext } from "../contexts/ThemeContext";
 import { DialogContext } from "../contexts/DialogContext";
 import {
   setPlayerOrder,
   setTeams,
   setTeamOrder,
-  setGameMode,
+  setGameMode
 } from "../actions/boardActions";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     display: "flex",
-    alignItems: "flex-end",
+    alignItems: "flex-end"
   },
   formControl: {
-    minWidth: 120,
+    minWidth: 120
   },
   child: {
-    marginLeft: "10px",
-  },
+    marginLeft: "10px"
+  }
 }));
 
 export default function TeamMakerSettings() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { players, playerOrder } = useSelector((state) => state.board.player);
-  const teams = useSelector((state) => state.board.team.teams);
-  const gameMode = useSelector((state) => state.board.meta.gameMode);
+  const { players, playerOrder } = useSelector(state => state.board.player);
+  const teams = useSelector(state => state.board.team.teams);
+  const gameMode = useSelector(state => state.board.meta.gameMode);
   const [gameModeSelector, setGameModeSelector] = useState("2v2");
   const { setOpen } = useContext(DialogContext);
 
@@ -66,7 +63,7 @@ export default function TeamMakerSettings() {
       numberOfTeams,
       workingPlayerOrder,
       newTeams,
-      newTeamOrder,
+      newTeamOrder
     ] = prepTeams();
     if (gameMode === "twos") {
       for (let i = 1; i < numberOfTeams + 1; i++) {
@@ -103,7 +100,7 @@ export default function TeamMakerSettings() {
       numberOfTeams,
       workingPlayerOrder,
       newTeams,
-      newTeamOrder,
+      newTeamOrder
     ] = prepTeams();
 
     for (let i = 1; i < numberOfTeams + 1; i++) {
@@ -114,30 +111,28 @@ export default function TeamMakerSettings() {
     dispatch(setPlayerOrder(workingPlayerOrder));
   };
 
-  const generateBlankTeams = (numberOfTeams) => {
+  const generateBlankTeams = numberOfTeams => {
     const newTeams = {};
     const newTeamOrder = [];
     for (let i = 1; i < numberOfTeams + 1; i++) {
       newTeams[`team-${i}`] = {
         id: `team-${i}`,
         teamName: `Team ${i}`,
-        members: [],
+        members: []
       };
       newTeamOrder.push(`team-${i}`);
     }
     return [newTeams, newTeamOrder];
   };
 
-  const handleGameModeChange = (event) => {
+  const handleGameModeChange = event => {
     setGameModeSelector(event.target.value);
     event.target.value === "2v2" ? setGameMode("twos") : setGameMode("threes");
   };
 
   const determineNumberOfTeams = () => {
     let mode = gameMode === "twos" ? 2 : 3;
-    let calcNumberOfTeams = Math.ceil(Object.keys(players).length / mode);
-    return calcNumberOfTeams;
-    // setNumberOfTeams(calcNumberOfTeams);
+    return Math.ceil(Object.keys(players).length / mode);
   };
 
   const reset = () => {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
@@ -201,7 +201,7 @@ export default function Chat() {
               </Paper>
             );
           })}
-          <div ref={messagesEndRef} style={{ opacity: 0 }}></div>
+          <div ref={messagesEndRef} style={{ opacity: 0 }} />
         </Paper>
         <Paper elevation={0} className={classes.input} square>
           <InputBase

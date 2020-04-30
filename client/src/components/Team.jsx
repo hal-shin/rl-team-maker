@@ -1,7 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import { Draggable, Droppable } from "react-beautiful-dnd";
+import { Droppable } from "react-beautiful-dnd";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -9,8 +9,6 @@ import Paper from "@material-ui/core/Paper";
 
 import Player from "./Player";
 import useToggle from "../hooks/useToggleState";
-import { TeamContext } from "../contexts/TeamContext";
-import { PlayerContext } from "../contexts/PlayerContext";
 import { setTeams } from "../actions/boardActions";
 
 const useStyles = makeStyles((theme) => ({

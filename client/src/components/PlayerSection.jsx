@@ -1,17 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Droppable } from "react-beautiful-dnd";
 import { makeStyles } from "@material-ui/core/styles";
 import { Paper } from "@material-ui/core";
 
 import Player from "./Player";
-import AddNewPlayer from "./AddNewPlayer";
 import PlayerContextMenu from "./PlayerContextMenu";
 import { setPlayerOrder } from "../actions/boardActions";
+import Button from "@material-ui/core/Button";
+import { DialogContext } from "../contexts/DialogContext";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
-    width: "250px",
+    width: "250px"
   },
   header: {
     margin: "20px 0 20px 0",
@@ -21,10 +22,10 @@ const useStyles = makeStyles((theme) => ({
       WebkitUserSelect: "none",
       MozUserSelect: "none",
       msUserSelect: "none",
-      userSelect: "none",
+      userSelect: "none"
     },
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "space-between"
   },
   playerBox: {
     display: "flex",
@@ -36,15 +37,16 @@ const useStyles = makeStyles((theme) => ({
     padding: "5px 8px 0 8px",
     overflow: "scroll",
     msOverflowStyle: "none",
-    "&::-webkit-scrollbar": { width: "0 !important" },
-  },
+    "&::-webkit-scrollbar": { width: "0 !important" }
+  }
 }));
 
 export default function PlayerSection() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { players, playerOrder } = useSelector((state) => state.board.player);
-  const gameMode = useSelector((state) => state.board.meta.gameMode);
+  const { players, playerOrder } = useSelector(state => state.board.player);
+  const gameMode = useSelector(state => state.board.meta.gameMode);
+  const { setOpen } = useContext(DialogContext);
 
   const handleSortPlayerList = () => {
     let newPlayerOrder = [...playerOrder];
@@ -61,7 +63,13 @@ export default function PlayerSection() {
     <div className={classes.container}>
       <div className={classes.header}>
         <h1 onClick={handleSortPlayerList}>Players ({playerOrder.length})</h1>
-        <AddNewPlayer />
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => setOpen("add-player")}
+        >
+          New
+        </Button>
       </div>
       <PlayerContextMenu />
       <Droppable droppableId="player-column">

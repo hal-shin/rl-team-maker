@@ -11,8 +11,6 @@ import SecurityIcon from "@material-ui/icons/Security";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 
-import { PlayerContext } from "../contexts/PlayerContext";
-import { TeamContext } from "../contexts/TeamContext";
 import useToggle from "../hooks/useToggleState";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { DialogContext } from "../contexts/DialogContext";
@@ -178,7 +176,7 @@ export default function Player(props) {
     }
     return (
       <Typography
-        gutterBottom={viewMode === "name" ? false : true}
+        gutterBottom={viewMode !== "name"}
         variant="h5"
         component="h2"
         style={{ cursor: "pointer" }}

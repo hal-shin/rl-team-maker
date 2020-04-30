@@ -8,15 +8,38 @@ const cheerio = require("cheerio");
 
 const currentSeason = 14;
 
-router.get("/:id", (req, res) => {
-  const { id } = req.params;
-  let { platform } = req.query || "steam";
+router.get("/bulkAdd", (req, res) => {
+  const { ids } = req.query || "";
+  const idsArray = ids.split(",");
 
-  const steamProfile = steamUrl + id;
-  const trackerProfile = trackerUrl + platform + "/" + id;
+  batchFetchPlayerData(idsArray, newPlayers => {
+    return res.json(newPlayers);
+  });
+});
 
-  const steamReq = axios.get(steamProfile);
-  const trackerReq = axios.get(trackerProfile);
+router.get("/add", (req, res) => {
+  const { id } = req.query;
+  const platform = req.query.platform || "steam";
+
+  fetchPlayerData(id, platform, newPlayer => {
+    console.log("NEW PLAYER:", newPlayer);
+    return res.json(newPlayer);
+  });
+});
+
+module.exports = router;
+
+function fetchPlayerData(id, platform, callback) {
+  const newPlayer = {};
+
+  newPlayer.id = id;
+  newPlayer.platform = platform;
+  newPlayer.steamProfile = steamUrl + id;
+  newPlayer.trackerProfile = trackerUrl + platform + "/" + id;
+  newPlayer.success = false;
+
+  const steamReq = axios.get(newPlayer.steamProfile);
+  const trackerReq = axios.get(newPlayer.trackerProfile);
 
   axios
     .all([steamReq, trackerReq])
@@ -27,7 +50,12 @@ router.get("/:id", (req, res) => {
 
         // steam profile pic
         const steamHtml = steamRes.data;
+        const trackerHtml = trackerRes.data;
+
+        // tracker data
         const $steam = cheerio.load(steamHtml);
+        const $tracker = cheerio.load(trackerHtml);
+
         const profileImg = $steam(".playerAvatarAutoSizeInner > img").attr(
           "src"
         );
@@ -35,23 +63,13 @@ router.get("/:id", (req, res) => {
           "body > div.responsive_page_frame.with_header > div.responsive_page_content > div.responsive_page_template_content > div > div.profile_header_bg > div > div > div > div.profile_header_centered_persona > div.persona_name > span.actual_persona_name"
         ).text();
 
-        // tracker data
-        const trackerHtml = trackerRes.data;
-        const $tracker = cheerio.load(trackerHtml);
-
-        const newPlayer = {
-          id: id,
-          tag: nickname || id,
-          icon:
-            profileImg ||
-            "https://images.idgesg.net/images/article/2018/06/steam_logo2-100691182-orig-100761992-large.3x2.jpg",
-          ranks: {
-            currentSeason: {},
-            lastSeason: {},
-          },
-          platform,
-          steamUrl: steamProfile,
-          trackerUrl: trackerProfile,
+        newPlayer.tag = nickname || id;
+        newPlayer.icon =
+          profileImg ||
+          "https://images.idgesg.net/images/article/2018/06/steam_logo2-100691182-orig-100761992-large.3x2.jpg";
+        newPlayer.ranks = {
+          currentSeason: {},
+          lastSeason: {}
         };
 
         const currSeasonRankTable = $tracker(
@@ -65,7 +83,7 @@ router.get("/:id", (req, res) => {
         const playlists = [
           ["Ranked Duel 1v1", "ones"],
           ["Ranked Doubles 2v2", "twos"],
-          ["Ranked Standard 3v3", "threes"],
+          ["Ranked Standard 3v3", "threes"]
         ];
 
         // Add current season ranks
@@ -98,28 +116,48 @@ router.get("/:id", (req, res) => {
           );
         }
 
-        // newPlayer.ranks.lastSeason.ones = parseInt(
-        //   lastSeasonRankTable
-        //     .find(`tr:nth-child(${mode[1] - 1 + onesIndex}) > td:nth-child(3)`)
-        //     .text()
-        //     .split("\n")[1]
-        //     .replace(/,/g, "")
-        // );
-        console.log("Adding the following player:", newPlayer);
-
         if (newPlayer.ranks.currentSeason.twos === undefined) {
           throw new Error("Rank not found.");
         }
 
         // mark player as verified by RL Tracker
         newPlayer.verified = true;
+        newPlayer.success = true;
 
-        res.json({ newPlayer });
+        // console.log("Adding the following player:", newPlayer);
+
+        callback(newPlayer);
       })
     )
-    .catch((errors) => {
+    .catch(errors => {
       console.error(errors);
+      callback(newPlayer);
     });
-});
+}
 
-module.exports = router;
+function batchFetchPlayerData(idsArray, callback) {
+  // batch add currently only supports steam as the platform
+  if (idsArray.length < 1) return;
+
+  const platform = "steam";
+  const newPlayers = {};
+
+  fetchPlayerData(idsArray[0], platform, newPlayer => {
+    newPlayers[idsArray[0]] = newPlayer;
+    console.log("Adding:", idsArray[0]);
+  });
+
+  for (let i = 1; i < idsArray.length; i++) {
+    const id = idsArray[i];
+    setTimeout(() => {
+      fetchPlayerData(id, platform, newPlayer => {
+        newPlayers[id] = newPlayer;
+        console.log("Adding:", id);
+      });
+    }, i * 5000);
+  }
+
+  setTimeout(() => {
+    callback(newPlayers);
+  }, idsArray.length * 5000);
+}

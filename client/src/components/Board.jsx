@@ -9,25 +9,25 @@ import Paper from "@material-ui/core/Paper";
 
 import { setPlayerOrder, setTeams } from "../actions/boardActions";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.default,
     display: "flex",
     padding: "0 5% 0 5%",
     justifyContent: "space-around",
-    height: "calc(100vh - 48px)",
-  },
+    height: "calc(100vh - 48px)"
+  }
 }));
 
 export default function Board() {
   const classes = useStyles();
-  const playerOrder = useSelector((state) => state.board.player.playerOrder);
-  const teams = useSelector((state) => state.board.team.teams);
+  const playerOrder = useSelector(state => state.board.player.playerOrder);
+  const teams = useSelector(state => state.board.team.teams);
   const dispatch = useDispatch();
 
-  const onDragEnd = (result) => {
+  const onDragEnd = result => {
     /* logic for drag-and-drop functions */
-    const { destination, source, draggableId, type } = result;
+    const { destination, source, draggableId } = result;
 
     if (!destination) return;
     if (

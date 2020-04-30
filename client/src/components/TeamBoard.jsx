@@ -1,8 +1,7 @@
-import React, { useContext } from "react";
+import React  from "react";
 import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { TeamContext } from "../contexts/TeamContext";
 import Team from "./Team";
 
 const useStyles = makeStyles((theme) => ({
