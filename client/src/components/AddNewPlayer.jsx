@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -23,34 +23,32 @@ import { timeoutPromise } from "../helpers";
 import {
   setPlayers,
   setPlayerOrder,
-  setRecentSearches,
+  setRecentSearches
 } from "../actions/boardActions";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     display: "flex",
-    alignItems: "center",
+    alignItems: "center"
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 120
   },
   centerContents: {
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   chips: {
-    margin: theme.spacing(0.5),
-  },
+    margin: theme.spacing(0.5)
+  }
 }));
 
 export default function AddNewPlayer() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { players, playerOrder } = useSelector((state) => state.board.player);
-  const recentSearches = useSelector(
-    (state) => state.board.meta.recentSearches
-  );
+  const { players, playerOrder } = useSelector(state => state.board.player);
+  const recentSearches = useSelector(state => state.board.meta.recentSearches);
 
   const { open, setOpen } = useContext(DialogContext);
   const [searchId, setSearchId] = useState("");
@@ -61,7 +59,7 @@ export default function AddNewPlayer() {
   const [manualPlayer, setManualPlayer] = useState({
     tag: "",
     twos: 0,
-    threes: 0,
+    threes: 0
   });
   const [loading, setLoading] = useState("loading");
 
@@ -77,12 +75,12 @@ export default function AddNewPlayer() {
     setLoading("loading");
   };
 
-  const handleSearchInput = (event) => {
+  const handleSearchInput = event => {
     setSearchId(event.target.value);
     checkUniqueId(event.target.value);
   };
 
-  const checkUniqueId = (checkId) => {
+  const checkUniqueId = checkId => {
     if (Object.keys(players).includes(checkId)) {
       setUniqueId(true);
     } else {
@@ -90,62 +88,67 @@ export default function AddNewPlayer() {
     }
   };
 
-  const handleKeyPress = (event) => {
+  const handleKeyPress = event => {
     if (event.charCode === 13) {
-      handleSearchPlayer(platform, searchId);
+      fetchPlayer(platform, searchId);
     }
   };
 
-  const handleClickChip = (name) => {
-    setSearchId(name);
-    handleSearchPlayer(platform, name);
-    checkUniqueId(name);
+  const handleClickChip = search => {
+    setSearchId(search.query);
+    fetchPlayer(search.platform, search.query);
+    checkUniqueId(search.query);
   };
 
-  const handleDeleteChip = (name) => {
+  const handleDeleteChip = name => {
     dispatch(
       setRecentSearches(
-        [...recentSearches].filter((search) => search.query !== name)
+        [...recentSearches].filter(search => search.query !== name)
       )
     );
   };
 
-  const handleSearchPlayer = (searchPlatform, searchId) => {
+  const handleSearchPlayer = () => {
+    fetchPlayer(platform, searchId);
+  };
+
+  const fetchPlayer = (searchPlatform, searchId) => {
     // update recent search history
     let newRecentSearches = [...recentSearches];
     const latestSearch = { query: searchId, platform: searchPlatform };
-    if (!newRecentSearches.find((search) => search.query === searchId)) {
+    if (!newRecentSearches.find(search => search.query === searchId)) {
       newRecentSearches.unshift(latestSearch);
     } else {
       newRecentSearches = newRecentSearches.filter(
-        (search) => search.query !== searchId
+        search => search.query !== searchId
       );
       newRecentSearches.unshift(latestSearch);
     }
     if (newRecentSearches.length > 5) {
       newRecentSearches = newRecentSearches.slice(0, 5);
     }
+    console.log("NEW SEARCH LOG:", newRecentSearches);
     dispatch(setRecentSearches(newRecentSearches));
 
     setOpen("automatic");
     timeoutPromise(
       10000,
-      fetch(`/search/${searchId}${"?platform=" + platform}`)
+      fetch(`/search/${searchId}${"?platform=" + searchPlatform}`)
     )
-      .then((response) => {
+      .then(response => {
         return response.json();
       })
-      .then((data) => {
+      .then(data => {
         const newPlayer = data.newPlayer;
         setSearchedPlayer({ ...newPlayer });
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(err);
         setLoading("error");
       });
   };
 
-  const handleKeyPressAutomatic = (event) => {
+  const handleKeyPressAutomatic = event => {
     if (event.charCode === 13 && uniqueId === false) {
       handleAddNewAutomaticPlayer();
     }
@@ -167,7 +170,7 @@ export default function AddNewPlayer() {
     setOpen("manual");
   };
 
-  const handleManualInput = (event) => {
+  const handleManualInput = event => {
     const newManualPlayer = { ...manualPlayer };
     newManualPlayer[event.target.id] = event.target.value;
     setManualPlayer(newManualPlayer);
@@ -203,16 +206,16 @@ export default function AddNewPlayer() {
         currentSeason: {
           ones: manualPlayer.ones,
           twos: manualPlayer.twos,
-          threes: manualPlayer.threes,
+          threes: manualPlayer.threes
         },
         lastSeason: {
           ones: manualPlayer.ones,
           twos: manualPlayer.twos,
-          threes: manualPlayer.threes,
-        },
+          threes: manualPlayer.threes
+        }
       },
       steamUrl: "",
-      trackerUrl: "",
+      trackerUrl: ""
     };
     newPlayerOrder.unshift(manualPlayer.tag);
     dispatch(setPlayers(newPlayers));
@@ -227,7 +230,7 @@ export default function AddNewPlayer() {
     localStorage.setItem("rl-playerOrder", JSON.stringify(defaultPlayerOrder));
   };
 
-  const handlePlatformChange = (event) => {
+  const handlePlatformChange = event => {
     setPlatform(event.target.value);
   };
 
@@ -291,15 +294,15 @@ export default function AddNewPlayer() {
             </FormControl>
           </div>
           <div>
-            {recentSearches.map((name) => {
+            {recentSearches.map((search, index) => {
               return (
                 <Chip
-                  key={name}
-                  label={name}
+                  key={`chip-${index}`}
+                  label={search.query}
                   size="small"
                   className={classes.chips}
-                  onClick={() => handleClickChip(name)}
-                  onDelete={() => handleDeleteChip(name)}
+                  onClick={() => handleClickChip(search)}
+                  onDelete={() => handleDeleteChip(search.query)}
                 />
               );
             })}
