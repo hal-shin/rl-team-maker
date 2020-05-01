@@ -90,79 +90,81 @@ export default function PlayerInfo(props) {
       aria-labelledby="player-info-dialog-title"
       open={open === "player-info"}
     >
-      <Card elevation={0} className={classes.root}>
-        <div className={classes.leftColumn}>
-          <CardContent className={classes.content}>
-            <Typography component="h5" variant="h5">
-              {player.tag}
-            </Typography>
-            <Typography variant="overline" color="textSecondary">
-              {player.platform}
-            </Typography>
-            <Divider />
-            <Typography
-              variant="body1"
-              color="primary"
-              className={classes.firstContent}
-              gutterBottom
-            >
-              Current Season Ranks:
-            </Typography>
-            <Typography variant="body2" className={classes.ranks}>
-              Solo Duel: <span>{player.ranks.currentSeason.ones}</span>
-            </Typography>
-            <Typography variant="body2" className={classes.ranks}>
-              Doubles: <span>{player.ranks.currentSeason.twos}</span>
-            </Typography>
-            <Typography variant="body2" className={classes.ranks}>
-              Standard: <span>{player.ranks.currentSeason.threes}</span>
-            </Typography>
+      {player && Object.keys(player).length > 0 && (
+        <Card elevation={0} className={classes.root}>
+          <div className={classes.leftColumn}>
+            <CardContent className={classes.content}>
+              <Typography component="h5" variant="h5">
+                {player.tag}
+              </Typography>
+              <Typography variant="overline" color="textSecondary">
+                {player.platform}
+              </Typography>
+              <Divider />
+              <Typography
+                variant="body1"
+                color="primary"
+                className={classes.firstContent}
+                gutterBottom
+              >
+                Current Season Ranks:
+              </Typography>
+              <Typography variant="body2" className={classes.ranks}>
+                Solo Duel: <span>{player.ranks.currentSeason.ones}</span>
+              </Typography>
+              <Typography variant="body2" className={classes.ranks}>
+                Doubles: <span>{player.ranks.currentSeason.twos}</span>
+              </Typography>
+              <Typography variant="body2" className={classes.ranks}>
+                Standard: <span>{player.ranks.currentSeason.threes}</span>
+              </Typography>
 
-            <Typography
-              variant="body1"
-              color="secondary"
-              className={classes.firstContent}
-              gutterBottom
-            >
-              Previous Season Ranks:
-            </Typography>
-            <Typography variant="body2" className={classes.ranks}>
-              Solo Duel: <span>{player.ranks.lastSeason.ones}</span>
-            </Typography>
-            <Typography variant="body2" className={classes.ranks}>
-              Doubles: <span>{player.ranks.lastSeason.twos}</span>
-            </Typography>
-            <Typography variant="body2" className={classes.ranks}>
-              Standard: <span>{player.ranks.lastSeason.threes}</span>
-            </Typography>
-          </CardContent>
-        </div>
-
-        <div className={classes.rightColumn}>
-          <CardMedia
-            className={classes.profileImg}
-            image={player.icon}
-            title={player.tag + "'s Profile Image"}
-          />
-          <Typography variant="overline">
-            Verified: <strong>{player.verified ? "yes" : "no"}</strong>
-          </Typography>
-
-          <div className={classes.buttons}>
-            <Button size="small" color="primary" onClick={handleOpenSteam}>
-              Steam
-            </Button>
-            <Button
-              size="small"
-              color="primary"
-              onClick={handleOpenTracker}
-              disabled={!player.trackerProfile}
-            >
-              Ranks
-            </Button>
+              <Typography
+                variant="body1"
+                color="secondary"
+                className={classes.firstContent}
+                gutterBottom
+              >
+                Previous Season Ranks:
+              </Typography>
+              <Typography variant="body2" className={classes.ranks}>
+                Solo Duel: <span>{player.ranks.lastSeason.ones}</span>
+              </Typography>
+              <Typography variant="body2" className={classes.ranks}>
+                Doubles: <span>{player.ranks.lastSeason.twos}</span>
+              </Typography>
+              <Typography variant="body2" className={classes.ranks}>
+                Standard: <span>{player.ranks.lastSeason.threes}</span>
+              </Typography>
+            </CardContent>
           </div>
-        </div>
-      </Card>
+
+          <div className={classes.rightColumn}>
+            <CardMedia
+              className={classes.profileImg}
+              image={player.icon}
+              title={player.tag + "'s Profile Image"}
+            />
+            <Typography variant="overline">
+              Verified: <strong>{player.verified ? "yes" : "no"}</strong>
+            </Typography>
+
+            <div className={classes.buttons}>
+              <Button size="small" color="primary" onClick={handleOpenSteam}>
+                Steam
+              </Button>
+              <Button
+                size="small"
+                color="primary"
+                onClick={handleOpenTracker}
+                disabled={!player.trackerProfile}
+              >
+                Ranks
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
     </Dialog>
   );
 }

@@ -11,7 +11,7 @@ export function DialogProvider(props) {
     mouseY: null
   });
   const [fetchedPlayer, setFetchedPlayer] = useState({});
-  const [currentPlayerInfo, setCurrentPlayerInfo] = useState(null); // check usage of this
+  const [currentPlayerInfo, setCurrentPlayerInfo] = useState({});
 
   return (
     <DialogContext.Provider
