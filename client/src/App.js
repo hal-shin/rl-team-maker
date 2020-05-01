@@ -30,6 +30,7 @@ import Chat from "./components/Chat";
 import { DialogContext } from "./contexts/DialogContext";
 import { SocketContext } from "./contexts/SocketContext";
 import { ThemeContext } from "./contexts/ThemeContext";
+import logo from "./assets/logo.png";
 
 const lightTheme = createMuiTheme({
   palette: {
@@ -67,6 +68,9 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen
     })
+  },
+  logo: {
+    maxWidth: 28
   },
   menuButton: {
     marginRight: theme.spacing(2)
@@ -167,7 +171,12 @@ export default function App() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap style={{ flexGrow: 1 }}>
+            <img src={logo} className={classes.logo} />
+            <Typography
+              variant="h6"
+              noWrap
+              style={{ flexGrow: 1, paddingLeft: 10 }}
+            >
               RL Team Maker
             </Typography>
             <Chat />
