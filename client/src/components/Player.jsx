@@ -14,34 +14,34 @@ import TextField from "@material-ui/core/TextField";
 import useToggle from "../hooks/useToggleState";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { DialogContext } from "../contexts/DialogContext";
-import {setPlayerOrder, setPlayers, setTeams} from "../actions/boardActions";
+import { setPlayerOrder, setPlayers, setTeams } from "../actions/boardActions";
 
 const useStyles = makeStyles({
   root: {
     flexShrink: 0,
     width: 225,
     maxHeight: 312,
-    marginBottom: "15px",
+    marginBottom: "15px"
   },
   rankTable: {
     display: "flex",
-    justifyContent: "space-around",
+    justifyContent: "space-around"
   },
   rank: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     "& p": {
-      margin: 0,
+      margin: 0
     },
     "& h4": {
-      margin: "5px",
-    },
+      margin: "5px"
+    }
   },
   textfieldTag: {
     width: "133px",
-    paddingBottom: "9px",
-  },
+    paddingBottom: "9px"
+  }
 });
 
 const buttonStyles = {
@@ -51,7 +51,7 @@ const buttonStyles = {
   minHeight: "25px",
   marginLeft: "5px",
   lineHeight: "1.15px",
-  boxShadow: "none",
+  boxShadow: "none"
 };
 
 export default function Player(props) {
@@ -59,7 +59,7 @@ export default function Player(props) {
   const classes = useStyles();
   const { player, id, index } = props;
 
-  const { players, playerOrder } = useSelector((state) => state.board.player);
+  const { players, playerOrder } = useSelector(state => state.board.player);
   const teams = useSelector(state => state.board.team.teams);
   const { viewMode } = useContext(ThemeContext);
   const { setOpenPlayerContextMenu, setCurrentPlayerContext } = useContext(
@@ -70,15 +70,15 @@ export default function Player(props) {
 
   // STEAM LINK BUTTON
   const handleOpenSteam = () => {
-    if (player.steamUrl) {
-      window.open(player.steamUrl);
+    if (player.steamProfile) {
+      window.open(player.steamProfile);
     }
   };
 
   // TRACKER LINK BUTTON
   const handleOpenTracker = () => {
-    if (player.trackerUrl) {
-      window.open(player.trackerUrl);
+    if (player.trackerProfile) {
+      window.open(player.trackerProfile);
     }
   };
 
@@ -94,14 +94,14 @@ export default function Player(props) {
     for (let i = 1; i < Object.keys(newTeams).length + 1; i++) {
       if (newTeams[`team-${i}`].members.includes(id)) {
         newTeams[`team-${i}`].members = newTeams[`team-${i}`].members.filter(
-          (member) => member !== id
+          member => member !== id
         );
       }
     }
 
     // if player was not on a team, remove from player list
     if (newPlayerOrder.includes(id)) {
-      newPlayerOrder = newPlayerOrder.filter((player) => player !== id);
+      newPlayerOrder = newPlayerOrder.filter(player => player !== id);
     }
     dispatch(setPlayers(newPlayers));
     dispatch(setPlayerOrder(newPlayerOrder));
@@ -120,23 +120,23 @@ export default function Player(props) {
     dispatch(setPlayers(newPlayers));
   };
 
-  const handleEditPlayerTag = (event) => {
+  const handleEditPlayerTag = event => {
     setPlayerTag(event.target.value);
   };
 
-  const handleKeyPress = (event) => {
+  const handleKeyPress = event => {
     if (event.charCode === 13) {
       handleSavePlayerTag();
     }
   };
 
-  const handleContextMenu = (event) => {
+  const handleContextMenu = event => {
     event.stopPropagation();
     event.preventDefault();
     setCurrentPlayerContext(player);
     setOpenPlayerContextMenu({
       mouseX: event.clientX - 2,
-      mouseY: event.clientY - 4,
+      mouseY: event.clientY - 4
     });
   };
 
@@ -253,7 +253,7 @@ export default function Player(props) {
 
   return (
     <Draggable draggableId={id} index={index}>
-      {(provided) => (
+      {provided => (
         <Card
           className={classes.root}
           {...provided.draggableProps}

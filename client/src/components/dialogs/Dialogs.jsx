@@ -7,10 +7,12 @@ import BulkAddPlayers from "./BulkAddPlayers";
 import AddPlayerManually from "./AddPlayerManually";
 import AddPlayerAutomatically from "./AddPlayerAutomatically";
 import AddPlayer from "./AddPlayer";
+import PlayerInfo from "./PlayerInfo";
 
 export default function Dialogs() {
   return (
     <div>
+      <PlayerInfo />
       <AddPlayer />
       <AddPlayerAutomatically />
       <AddPlayerManually />

@@ -18,20 +18,20 @@ export default function PlayerContextMenu() {
     setOpen,
     openPlayerContextMenu,
     setOpenPlayerContextMenu,
-    currentPlayerContext
+    currentPlayerInfo
   } = useContext(DialogContext);
 
   const handleClose = () => {
     setOpenPlayerContextMenu(initialState);
   };
 
-  const handleInfo = () => {
+  const handleOpenPlayerInfo = () => {
     handleClose();
     setOpen("player-info");
   };
 
   const handleDelete = () => {
-    const id = currentPlayerContext.id;
+    const id = currentPlayerInfo.id;
     const newPlayers = { ...players };
     let newPlayerOrder = [...playerOrder];
     const newTeams = { ...teams };
@@ -71,7 +71,7 @@ export default function PlayerContextMenu() {
             : undefined
         }
       >
-        <MenuItem onClick={handleInfo}>Info</MenuItem>
+        <MenuItem onClick={handleOpenPlayerInfo}>Info</MenuItem>
         <MenuItem color="secondary" onClick={handleDelete}>
           Delete
         </MenuItem>

@@ -42,8 +42,8 @@ export default function PlayerStatic(props) {
   };
 
   const handleOpenTracker = () => {
-    if (player.trackerUrl) {
-      window.open(player.trackerUrl);
+    if (player.trackerProfile) {
+      window.open(player.trackerProfile);
     }
   };
 

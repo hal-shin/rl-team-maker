@@ -74,7 +74,7 @@ function AddPlayerManually() {
         }
       },
       steamUrl: "",
-      trackerUrl: ""
+      trackerProfile: ""
     };
     newPlayerOrder.unshift(manualPlayer.tag);
     dispatch(setPlayers(newPlayers));
