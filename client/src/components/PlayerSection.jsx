@@ -12,7 +12,7 @@ import { DialogContext } from "../contexts/DialogContext";
 
 const useStyles = makeStyles(theme => ({
   container: {
-    width: "250px"
+    minWidth: "250px"
   },
   header: {
     margin: "20px 0 20px 0",

@@ -11,7 +11,7 @@ import Player from "./Player";
 import useToggle from "../hooks/useToggleState";
 import { setTeams } from "../actions/boardActions";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     height: "378px",
     // maxHeight: "calc(100vh - 160px)",
@@ -21,20 +21,21 @@ const useStyles = makeStyles((theme) => ({
     overflow: "scroll",
     msOverflowStyle: "none",
     "&::-webkit-scrollbar": { width: "0 !important" },
-    flexShrink: "0",
+    flexShrink: "0"
   },
   header: {
     position: "sticky",
     height: "47px",
     width: "278px",
     background: theme.palette.background.paper,
-    zIndex: 1,
+    zIndex: 1
   },
   teamName: {
     padding: "10px 0 5px 0",
     display: "flex",
     justifyContent: "center",
-    "& input": { width: "80% !important" },
+    userSelect: "none",
+    "& input": { width: "80% !important" }
   },
   teammates: {
     minHeight: "292px",
@@ -42,8 +43,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     padding: "10px 25px 0 25px",
-    transition: "background-color 0.2s ease",
-  },
+    transition: "background-color 0.2s ease"
+  }
 }));
 
 const buttonStyles = {
@@ -52,19 +53,19 @@ const buttonStyles = {
   minWidth: "30px",
   minHeight: "30px",
   marginLeft: "5px",
-  boxShadow: "none",
+  boxShadow: "none"
 };
 
 export default function Team(props) {
   const classes = useStyles(props);
   const dispatch = useDispatch();
-  const teams = useSelector((state) => state.board.team.teams);
-  const players = useSelector((state) => state.board.player.players);
+  const teams = useSelector(state => state.board.team.teams);
+  const players = useSelector(state => state.board.player.players);
   const team = teams[props.id];
   const [isEditing, toggleIsEditing] = useToggle(false);
   const [tempTeamName, setTempTeamName] = useState(team.teamName);
 
-  const handleEditTeamName = (evt) => {
+  const handleEditTeamName = evt => {
     setTempTeamName(evt.target.value);
   };
 
@@ -80,7 +81,7 @@ export default function Team(props) {
     toggleIsEditing();
   };
 
-  const handleKeyPress = (event) => {
+  const handleKeyPress = event => {
     if (event.charCode === 13) {
       handleSaveTeamName();
     }

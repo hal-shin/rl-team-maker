@@ -23,6 +23,12 @@ const useStyles = makeStyles({
     maxHeight: 312,
     marginBottom: "15px"
   },
+  playerTag: {
+    height: 32,
+    cursor: "pointer",
+    whiteSpace: "nowrap",
+    overflow: "hidden"
+  },
   rankTable: {
     display: "flex",
     justifyContent: "space-around"
@@ -39,7 +45,7 @@ const useStyles = makeStyles({
     }
   },
   textfieldTag: {
-    width: "133px",
+    // width: "133px",
     paddingBottom: "9px"
   }
 });
@@ -60,6 +66,7 @@ export default function Player(props) {
   const { player, id, index } = props;
 
   const { players, playerOrder } = useSelector(state => state.board.player);
+  const gameMode = useSelector(state => state.board.meta.gameMode);
   const teams = useSelector(state => state.board.team.teams);
   const { viewMode } = useContext(ThemeContext);
   const { setOpenPlayerContextMenu, setCurrentPlayerContext } = useContext(
@@ -108,11 +115,6 @@ export default function Player(props) {
     dispatch(setTeams(newTeams));
   };
 
-  const handleCancelEdit = () => {
-    setPlayerTag(player.tag);
-    toggleIsEditing();
-  };
-
   const handleSavePlayerTag = () => {
     toggleIsEditing();
     const newPlayers = { ...players };
@@ -148,29 +150,11 @@ export default function Player(props) {
             id="standard-basic"
             defaultValue={player.tag}
             onChange={handleEditPlayerTag}
-            onBlur={handleCancelEdit}
+            onBlur={handleSavePlayerTag}
             className={classes.textfieldTag}
             onKeyPress={handleKeyPress}
             autoFocus
           />
-          <Button
-            variant="contained"
-            color="secondary"
-            size="small"
-            onMouseDown={handleCancelEdit}
-            style={buttonStyles}
-          >
-            X
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            size="small"
-            onMouseDown={handleSavePlayerTag}
-            style={buttonStyles}
-          >
-            ✓
-          </Button>
         </div>
       );
     }
@@ -178,8 +162,7 @@ export default function Player(props) {
       <Typography
         gutterBottom={viewMode !== "name"}
         variant="h5"
-        component="h2"
-        style={{ cursor: "pointer" }}
+        className={classes.playerTag}
         onClick={toggleIsEditing}
       >
         {props.isCaptain ? <SecurityIcon fontSize="inherit" /> : ""}
@@ -232,22 +215,20 @@ export default function Player(props) {
     } else if (viewMode === "condensed") {
       return (
         <>
-          <CardContent>{renderPlayerName()}</CardContent>
-          <CardActions>
-            <Button size="small" color="primary" onClick={handleOpenSteam}>
-              Steam
-            </Button>
-            <Button size="small" color="primary" onClick={handleOpenTracker}>
-              Ranks
-            </Button>
-            <Button size="small" color="secondary" onClick={handleDelete}>
-              Delete
-            </Button>
-          </CardActions>
+          <CardContent style={{ paddingBottom: 15 }}>
+            {renderPlayerName()}
+            <Typography variant="body2">
+              RANK: {player.ranks.currentSeason[gameMode]}
+            </Typography>
+          </CardContent>
         </>
       );
     } else if (viewMode === "name") {
-      return <CardContent>{renderPlayerName()}</CardContent>;
+      return (
+        <CardContent style={{ paddingBottom: 15 }}>
+          {renderPlayerName()}
+        </CardContent>
+      );
     }
   };
 
@@ -260,6 +241,7 @@ export default function Player(props) {
           {...provided.dragHandleProps}
           ref={provided.innerRef}
           onContextMenu={handleContextMenu}
+          variant="outlined"
         >
           {renderPlayer()}
         </Card>

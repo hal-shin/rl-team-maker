@@ -56,7 +56,7 @@ export default function TeamMakerSettings() {
   const balanceTeams = () => {
     const mode = gameMode === "twos" ? 2 : 3;
     if (Object.keys(players).length % mode !== 0) {
-      setOpen("team-error");
+      setOpen("sort-team-error");
       return;
     }
     const [
@@ -93,7 +93,7 @@ export default function TeamMakerSettings() {
   const captainsDraft = () => {
     const mode = gameMode === "twos" ? 2 : 3;
     if (Object.keys(players).length % mode !== 0) {
-      setOpen("team-error");
+      setOpen("sort-team-error");
       return;
     }
     const [
@@ -127,7 +127,9 @@ export default function TeamMakerSettings() {
 
   const handleGameModeChange = event => {
     setGameModeSelector(event.target.value);
-    event.target.value === "2v2" ? setGameMode("twos") : setGameMode("threes");
+    event.target.value === "2v2"
+      ? dispatch(setGameMode("twos"))
+      : dispatch(setGameMode("threes"));
   };
 
   const determineNumberOfTeams = () => {

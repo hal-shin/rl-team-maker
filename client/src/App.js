@@ -23,7 +23,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { MuiThemeProvider } from "@material-ui/core";
 
-import {lightTheme, darkTheme, useStyles} from "./AppStyles";
+import { lightTheme, darkTheme, useStyles } from "./AppStyles";
 import Board from "./components/Board";
 import Chat from "./components/Chat";
 // import ChatAvatars from "./components/ChatAvatars";

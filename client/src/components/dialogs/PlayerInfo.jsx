@@ -150,7 +150,12 @@ export default function PlayerInfo(props) {
             </Typography>
 
             <div className={classes.buttons}>
-              <Button size="small" color="primary" onClick={handleOpenSteam}>
+              <Button
+                size="small"
+                color="primary"
+                onClick={handleOpenSteam}
+                disabled={!player.steamProfile}
+              >
                 Steam
               </Button>
               <Button
