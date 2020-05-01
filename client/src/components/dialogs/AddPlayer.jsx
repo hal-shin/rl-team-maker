@@ -33,7 +33,9 @@ function AddPlayer() {
   const { players } = useSelector(state => state.board.player);
   const recentSearches = useSelector(state => state.board.meta.recentSearches);
 
-  const { open, setOpen, setLoading, setFetchedPlayer } = useContext(DialogContext);
+  const { open, setOpen, setLoading, setFetchedPlayer } = useContext(
+    DialogContext
+  );
   const [searchId, setSearchId] = useState("");
   const [uniqueId, setUniqueId] = useState(false);
   const [platform, setPlatform] = useState("steam");
@@ -181,11 +183,7 @@ function AddPlayer() {
           <Button onClick={() => setOpen("add-player-manual")} color="primary">
             Manual
           </Button>
-          <Button
-            onClick={() => setOpen("add-player-bulk")}
-            color="primary"
-            disabled
-          >
+          <Button onClick={() => setOpen("add-player-bulk")} color="primary">
             Bulk Add
           </Button>
         </div>
