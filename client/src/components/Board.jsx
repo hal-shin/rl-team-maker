@@ -24,6 +24,10 @@ const useStyles = makeStyles(theme => ({
     },
     justifyContent: "space-around",
     height: "calc(100vh - 48px)"
+  },
+  tabs: {
+    borderRightStyle: "none",
+    borderLeftStyle: "none"
   }
 }));
 
@@ -118,7 +122,7 @@ export default function Board() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Hidden smUp>
-        <Paper variant="outlined" square>
+        <Paper variant="outlined" className={classes.tabs} square>
           <Tabs
             value={value}
             indicatorColor="primary"
