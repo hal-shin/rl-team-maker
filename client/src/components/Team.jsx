@@ -48,6 +48,7 @@ const useStyles = makeStyles(theme => ({
     "& input": { width: "80% !important" }
   },
   teammates: {
+    // scrolling container
     minHeight: 292,
     maxHeight: "292px",
     overflow: "scroll",
@@ -55,7 +56,10 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     alignItems: "center",
     padding: "10px 25px 0 25px",
-    transition: "background-color 0.2s ease"
+    msOverflowStyle: "none", // scrollbar hider - do not remove
+    "&::-webkit-scrollbar": {
+      display: "none" // scrollbar hider - do not remove
+    }
   },
   footer: {
     height: 36

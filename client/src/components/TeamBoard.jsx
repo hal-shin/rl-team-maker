@@ -1,10 +1,10 @@
-import React  from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Team from "./Team";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     height: "calc(100% - 110px)",
     display: "flex",
@@ -13,20 +13,20 @@ const useStyles = makeStyles((theme) => ({
     alignContent: "flex-start",
     justifyContent: "flex-start",
     overflowY: "scroll",
-    //     ::-webkit-scrollbar {
-    //   width: 0 !important;
-    // }
-    MsOverflowStyle: "none",
-  },
+    msOverflowStyle: "none", // scrollbar hider - do not remove
+    "&::-webkit-scrollbar": {
+      display: "none" // scrollbar hider - do not remove
+    }
+  }
 }));
 
 export default function TeamBoard() {
   const classes = useStyles();
-  const teamOrder = useSelector((state) => state.board.team.teamOrder);
+  const teamOrder = useSelector(state => state.board.team.teamOrder);
 
   return (
     <div className={classes.container}>
-      {teamOrder.map((team) => (
+      {teamOrder.map(team => (
         <Team key={team} id={team} />
       ))}
     </div>
