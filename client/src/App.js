@@ -6,6 +6,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import HelpIcon from "@material-ui/icons/Help";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import PeopleIcon from "@material-ui/icons/People";
@@ -31,6 +32,7 @@ import { DialogContext } from "./contexts/DialogContext";
 import { SocketContext } from "./contexts/SocketContext";
 import { ThemeContext } from "./contexts/ThemeContext";
 import logo from "./assets/logo.png";
+import Hidden from "@material-ui/core/Hidden";
 
 export default function App() {
   const classes = useStyles();
@@ -60,12 +62,17 @@ export default function App() {
     }
   };
 
+  const handleAltMenuOpen = () => {
+    setOpen("alt-menu");
+  };
+
   return (
     <MuiThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <div className={classes.root}>
         <CssBaseline />
         <AppBar
-          color="transparent"
+          variant="outlined"
+          color="inherit"
           position="fixed"
           className={clsx(classes.appBar, {
             [classes.appBarShift]: menuOpen
@@ -90,6 +97,15 @@ export default function App() {
               RL Team Maker
             </Typography>
             <Chat />
+            <Hidden lgUp>
+              <IconButton
+                color="inherit"
+                aria-label="open alt menu"
+                onClick={handleAltMenuOpen}
+              >
+                <MoreVertIcon />
+              </IconButton>
+            </Hidden>
           </Toolbar>
         </AppBar>
         <Drawer

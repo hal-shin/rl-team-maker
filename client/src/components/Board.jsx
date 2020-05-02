@@ -1,11 +1,13 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
+import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import Hidden from "@material-ui/core/Hidden";
+
 import TeamSection from "./TeamSection";
 import PlayerSection from "./PlayerSection";
 import Dialogs from "./dialogs/Dialogs";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 
 import { setPlayerOrder, setTeams } from "../actions/boardActions";
 
@@ -14,6 +16,10 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.default,
     display: "flex",
     padding: "0 5% 0 5%",
+    [theme.breakpoints.down("xs")]: {
+      padding: "0 8px 0 8px",
+      justifyContent: "center"
+    },
     justifyContent: "space-around",
     height: "calc(100vh - 48px)"
   }
@@ -106,7 +112,9 @@ export default function Board() {
     <DragDropContext onDragEnd={onDragEnd}>
       <Paper elevation={0} className={classes.root}>
         <TeamSection />
-        <PlayerSection />
+        <Hidden xsDown>
+          <PlayerSection />
+        </Hidden>
         <Dialogs />
       </Paper>
     </DragDropContext>

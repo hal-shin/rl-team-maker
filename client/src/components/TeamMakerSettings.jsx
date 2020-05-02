@@ -9,10 +9,16 @@ import Select from "@material-ui/core/Select";
 
 import { DialogContext } from "../contexts/DialogContext";
 import {
+  generateBalancedTeams,
+  generateCaptainsDraftTeams
+} from "../helpers/teamMakerLogic";
+import {
   setPlayerOrder,
   setTeams,
   setTeamOrder,
-  setGameMode
+  setGameMode,
+  reset,
+  sortTeams
 } from "../actions/boardActions";
 
 const useStyles = makeStyles(theme => ({
@@ -38,91 +44,33 @@ export default function TeamMakerSettings() {
   const { setOpen } = useContext(DialogContext);
 
   useEffect(() => {
-    reset();
+    dispatch(reset());
   }, [gameMode]);
 
-  const prepTeams = () => {
-    const numberOfTeams = determineNumberOfTeams();
-    const [newTeams, newTeamOrder] = generateBlankTeams(numberOfTeams);
-    let workingPlayerOrder = Object.keys(players).sort((a, b) => {
-      return (
-        players[b].ranks.currentSeason[gameMode] -
-        players[a].ranks.currentSeason[gameMode]
-      );
-    });
-    return [numberOfTeams, workingPlayerOrder, newTeams, newTeamOrder];
-  };
-
-  const balanceTeams = () => {
-    const mode = gameMode === "twos" ? 2 : 3;
-    if (Object.keys(players).length % mode !== 0) {
+  const handleBalanceTeams = () => {
+    try {
+      const [
+        newTeams,
+        newTeamOrder,
+        workingPlayerOrder
+      ] = generateBalancedTeams(players, gameMode);
+      dispatch(sortTeams(newTeams, newTeamOrder, workingPlayerOrder));
+    } catch (err) {
       setOpen("sort-team-error");
-      return;
     }
-    const [
-      numberOfTeams,
-      workingPlayerOrder,
-      newTeams,
-      newTeamOrder
-    ] = prepTeams();
-    if (gameMode === "twos") {
-      for (let i = 1; i < numberOfTeams + 1; i++) {
-        newTeams[`team-${i}`].members.push(workingPlayerOrder.shift());
-        newTeams[`team-${i}`].members.push(workingPlayerOrder.pop());
-      }
-      dispatch(setTeamOrder(newTeamOrder));
-      dispatch(setTeams(newTeams));
-      dispatch(setPlayerOrder(workingPlayerOrder));
-      return;
-    }
-
-    for (let i = 0; i < numberOfTeams; i++) {
-      newTeams[`team-${i + 1}`].members.push(workingPlayerOrder[i]);
-      newTeams[`team-${i + 1}`].members.push(
-        workingPlayerOrder[2 * numberOfTeams - 1 - i]
-      );
-      newTeams[`team-${i + 1}`].members.push(
-        workingPlayerOrder[2 * numberOfTeams + i]
-      );
-    }
-    dispatch(setTeamOrder(newTeamOrder));
-    dispatch(setTeams(newTeams));
-    dispatch(setPlayerOrder([]));
   };
 
-  const captainsDraft = () => {
-    const mode = gameMode === "twos" ? 2 : 3;
-    if (Object.keys(players).length % mode !== 0) {
+  const handleCaptainsDraft = () => {
+    try {
+      const [
+        newTeams,
+        newTeamOrder,
+        workingPlayerOrder
+      ] = generateCaptainsDraftTeams(players, gameMode);
+      dispatch(sortTeams(newTeams, newTeamOrder, workingPlayerOrder));
+    } catch (err) {
       setOpen("sort-team-error");
-      return;
     }
-    const [
-      numberOfTeams,
-      workingPlayerOrder,
-      newTeams,
-      newTeamOrder
-    ] = prepTeams();
-
-    for (let i = 1; i < numberOfTeams + 1; i++) {
-      newTeams[`team-${i}`].members.push(workingPlayerOrder.shift());
-    }
-    dispatch(setTeamOrder(newTeamOrder));
-    dispatch(setTeams(newTeams));
-    dispatch(setPlayerOrder(workingPlayerOrder));
-  };
-
-  const generateBlankTeams = numberOfTeams => {
-    const newTeams = {};
-    const newTeamOrder = [];
-    for (let i = 1; i < numberOfTeams + 1; i++) {
-      newTeams[`team-${i}`] = {
-        id: `team-${i}`,
-        teamName: `Team ${i}`,
-        members: []
-      };
-      newTeamOrder.push(`team-${i}`);
-    }
-    return [newTeams, newTeamOrder];
   };
 
   const handleGameModeChange = event => {
@@ -132,33 +80,8 @@ export default function TeamMakerSettings() {
       : dispatch(setGameMode("threes"));
   };
 
-  const determineNumberOfTeams = () => {
-    let mode = gameMode === "twos" ? 2 : 3;
-    return Math.ceil(Object.keys(players).length / mode);
-  };
-
-  const reset = () => {
-    // move any current players on teams to player list
-    if (Object.keys(players).length !== playerOrder.length) {
-      const newPlayerOrder = [...playerOrder];
-      for (let teamId in teams) {
-        newPlayerOrder.splice(
-          newPlayerOrder.length - 1,
-          0,
-          ...teams[teamId].members
-        );
-      }
-      dispatch(setPlayerOrder(newPlayerOrder));
-    }
-    // reset teams based on number of teams
-    const numberOfTeams = determineNumberOfTeams();
-    const [newTeams, newTeamOrder] = generateBlankTeams(numberOfTeams);
-    dispatch(setTeamOrder(newTeamOrder));
-    dispatch(setTeams(newTeams));
-  };
-
   const handleReset = () => {
-    reset();
+    dispatch(reset());
   };
 
   return (
@@ -178,12 +101,20 @@ export default function TeamMakerSettings() {
         </FormControl>
       </div>
       <div className={classes.child}>
-        <Button variant="contained" color="primary" onClick={balanceTeams}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleBalanceTeams}
+        >
           Balance Teams
         </Button>
       </div>
       <div className={classes.child}>
-        <Button variant="contained" color="primary" onClick={captainsDraft}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleCaptainsDraft}
+        >
           Captain's Draft
         </Button>
       </div>

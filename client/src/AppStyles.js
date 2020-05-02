@@ -1,6 +1,6 @@
-import {createMuiTheme} from "@material-ui/core";
-import {blue, orange} from "@material-ui/core/colors";
-import {makeStyles} from "@material-ui/core/styles";
+import { createMuiTheme } from "@material-ui/core";
+import { blue, orange } from "@material-ui/core/colors";
+import { makeStyles } from "@material-ui/core/styles";
 
 export const lightTheme = createMuiTheme({
   palette: {
@@ -29,7 +29,10 @@ export const useStyles = makeStyles(theme => ({
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
-    })
+    }),
+    borderTopStyle: "none",
+    borderLeftStyle: "none",
+    borderRightStyle: "none"
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,

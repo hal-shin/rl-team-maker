@@ -1,29 +1,41 @@
-export const setPlayerOrder = (newPlayerOrder) => ({
+export const setPlayerOrder = newPlayerOrder => ({
   type: "SET_PLAYER_ORDER",
-  newPlayerOrder,
+  newPlayerOrder
 });
 
-export const setPlayers = (newPlayers) => ({
+export const setPlayers = newPlayers => ({
   type: "SET_PLAYERS",
-  newPlayers,
+  newPlayers
 });
 
-export const setTeams = (newTeams) => ({
+export const setTeams = newTeams => ({
   type: "SET_TEAMS",
-  newTeams,
+  newTeams
 });
 
-export const setTeamOrder = (newTeamOrder) => ({
+export const setTeamOrder = newTeamOrder => ({
   type: "SET_TEAM_ORDER",
-  newTeamOrder,
+  newTeamOrder
 });
 
-export const setGameMode = (newGameMode) => ({
+export const setGameMode = newGameMode => ({
   type: "SET_GAME_MODE",
-  newGameMode,
+  newGameMode
 });
 
-export const setRecentSearches = (newRecentSearches) => ({
+export const setRecentSearches = newRecentSearches => ({
   type: "SET_RECENT_SEARCHES",
-  newRecentSearches,
+  newRecentSearches
+});
+
+export const sortTeams = (newTeams, newTeamOrder, newPlayerOrder) => ({
+  type: "SORT_TEAMS",
+  newTeams,
+  newTeamOrder,
+  newPlayerOrder
+});
+
+
+export const reset = () => ({
+  type: "RESET"
 });
