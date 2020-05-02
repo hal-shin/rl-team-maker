@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Hidden from "@material-ui/core/Hidden";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 import TeamSection from "./TeamSection";
 import PlayerSection from "./PlayerSection";
@@ -27,9 +29,10 @@ const useStyles = makeStyles(theme => ({
 
 export default function Board() {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const playerOrder = useSelector(state => state.board.player.playerOrder);
   const teams = useSelector(state => state.board.team.teams);
-  const dispatch = useDispatch();
+  const [value, setValue] = useState(0);
 
   const onDragEnd = result => {
     /* logic for drag-and-drop functions */
@@ -108,11 +111,33 @@ export default function Board() {
     }
   };
 
+  const handleTabChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
+      <Hidden smUp>
+        <Paper variant="outlined" square>
+          <Tabs
+            value={value}
+            indicatorColor="primary"
+            textColor="primary"
+            onChange={handleTabChange}
+            className={classes.tabs}
+            centered
+          >
+            <Tab label="Teams" />
+            <Tab label="Players" />
+          </Tabs>
+        </Paper>
+      </Hidden>
       <Paper elevation={0} className={classes.root}>
-        <TeamSection />
+        <Hidden smUp>
+          {value === 0 ? <TeamSection /> : <PlayerSection />}
+        </Hidden>
         <Hidden xsDown>
+          <TeamSection />
           <PlayerSection />
         </Hidden>
         <Dialogs />
