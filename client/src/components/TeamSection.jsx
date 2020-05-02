@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Hidden from "@material-ui/core/Hidden";
+import Typography from "@material-ui/core/Typography";
 
 import TeamBoard from "./TeamBoard";
 import TeamMakerSettings from "./TeamMakerSettings";
@@ -27,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   teamHeader: {
     display: "flex",
     alignContent: "center",
-    "& h1": {
+    "& h4": {
       margin: "0 20px 0 0"
     }
   },
@@ -44,7 +45,9 @@ export default function TeamSection() {
     <div className={classes.container}>
       <div className={classes.header}>
         <div className={classes.teamHeader}>
-          <h1>Teams ({Object.keys(teams).length})</h1>
+          <Typography variant="h4">
+            Teams ({Object.keys(teams).length})
+          </Typography>
           <div className={classes.buttonDiv}>
             <AddNewTeam />
           </div>

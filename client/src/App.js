@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -22,7 +22,6 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import { MuiThemeProvider } from "@material-ui/core";
 
 import { lightTheme, darkTheme, useStyles } from "./AppStyles";
 import Board from "./components/Board";
@@ -36,13 +35,15 @@ import Hidden from "@material-ui/core/Hidden";
 
 export default function App() {
   const classes = useStyles();
-  const theme = useTheme();
   const { setOpen } = useContext(DialogContext);
   const { isDarkMode, toggleIsDarkMode, viewMode, setViewMode } = useContext(
     ThemeContext
   );
   const { roomNameLive } = useContext(SocketContext);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { setOpenPlayerContextMenu } = useContext(DialogContext);
+
+  const theme = isDarkMode ? darkTheme : lightTheme; // must come after isDarkMode declaration
 
   const handleDrawerOpen = () => {
     setMenuOpen(true);
@@ -66,9 +67,22 @@ export default function App() {
     setOpen("alt-menu");
   };
 
+  const handleMouseDown = event => {
+    if (event.button === 2) {
+      setOpenPlayerContextMenu({
+        mouseX: null,
+        mouseY: null
+      });
+    }
+  };
+
   return (
-    <MuiThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
-      <div className={classes.root}>
+    <MuiThemeProvider theme={theme}>
+      <div
+        className={classes.root}
+        onContextMenu={e => e.preventDefault()}
+        onMouseDown={handleMouseDown}
+      >
         <CssBaseline />
         <AppBar
           variant="outlined"

@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { Droppable } from "react-beautiful-dnd";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
+import Divider from "@material-ui/core/Divider";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 
 import Player from "./Player";
 import useToggle from "../hooks/useToggleState";
@@ -13,22 +19,26 @@ import { setTeams } from "../actions/boardActions";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    height: "378px",
+    // height: "378px",
     // maxHeight: "calc(100vh - 160px)",
-    paddingBottom: "8px",
+    // paddingBottom: "8px",
     width: "280px",
     margin: "0 10px 10px 0",
-    overflow: "scroll",
+    // overflow: "scroll",
     msOverflowStyle: "none",
     "&::-webkit-scrollbar": { width: "0 !important" },
     flexShrink: "0"
   },
   header: {
-    position: "sticky",
     height: "47px",
     width: "278px",
     background: theme.palette.background.paper,
-    zIndex: 1
+    position: "relative"
+  },
+  collapseIcon: {
+    position: "absolute",
+    top: 0,
+    left: 0
   },
   teamName: {
     padding: "10px 0 5px 0",
@@ -38,12 +48,17 @@ const useStyles = makeStyles(theme => ({
     "& input": { width: "80% !important" }
   },
   teammates: {
-    minHeight: "292px",
+    minHeight: 292,
+    maxHeight: "292px",
+    overflow: "scroll",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     padding: "10px 25px 0 25px",
     transition: "background-color 0.2s ease"
+  },
+  footer: {
+    height: 36
   }
 }));
 
@@ -61,9 +76,20 @@ export default function Team(props) {
   const dispatch = useDispatch();
   const teams = useSelector(state => state.board.team.teams);
   const players = useSelector(state => state.board.player.players);
+  const gameMode = useSelector(state => state.board.meta.gameMode);
   const team = teams[props.id];
   const [isEditing, toggleIsEditing] = useToggle(false);
-  const [tempTeamName, setTempTeamName] = useState(team.teamName);
+  const [tempTeamName, setTempTeamName] = useState(team.teamName); // must come after team variable
+  const [totalMMR, setTotalMMR] = useState(0);
+  const [collapsed, setCollapsed] = useState(false);
+
+  // add up MMR of players in team
+  useEffect(() => {
+    const newTotalMMR = team.members.reduce((accumulator, id) => {
+      return accumulator + players[id].ranks.currentSeason[gameMode];
+    }, 0);
+    setTotalMMR(newTotalMMR);
+  }, [teams]);
 
   const handleEditTeamName = evt => {
     setTempTeamName(evt.target.value);
@@ -85,6 +111,10 @@ export default function Team(props) {
     if (event.charCode === 13) {
       handleSaveTeamName();
     }
+  };
+
+  const handleToggleCollapse = () => {
+    setCollapsed(!collapsed);
   };
 
   const renderTeamName = () => {
@@ -135,28 +165,68 @@ export default function Team(props) {
 
   return (
     <Paper className={classes.root} variant="outlined">
-      <div className={classes.header}>{renderTeamName()}</div>
-      <Droppable droppableId={team.id} direction="vertical">
-        {(provided, snapshot) => (
-          <div
-            className={classes.teammates}
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            // isDraggingOver={snapshot.isDraggingOver}
+      <div className={classes.header}>
+        {renderTeamName()}
+        <div className={classes.collapseIcon}>
+          <IconButton
+            color="inherit"
+            aria-label="collapse team"
+            onClick={handleToggleCollapse}
           >
-            {team.members.map((playerId, index) => (
-              <Player
-                key={playerId}
-                id={playerId}
-                index={index}
-                player={players[playerId]}
-                isCaptain={index === 0}
-              />
-            ))}
-            {provided.placeholder}
+            {collapsed ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+          </IconButton>
+        </div>
+      </div>
+      {!collapsed && (
+        <div>
+          <Divider />
+          <div>
+            <Droppable droppableId={team.id} direction="vertical">
+              {(provided, snapshot) => (
+                <div
+                  className={classes.teammates}
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  // isDraggingOver={snapshot.isDraggingOver}
+                >
+                  {team.members.map((playerId, index) => (
+                    <Player
+                      key={playerId}
+                      id={playerId}
+                      index={index}
+                      player={players[playerId]}
+                      view="condensed"
+                      isCaptain={index === 0}
+                    />
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
           </div>
-        )}
-      </Droppable>
+        </div>
+      )}
+      <Divider />
+
+      <Grid
+        container
+        className={classes.footer}
+        alignContent="center"
+        justify="space-around"
+      >
+        <Grid item xs={6}>
+          <Typography component="div" variant="body2">
+            <Box pl={2}>TOTAL: {totalMMR}</Box>
+          </Typography>
+        </Grid>
+        <Grid item xs={6} justify="center">
+          <Typography component="div" variant="body2">
+            <Box>
+              AVERAGE: {Math.round(totalMMR / team.members.length) || 0}
+            </Box>
+          </Typography>
+        </Grid>
+      </Grid>
     </Paper>
   );
 }

@@ -1,22 +1,40 @@
-import { createMuiTheme } from "@material-ui/core";
+import { createMuiTheme, responsiveFontSizes } from "@material-ui/core";
 import { blue, orange } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/core/styles";
 
-export const lightTheme = createMuiTheme({
-  palette: {
-    primary: blue,
-    secondary: orange,
-    type: "light"
-  }
-});
+export const lightTheme = responsiveFontSizes(
+  createMuiTheme({
+    palette: {
+      primary: blue,
+      secondary: orange,
+      type: "light"
+    },
+    typography: {
+      body2: {
+        fontSize: 13.5,
+        fontWeight: 400,
+        letterSpacing: 0.95
+      }
+    }
+  })
+);
 
-export const darkTheme = createMuiTheme({
-  palette: {
-    primary: blue,
-    secondary: orange,
-    type: "dark"
-  }
-});
+export const darkTheme = responsiveFontSizes(
+  createMuiTheme({
+    palette: {
+      primary: blue,
+      secondary: orange,
+      type: "dark"
+    },
+    typography: {
+      body2: {
+        fontSize: 13.5,
+        fontWeight: 400,
+        letterSpacing: 0.95
+      }
+    }
+  })
+);
 
 export const drawerWidth = 240; // export not really necessary
 

@@ -8,6 +8,8 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import SecurityIcon from "@material-ui/icons/Security";
+import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 
@@ -30,35 +32,18 @@ const useStyles = makeStyles({
     overflow: "hidden"
   },
   rankTable: {
-    display: "flex",
-    justifyContent: "space-around"
+    paddingTop: 6
   },
   rank: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    "& p": {
-      margin: 0
-    },
-    "& h4": {
-      margin: "5px"
-    }
+    alignItems: "center"
   },
   textfieldTag: {
     // width: "133px",
     paddingBottom: "9px"
   }
 });
-
-const buttonStyles = {
-  maxWidth: "25px",
-  maxHeight: "25px",
-  minWidth: "25px",
-  minHeight: "25px",
-  marginLeft: "5px",
-  lineHeight: "1.15px",
-  boxShadow: "none"
-};
 
 export default function Player(props) {
   const dispatch = useDispatch();
@@ -132,30 +117,34 @@ export default function Player(props) {
     }
   };
 
-  const handleContextMenu = event => {
-    event.stopPropagation();
-    event.preventDefault();
-    setCurrentPlayerContext(player);
-    setOpenPlayerContextMenu({
-      mouseX: event.clientX - 2,
-      mouseY: event.clientY - 4
-    });
+  const handleMouseDown = event => {
+    if (event.button === 2) {
+      setOpenPlayerContextMenu({ mouseX: null, mouseY: null });
+    }
+  };
+
+  const handleMouseUp = event => {
+    if (event.button === 2) {
+      setCurrentPlayerContext(player);
+      setOpenPlayerContextMenu({
+        mouseX: event.clientX - 2,
+        mouseY: event.clientY - 4
+      });
+    }
   };
 
   const renderPlayerName = () => {
     if (isEditing) {
       return (
-        <div>
-          <TextField
-            id="standard-basic"
-            defaultValue={player.tag}
-            onChange={handleEditPlayerTag}
-            onBlur={handleSavePlayerTag}
-            className={classes.textfieldTag}
-            onKeyPress={handleKeyPress}
-            autoFocus
-          />
-        </div>
+        <TextField
+          id="standard-basic"
+          defaultValue={player.tag}
+          onChange={handleEditPlayerTag}
+          onBlur={handleSavePlayerTag}
+          className={classes.textfieldTag}
+          onKeyPress={handleKeyPress}
+          autoFocus
+        />
       );
     }
     return (
@@ -185,18 +174,38 @@ export default function Player(props) {
           <CardContent>
             {renderPlayerName()}
             <div className={classes.rankTable}>
-              <div className={classes.rank}>
-                <h4>Ones</h4>
-                <p>{player.ranks.currentSeason.ones}</p>
-              </div>
-              <div className={classes.rank}>
-                <h4>Twos</h4>
-                <p>{player.ranks.currentSeason.twos}</p>
-              </div>
-              <div className={classes.rank}>
-                <h4>Threes</h4>
-                <p>{player.ranks.currentSeason.threes}</p>
-              </div>
+              <Grid container justify="space-evenly" spacing={0}>
+                <Grid item xs={4}>
+                  <Typography component="div" variant="body1">
+                    <Box textAlign="center" fontWeight="fontWeightBold">
+                      Ones
+                    </Box>
+                    <Box textAlign="center">
+                      {player.ranks.currentSeason.ones}
+                    </Box>
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography component="div" variant="body1">
+                    <Box textAlign="center" fontWeight="fontWeightBold">
+                      Twos
+                    </Box>
+                    <Box textAlign="center">
+                      {player.ranks.currentSeason.twos}
+                    </Box>
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography component="div" variant="body1">
+                    <Box textAlign="center" fontWeight="fontWeightBold">
+                      Threes
+                    </Box>
+                    <Box textAlign="center">
+                      {player.ranks.currentSeason.threes}
+                    </Box>
+                  </Typography>
+                </Grid>
+              </Grid>
             </div>
           </CardContent>
           <CardActions>
@@ -240,7 +249,8 @@ export default function Player(props) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
-          onContextMenu={handleContextMenu}
+          // onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
           variant="outlined"
         >
           {renderPlayer()}

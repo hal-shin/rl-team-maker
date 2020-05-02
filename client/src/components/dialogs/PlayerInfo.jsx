@@ -3,6 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import { Divider } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -44,10 +46,6 @@ const useStyles = makeStyles(theme => ({
   ranks: {
     width: 150,
     textTransform: "uppercase",
-    fontSize: 13.5,
-    fontWeight: 400,
-    color: "#555",
-    letterSpacing: 0.95,
     display: "flex",
     justifyContent: "space-between"
   },
@@ -108,7 +106,7 @@ export default function PlayerInfo(props) {
                 Current Season Ranks:
               </Typography>
               <Typography variant="body2" className={classes.ranks}>
-                Solo Duel: <span>{player.ranks.currentSeason.ones}</span>
+                Duel: <span>{player.ranks.currentSeason.ones}</span>
               </Typography>
               <Typography variant="body2" className={classes.ranks}>
                 Doubles: <span>{player.ranks.currentSeason.twos}</span>
@@ -126,7 +124,7 @@ export default function PlayerInfo(props) {
                 Previous Season Ranks:
               </Typography>
               <Typography variant="body2" className={classes.ranks}>
-                Solo Duel: <span>{player.ranks.lastSeason.ones}</span>
+                Duel: <span>{player.ranks.lastSeason.ones}</span>
               </Typography>
               <Typography variant="body2" className={classes.ranks}>
                 Doubles: <span>{player.ranks.lastSeason.twos}</span>

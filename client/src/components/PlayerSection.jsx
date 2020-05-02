@@ -2,7 +2,8 @@ import React, { useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Droppable } from "react-beautiful-dnd";
 import { makeStyles } from "@material-ui/core/styles";
-import { Paper } from "@material-ui/core";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 
 import Player from "./Player";
 import PlayerContextMenu from "./PlayerContextMenu";
@@ -62,7 +63,9 @@ export default function PlayerSection() {
   return (
     <div className={classes.container}>
       <div className={classes.header}>
-        <h1 onClick={handleSortPlayerList}>Players ({playerOrder.length})</h1>
+        <Typography variant="h4" onClick={handleSortPlayerList}>
+          Players ({playerOrder.length})
+        </Typography>
         <Button
           variant="outlined"
           color="primary"
