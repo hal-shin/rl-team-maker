@@ -11,17 +11,14 @@ import { DialogContext } from "../contexts/DialogContext";
 import {
   generateBalancedTeams,
   generateCaptainsDraftTeams
-} from "../helpers/teamMakerLogic";
+} from "../helpers/teamSortingLogic";
 import {
-  setPlayerOrder,
-  setTeams,
-  setTeamOrder,
   setGameMode,
   reset,
   sortTeams
 } from "../actions/boardActions";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   container: {
     display: "flex",
     alignItems: "flex-end"
@@ -32,13 +29,12 @@ const useStyles = makeStyles(theme => ({
   child: {
     marginLeft: "10px"
   }
-}));
+});
 
 export default function TeamMakerSettings() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { players, playerOrder } = useSelector(state => state.board.player);
-  const teams = useSelector(state => state.board.team.teams);
+  const { players } = useSelector(state => state.board.player);
   const gameMode = useSelector(state => state.board.meta.gameMode);
   const [gameModeSelector, setGameModeSelector] = useState("2v2");
   const { setOpen } = useContext(DialogContext);

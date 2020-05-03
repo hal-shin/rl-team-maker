@@ -27,10 +27,14 @@ const useStyles = makeStyles(theme => ({
   },
   teamHeader: {
     display: "flex",
-    alignContent: "center",
-    "& h4": {
-      margin: "0 20px 0 0"
-    }
+    alignContent: "center"
+  },
+  title: {
+    WebkitUserSelect: "none",
+    MozUserSelect: "none",
+    msUserSelect: "none",
+    userSelect: "none",
+    margin: "0 20px 0 0"
   },
   buttonDiv: {
     display: "flex",
@@ -45,7 +49,7 @@ export default function TeamSection() {
     <div className={classes.container}>
       <div className={classes.header}>
         <div className={classes.teamHeader}>
-          <Typography variant="h4">
+          <Typography className={classes.title} variant="h4">
             Teams ({Object.keys(teams).length})
           </Typography>
           <div className={classes.buttonDiv}>

@@ -19,12 +19,8 @@ import { setTeams } from "../actions/boardActions";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    // height: "378px",
-    // maxHeight: "calc(100vh - 160px)",
-    // paddingBottom: "8px",
     width: "280px",
     margin: "0 10px 10px 0",
-    // overflow: "scroll",
     msOverflowStyle: "none",
     "&::-webkit-scrollbar": { width: "0 !important" },
     flexShrink: "0"
@@ -63,6 +59,11 @@ const useStyles = makeStyles(theme => ({
   },
   footer: {
     height: 36
+  },
+  footerText: {
+    fontSize: 13.5,
+    fontWeight: 400,
+    letterSpacing: 0.95
   }
 }));
 
@@ -219,15 +220,13 @@ export default function Team(props) {
         justify="space-around"
       >
         <Grid item xs={6}>
-          <Typography component="div" variant="body2">
+          <Typography component="div" variant="body2" className={classes.footerText}>
             <Box pl={2}>TOTAL: {totalMMR}</Box>
           </Typography>
         </Grid>
-        <Grid item xs={6} justify="center">
-          <Typography component="div" variant="body2">
-            <Box>
-              AVERAGE: {Math.round(totalMMR / team.members.length) || 0}
-            </Box>
+        <Grid item xs={6}>
+          <Typography variant="body2" className={classes.footerText}>
+            AVERAGE: {Math.round(totalMMR / team.members.length) || 0}
           </Typography>
         </Grid>
       </Grid>

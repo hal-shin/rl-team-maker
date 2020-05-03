@@ -117,12 +117,6 @@ export default function Player(props) {
     }
   };
 
-  const handleMouseDown = event => {
-    if (event.button === 2) {
-      setOpenPlayerContextMenu({ mouseX: null, mouseY: null });
-    }
-  };
-
   const handleMouseUp = event => {
     if (event.button === 2) {
       setCurrentPlayerContext(player);

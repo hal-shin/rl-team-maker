@@ -15,7 +15,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { DialogContext } from "../../contexts/DialogContext";
 import { setPlayers, setPlayerOrder } from "../../actions/boardActions";
-import { timeoutPromise } from "../../helpers";
+import { timeoutPromise } from "../../helpers/playerFetchLogic";
+
+let bulkController;
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -49,6 +51,9 @@ export default function BulkAddPlayers() {
   };
 
   const handleClose = () => {
+    if (bulkController) {
+      bulkController.abort();
+    }
     setOpen(false);
     setShowing("input");
     setFetchedPlayers({});
@@ -56,23 +61,28 @@ export default function BulkAddPlayers() {
   };
 
   const fetchPlayers = () => {
+    bulkController = new AbortController();
     setShowing("loading");
 
     // sanitize playerIds string
     let input = playerIds.replace(/ /g, "");
 
-    timeoutPromise(60 * 1000, fetch(`/search/bulkAdd?ids=${input}`))
-      .then(response => {
-        return response.json();
-      })
+    fetch(`/search/bulkAdd?ids=${input}`, {
+      signal: bulkController.signal
+    })
+      .then(response => response.json())
       .then(data => {
-        console.log("FETCHED:", data);
-        setFetchedPlayers(data);
-        setShowing("fetched-data");
+        if (!bulkController.signal.aborted) {
+          setFetchedPlayers(data);
+          setShowing("fetched-data");
+        }
       })
       .catch(err => {
         console.error(err);
-        setShowing("error");
+        if (!bulkController.signal.aborted) {
+          console.log("displaying bulk error page");
+          setShowing("error");
+        }
       });
   };
 
@@ -80,7 +90,7 @@ export default function BulkAddPlayers() {
     let newPlayers = { ...players };
     let newPlayerOrder = [...playerOrder];
 
-    Object.keys(fetchedPlayers).map(id => {
+    Object.keys(fetchedPlayers).forEach(id => {
       if (fetchedPlayers[id].success) {
         newPlayers[id] = fetchedPlayers[id];
         newPlayerOrder.unshift(id);
@@ -136,19 +146,17 @@ export default function BulkAddPlayers() {
       return (
         <>
           <DialogContent>
-            <DialogContentText id="team-bulk-add-dialog-description">
-              <List dense>
-                {Object.keys(fetchedPlayers).map(id => {
-                  return (
-                    <ListItem>
-                      <ListItemText>
-                        {id} - {fetchedPlayers[id].success ? "Success" : "Fail"}
-                      </ListItemText>
-                    </ListItem>
-                  );
-                })}
-              </List>
-            </DialogContentText>
+            <List dense>
+              {Object.keys(fetchedPlayers).map(id => {
+                return (
+                  <ListItem key={id}>
+                    <ListItemText>
+                      {id} - {fetchedPlayers[id].success ? "Success" : "Fail"}
+                    </ListItemText>
+                  </ListItem>
+                );
+              })}
+            </List>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="secondary">

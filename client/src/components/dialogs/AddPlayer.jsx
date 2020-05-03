@@ -11,11 +11,18 @@ import Chip from "@material-ui/core/Chip";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import { setRecentSearches } from "../../actions/boardActions";
-import { timeoutPromise } from "../../helpers";
+
+import {
+  timeoutPromise,
+  makeCancelableFunction,
+  makeCancelablePlayerDataFetch
+} from "../../helpers/playerFetchLogic";
 import { useDispatch, useSelector } from "react-redux";
 import { DialogContext } from "../../contexts/DialogContext";
 import { makeStyles } from "@material-ui/core/styles";
+import { setRecentSearches } from "../../actions/boardActions";
+
+export let abortController;
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -61,13 +68,13 @@ function AddPlayer() {
 
   const handleKeyPress = event => {
     if (event.charCode === 13) {
-      fetchPlayer(platform, searchId);
+      fetchPlayer(searchId, platform);
     }
   };
 
   const handleClickChip = search => {
     setSearchId(search.query);
-    fetchPlayer(search.platform, search.query);
+    fetchPlayer(search.query, search.platform);
     checkUniqueId(search.query);
   };
 
@@ -80,10 +87,10 @@ function AddPlayer() {
   };
 
   const handleSearchPlayer = () => {
-    fetchPlayer(platform, searchId);
+    fetchPlayer(searchId, platform);
   };
 
-  const fetchPlayer = (searchPlatform, searchId) => {
+  const fetchPlayer = (searchId, searchPlatform) => {
     // update recent search history
     let newRecentSearches = [...recentSearches];
     const latestSearch = { query: searchId, platform: searchPlatform };
@@ -102,21 +109,25 @@ function AddPlayer() {
 
     // add player automatically
     setOpen("add-player-auto");
-    timeoutPromise(
-      10000,
-      fetch(`/search/add?id=${searchId}${"&platform=" + searchPlatform}`)
-    )
-      .then(response => {
-        return response.json();
-      })
+
+    abortController = new AbortController();
+
+    fetch(`/search/add?id=${searchId}${"&platform=" + searchPlatform}`, {
+      signal: abortController.signal
+    })
+      .then(response => response.json())
       .then(data => {
-        const newPlayer = data;
-        if (newPlayer.success) setFetchedPlayer({ ...newPlayer });
-        else setLoading("error");
+        if (!abortController.signal.aborted) {
+          const newPlayer = data;
+          if (newPlayer.success) setFetchedPlayer({ ...newPlayer });
+          else setLoading("error");
+        }
       })
       .catch(err => {
-        console.error(err);
-        setLoading("error");
+        if (!abortController.signal.aborted) {
+          console.error(err);
+          setLoading("error");
+        }
       });
   };
 

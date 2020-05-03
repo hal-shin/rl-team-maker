@@ -102,7 +102,7 @@ export default function App() {
             >
               <MenuIcon />
             </IconButton>
-            <img src={logo} className={classes.logo} />
+            <img src={logo} alt="application logo" className={classes.logo} />
             <Typography
               variant="h6"
               noWrap

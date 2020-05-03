@@ -17,7 +17,7 @@ import { DialogContext } from "../../contexts/DialogContext";
 import {
   generateBalancedTeams,
   generateCaptainsDraftTeams
-} from "../../helpers/teamMakerLogic";
+} from "../../helpers/teamSortingLogic";
 import { setGameMode, sortTeams, reset } from "../../actions/boardActions";
 
 const useStyles = makeStyles(theme => ({

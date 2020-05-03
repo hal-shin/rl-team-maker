@@ -17,16 +17,16 @@ const useStyles = makeStyles(theme => ({
   },
   header: {
     margin: "20px 0 20px 0",
-    "& h1": {
-      margin: "0",
-      cursor: "pointer",
-      WebkitUserSelect: "none",
-      MozUserSelect: "none",
-      msUserSelect: "none",
-      userSelect: "none"
-    },
     display: "flex",
     justifyContent: "space-between"
+  },
+  title: {
+    margin: "0",
+    cursor: "pointer",
+    WebkitUserSelect: "none",
+    MozUserSelect: "none",
+    msUserSelect: "none",
+    userSelect: "none"
   },
   playerBox: {
     display: "flex",
@@ -63,7 +63,7 @@ export default function PlayerSection() {
   return (
     <div className={classes.container}>
       <div className={classes.header}>
-        <Typography variant="h4" onClick={handleSortPlayerList}>
+        <Typography variant="h4" className={classes.title} onClick={handleSortPlayerList}>
           Players ({playerOrder.length})
         </Typography>
         <Button

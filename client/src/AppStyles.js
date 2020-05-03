@@ -8,13 +8,6 @@ export const lightTheme = responsiveFontSizes(
       primary: blue,
       secondary: orange,
       type: "light"
-    },
-    typography: {
-      body2: {
-        fontSize: 13.5,
-        fontWeight: 400,
-        letterSpacing: 0.95
-      }
     }
   })
 );
@@ -25,13 +18,6 @@ export const darkTheme = responsiveFontSizes(
       primary: blue,
       secondary: orange,
       type: "dark"
-    },
-    typography: {
-      body2: {
-        fontSize: 13.5,
-        fontWeight: 400,
-        letterSpacing: 0.95
-      }
     }
   })
 );

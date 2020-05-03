@@ -1,7 +1,6 @@
 import {
   prepBlankTeamsAndTeamOrder,
-  sortAllPlayersByMMR
-} from "../helpers/teamMakerLogic";
+} from "../helpers/teamSortingLogic";
 import { initialData } from "./boardReducerInitialData";
 
 const board = (state = initialData, action) => {

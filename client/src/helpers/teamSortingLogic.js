@@ -1,5 +1,3 @@
-import {setPlayerOrder, setTeamOrder, setTeams} from "../actions/boardActions";
-
 export const generateBlankTeamsAndTeamOrder = numberOfTeams => {
   const newTeams = {};
   const newTeamOrder = [];
@@ -51,7 +49,7 @@ export const checkTeamSortRequirements = (players, gameMode) => {
 
 export const generateBalancedTeams = (players, gameMode) => {
   if (!checkTeamSortRequirements(players, gameMode)) {
-    throw "mismatching player numbers";
+    throw new Error("mismatching player numbers");
   }
 
   const [newTeams, newTeamOrder] = prepBlankTeamsAndTeamOrder(
@@ -83,7 +81,7 @@ export const generateBalancedTeams = (players, gameMode) => {
 
 export const generateCaptainsDraftTeams = (players, gameMode) => {
   if (!checkTeamSortRequirements(players, gameMode)) {
-    throw "mismatching player numbers";
+    throw new Error("mismatching player numbers");
   }
   const [newTeams, newTeamOrder] = prepBlankTeamsAndTeamOrder(
     players,
@@ -95,5 +93,5 @@ export const generateCaptainsDraftTeams = (players, gameMode) => {
   for (let i = 1; i < numberOfTeams + 1; i++) {
     newTeams[`team-${i}`].members.push(workingPlayerOrder.shift());
   }
-  return [newTeams, newTeamOrder, workingPlayerOrder]
+  return [newTeams, newTeamOrder, workingPlayerOrder];
 };

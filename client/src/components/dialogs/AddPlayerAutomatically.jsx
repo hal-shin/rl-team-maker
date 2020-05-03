@@ -9,6 +9,7 @@ import { CircularProgress } from "@material-ui/core";
 import { setPlayerOrder, setPlayers } from "../../actions/boardActions";
 import { useDispatch, useSelector } from "react-redux";
 import { DialogContext } from "../../contexts/DialogContext";
+import { abortController } from "./AddPlayer";
 
 function AddPlayerAutomatically() {
   const dispatch = useDispatch();
@@ -25,6 +26,9 @@ function AddPlayerAutomatically() {
   const [uniqueId, setUniqueId] = useState(false);
 
   const handleClose = () => {
+    if (abortController) {
+      abortController.abort();
+    }
     setOpen(false);
     setUniqueId(false);
     setFetchedPlayer({});
