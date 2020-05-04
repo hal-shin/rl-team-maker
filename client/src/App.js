@@ -221,7 +221,7 @@ export default function App() {
               <Route exact path="/session/:sessionUrl">
                 <Board />
               </Route>
-              <Route exact path="/">
+              <Route path="/">
                 <Board />
               </Route>
             </Switch>
