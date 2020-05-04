@@ -43,9 +43,7 @@ export default function App() {
   const { isDarkMode, toggleIsDarkMode, viewMode, setViewMode } = useContext(
     ThemeContext
   );
-  const { currentSessionId, isViewer } = useContext(
-    SocketContext
-  );
+  const { currentSessionId, isViewer } = useContext(SocketContext);
   const [menuOpen, setMenuOpen] = useState(false);
   const { setOpenPlayerContextMenu } = useContext(DialogContext);
 
@@ -219,10 +217,10 @@ export default function App() {
           <div className={classes.drawerHeader} />
           <BrowserRouter>
             <Switch>
-              <Route path="/session/:sessionUrl">
+              <Route exact path="/session/:sessionUrl">
                 <Board />
               </Route>
-              <Route path="/">
+              <Route exact path="/">
                 <Board />
               </Route>
             </Switch>
