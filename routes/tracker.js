@@ -1,33 +1,32 @@
 const router = require("express").Router();
+const axios = require("axios");
+const cheerio = require("cheerio");
 
 // Web scraping
 const steamUrl = "https://steamcommunity.com/id/";
 const trackerUrl = "https://rocketleague.tracker.network/profile/";
-const axios = require("axios");
-const cheerio = require("cheerio");
-
 const currentSeason = 14;
 
-router.get("/bulkAdd", (req, res) => {
-  const { ids } = req.query || "";
-  const idsArray = ids.split(",");
+module.exports = function(router) {
+  router.get("/bulkAdd", (req, res) => {
+    const { ids } = req.query || "";
+    const idsArray = ids.split(",");
 
-  batchFetchPlayerData(idsArray, newPlayers => {
-    return res.json(newPlayers);
+    batchFetchPlayerData(idsArray, newPlayers => {
+      return res.json(newPlayers);
+    });
   });
-});
 
-router.get("/add", (req, res) => {
-  const { id } = req.query;
-  const platform = req.query.platform || "steam";
+  router.get("/add", (req, res) => {
+    const { id } = req.query;
+    const platform = req.query.platform || "steam";
 
-  fetchPlayerData(id, platform, newPlayer => {
-    // console.log("NEW PLAYER:", newPlayer);
-    return res.json(newPlayer);
+    fetchPlayerData(id, platform, newPlayer => {
+      // console.log("NEW PLAYER:", newPlayer);
+      return res.json(newPlayer);
+    });
   });
-});
-
-module.exports = router;
+};
 
 function fetchPlayerData(id, platform, callback) {
   const newPlayer = {};
@@ -159,20 +158,22 @@ function batchFetchPlayerData(idsArray, callback) {
 
   fetchPlayerData(idsArray[0], platform, newPlayer => {
     newPlayers[idsArray[0]] = newPlayer;
-    console.log("Adding:", idsArray[0]);
+    if (process.env.NODE_ENV === "development") {
+      console.log("Adding:", idsArray[0]);
+    }
   });
 
   for (let i = 1; i < idsArray.length; i++) {
     const id = idsArray[i];
     setTimeout(() => {
       fetchPlayerData(id, platform, newPlayer => {
+        if (process.env.NODE_ENV === "development") console.log("Adding:", id);
         newPlayers[id] = newPlayer;
-        console.log("Adding:", id);
       });
-    }, i * 5000);
+    }, i * 5000); // 5 seconds delay per request to not overload tracker server
   }
 
   setTimeout(() => {
     callback(newPlayers);
-  }, idsArray.length * 5000);
+  }, idsArray.length * 5000); // wait 5 seconds after last fetch then callback
 }

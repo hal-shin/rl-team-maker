@@ -36,6 +36,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function Host() {
   const classes = useStyles();
+  const currentStore = useSelector(state => state);
   const currentBoard = useSelector(state => state.board);
   const { open, setOpen } = useContext(DialogContext);
   const currentSession = useSelector(state => state.session);
@@ -71,6 +72,7 @@ export default function Host() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
+        storeData: currentStore,
         boardData: currentBoard,
         newBoard: false,
         hostName: username

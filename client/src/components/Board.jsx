@@ -40,6 +40,7 @@ export default function Board() {
   const classes = useStyles();
   const dispatch = useDispatch();
   let { sessionUrl } = useParams();
+  const currentStore = useSelector(state => state);
   const currentBoard = useSelector(state => state.board);
   const currentSession = useSelector(state => state.session);
   const playerOrder = useSelector(state => state.board.player.playerOrder);
@@ -48,7 +49,7 @@ export default function Board() {
     setCurrentSessionUrl,
     currentSessionId,
     setCurrentSessionId,
-    setIsViewer,
+    setIsViewer
   } = useContext(SocketContext);
   const [value, setValue] = useState(0);
   const [showing, setShowing] = useState("board");
@@ -60,7 +61,6 @@ export default function Board() {
       timeoutPromise(1000 * 10, fetch(`/session?url=${sessionUrl}`))
         .then(res => res.json())
         .then(data => {
-
           const newSessionId = data.sessionId;
           setCurrentSessionId(newSessionId);
           setIsViewer(data.isViewer);
@@ -75,6 +75,7 @@ export default function Board() {
         });
 
       socket.on("update-board", newBoard => {
+        console.log("INCOMING BOARD:", newBoard);
         dispatch(setBoard(newBoard));
       });
 
@@ -89,7 +90,7 @@ export default function Board() {
       socket.emit("board-changed", {
         sessionUrl,
         sessionId: currentSessionId,
-        newBoard: currentBoard
+        newStore: currentStore
       });
     }
   }, [currentBoard]);
