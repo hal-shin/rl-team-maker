@@ -22,7 +22,7 @@ router.get("/add", (req, res) => {
   const platform = req.query.platform || "steam";
 
   fetchPlayerData(id, platform, newPlayer => {
-    console.log("NEW PLAYER:", newPlayer);
+    // console.log("NEW PLAYER:", newPlayer);
     return res.json(newPlayer);
   });
 });
@@ -72,8 +72,12 @@ function fetchPlayerData(id, platform, callback) {
           lastSeason: {}
         };
 
+        // check if playlist table is first or second
+        const playlistLocation =
+          $tracker(`#season-${currentSeason} > table:nth-child(2)`).length + 1;
+
         const currSeasonRankTable = $tracker(
-          `#season-${currentSeason} > table:nth-child(2) > tbody`
+          `#season-${currentSeason} > table:nth-child(${playlistLocation}) > tbody`
         );
 
         const lastSeasonRankTable = $tracker(
@@ -89,15 +93,19 @@ function fetchPlayerData(id, platform, callback) {
         // Add current season ranks
         for (let mode of playlists) {
           const row = $tracker(
-            `#season-${currentSeason} > table:nth-child(2) > tbody > tr:contains(${mode[0]})`
+            `#season-${currentSeason} > table:nth-child(${playlistLocation}) > tbody > tr:contains(${mode[0]})`
           ).index();
-          newPlayer.ranks.currentSeason[mode[1]] = parseInt(
-            currSeasonRankTable
-              .find(`tr:nth-child(${row + 1}) > td:nth-child(4)`)
-              .text()
-              .split("\n")[1]
-              .replace(/,/g, "")
-          );
+          try {
+            newPlayer.ranks.currentSeason[mode[1]] = parseInt(
+              currSeasonRankTable
+                .find(`tr:nth-child(${row + 1}) > td:nth-child(4)`)
+                .text()
+                .split("\n")[1]
+                .replace(/,/g, "")
+            );
+          } catch (err) {
+            newPlayer.ranks.currentSeason[mode[1]] = "0";
+          }
         }
 
         // Add last season ranks
@@ -107,16 +115,23 @@ function fetchPlayerData(id, platform, callback) {
               mode[0]
             })`
           ).index();
-          newPlayer.ranks.lastSeason[mode[1]] = parseInt(
-            lastSeasonRankTable
-              .find(`tr:nth-child(${row + 1}) > td:nth-child(3)`)
-              .text()
-              .split("\n")[1]
-              .replace(/,/g, "")
-          );
+          try {
+            newPlayer.ranks.lastSeason[mode[1]] = parseInt(
+              lastSeasonRankTable
+                .find(`tr:nth-child(${row + 1}) > td:nth-child(3)`)
+                .text()
+                .split("\n")[1]
+                .replace(/,/g, "")
+            );
+          } catch (err) {
+            newPlayer.ranks.lastSeason[mode[1]] = "0";
+          }
         }
 
-        if (newPlayer.ranks.currentSeason.twos === undefined) {
+        if (
+          newPlayer.ranks.currentSeason.twos === undefined ||
+          newPlayer.ranks.currentSeason.twos === "0"
+        ) {
           throw new Error("Rank not found.");
         }
 
