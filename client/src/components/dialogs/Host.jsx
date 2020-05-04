@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -8,15 +9,9 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import { CircularProgress } from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
 import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
 import { DialogContext } from "../../contexts/DialogContext";
-import { SocketContext } from "../../contexts/SocketContext";
-import { useDispatch, useSelector } from "react-redux";
-import { setBoard } from "../../actions/boardActions";
-import { setSession } from "../../actions/sessionActions";
-import { LocalGasStation } from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => ({
   inputs: {
@@ -41,17 +36,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function Host() {
   const classes = useStyles();
-  const dispatch = useDispatch();
   const currentBoard = useSelector(state => state.board);
   const { open, setOpen } = useContext(DialogContext);
-  const { setUsernameLive } = useContext(SocketContext);
   const currentSession = useSelector(state => state.session);
   const [username, setUsername] = useState("");
   const [fetchedSession, setFetchedSession] = useState({});
   const [fetchSuccessful, setFetchSuccessful] = useState(false);
   const [showing, setShowing] = useState("default");
 
-  console.log("SESSION CONNECTED:", currentSession.connected);
   useEffect(() => {
     if (currentSession.connected) {
       setFetchedSession({ session: { ...currentSession } });

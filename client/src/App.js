@@ -43,7 +43,7 @@ export default function App() {
   const { isDarkMode, toggleIsDarkMode, viewMode, setViewMode } = useContext(
     ThemeContext
   );
-  const { roomNameLive, currentSessionId, isViewer } = useContext(
+  const { currentSessionId, isViewer } = useContext(
     SocketContext
   );
   const [menuOpen, setMenuOpen] = useState(false);

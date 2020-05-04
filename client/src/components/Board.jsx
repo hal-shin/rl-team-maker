@@ -48,10 +48,7 @@ export default function Board() {
     setCurrentSessionUrl,
     currentSessionId,
     setCurrentSessionId,
-    isViewer,
     setIsViewer,
-    connected,
-    setConnected
   } = useContext(SocketContext);
   const [value, setValue] = useState(0);
   const [showing, setShowing] = useState("board");
