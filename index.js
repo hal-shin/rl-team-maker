@@ -18,12 +18,12 @@ server.listen(port, () => {
 });
 
 // app configs
-// app.use(express.static(path.join(__dirname, "client/build")));
+app.use(express.static(path.join(__dirname, "client/build")));
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(express.static("client/build"));
+// app.use(express.static("client/build"));
 
 mongoose.connect(
   process.env.DATABASE,
@@ -39,6 +39,52 @@ mongoose.connect(
       if (process.env.NODE_ENV === "development") {
         console.log("Successful database connection");
       }
+
+      // socket logic
+      io.on("connection", client => {
+        client.emit("general-connect");
+
+        client.on("join-session", payload => {
+          const { sessionUrl, newSessionId } = payload;
+          console.log("Someone joined", sessionUrl);
+          client.join(sessionUrl);
+
+          Session.findById(newSessionId, (err, foundSession) => {
+            if (err) return console.log("SESSION NOT FOUND");
+            else {
+              const newStore = JSON.parse(foundSession.store);
+
+              client.emit("update-board", newStore.board);
+              client.emit("update-session", foundSession.session);
+            }
+          });
+        });
+
+        client.on("board-changed", payload => {
+          const { sessionUrl, sessionId, newStore } = payload;
+          // check if emitter is the host
+          Session.findById(sessionId, (err, foundSession) => {
+            if (err) return console.log("SESSION NOT FOUND");
+            else {
+              if (foundSession.session.hostUrl === sessionUrl) {
+                Session.findByIdAndUpdate(
+                  sessionId,
+                  { store: JSON.stringify(newStore) },
+                  (err, updatedStore) => {
+                    if (err) console.log("Session data update failed.");
+                  }
+                );
+                client
+                  .to(foundSession.session.viewerUrl)
+                  .emit("update-board", newStore.board);
+                client
+                  .to(foundSession.session.hostUrl)
+                  .emit("update-board", newStore.board);
+              }
+            }
+          });
+        });
+      });
 
       // Tracker route
       app.use("/search", tracker);
@@ -103,52 +149,6 @@ mongoose.connect(
           } else {
             res.json(doc);
           }
-        });
-      });
-
-      // socket logic
-      io.on("connection", client => {
-        client.emit("general-connect");
-
-        client.on("join-session", payload => {
-          const { sessionUrl, newSessionId } = payload;
-          console.log("Someone joined", sessionUrl);
-          client.join(sessionUrl);
-
-          Session.findById(newSessionId, (err, foundSession) => {
-            if (err) return console.log("SESSION NOT FOUND");
-            else {
-              const newStore = JSON.parse(foundSession.store);
-
-              client.emit("update-board", newStore.board);
-              client.emit("update-session", foundSession.session);
-            }
-          });
-        });
-
-        client.on("board-changed", payload => {
-          const { sessionUrl, sessionId, newStore } = payload;
-          // check if emitter is the host
-          Session.findById(sessionId, (err, foundSession) => {
-            if (err) return console.log("SESSION NOT FOUND");
-            else {
-              if (foundSession.session.hostUrl === sessionUrl) {
-                Session.findByIdAndUpdate(
-                  sessionId,
-                  { store: JSON.stringify(newStore) },
-                  (err, updatedStore) => {
-                    if (err) console.log("Session data update failed.");
-                  }
-                );
-                client
-                  .to(foundSession.session.viewerUrl)
-                  .emit("update-board", newStore.board);
-                client
-                  .to(foundSession.session.hostUrl)
-                  .emit("update-board", newStore.board);
-              }
-            }
-          });
         });
       });
 
