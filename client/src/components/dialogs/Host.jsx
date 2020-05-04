@@ -64,7 +64,7 @@ export default function Host() {
 
   const handleMakeRoom = () => {
     setShowing("loading");
-    fetch("/session/create", {
+    fetch("/session", {
       method: "POST",
       headers: {
         Accept: "application/json",

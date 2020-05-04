@@ -57,7 +57,7 @@ export default function Board() {
     if (sessionUrl) {
       setShowing("loading");
       // fetch sessionID
-      timeoutPromise(1000 * 10, fetch(`/session/get?url=${sessionUrl}`))
+      timeoutPromise(1000 * 10, fetch(`/session?url=${sessionUrl}`))
         .then(res => res.json())
         .then(data => {
 

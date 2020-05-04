@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import clsx from "clsx";
-import { Switch, Route, BrowserRouter } from "react-router-dom";
+import { Switch, Route, BrowserRouter, HashRouter } from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -215,6 +215,7 @@ export default function App() {
           })}
         >
           <div className={classes.drawerHeader} />
+
           <BrowserRouter>
             <Switch>
               <Route exact path="/session/:sessionUrl">

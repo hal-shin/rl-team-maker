@@ -49,7 +49,7 @@ io.on("connection", client => {
 app.use("/search", tracker);
 
 // Retrieve session ID based on given URL
-app.get("/session/get", (req, res) => {
+app.get("/session", (req, res) => {
   let foundId;
   let isViewer = true;
   const sessionUrl = req.query.url;
@@ -76,7 +76,7 @@ app.get("/session/get", (req, res) => {
   }
 });
 
-app.post("/session/create", (req, res) => {
+app.post("/session", (req, res) => {
   try {
     let { newBoard, boardData, hostName } = req.body;
 
@@ -131,7 +131,7 @@ app.post("/session/create", (req, res) => {
       sessions[newSessionId].store.board = boardData;
     }
 
-    // console.log("CREATING:", sessions[newSessionId].store.board.team.teams);
+    console.log("CREATING:", sessions[newSessionId].store.board.team.teams);
 
     res.json(sessions[newSessionId]);
   } catch (err) {
