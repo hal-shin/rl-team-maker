@@ -1,7 +1,10 @@
-const session = (state = [], action) => {
+const session = (state = { connected: false }, action) => {
   switch (action.type) {
-    case "ADD_PLAYER":
-      return [...state, action.data];
+    case "SET_SESSION":
+      return {
+        ...state,
+        ...action.sessionData
+      };
     default:
       return state;
   }

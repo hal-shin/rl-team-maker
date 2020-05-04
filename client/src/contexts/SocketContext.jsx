@@ -1,7 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
-import io from "socket.io-client";
-
-export var chat;
+import React, { createContext, useState } from "react";
 
 export const SocketContext = createContext();
 
@@ -11,10 +8,10 @@ export function SocketProvider(props) {
   const [messages, setMessages] = useState([]);
   const [usernameLive, setUsernameLive] = useState("");
   const [roomNameLive, setRoomNameLive] = useState("");
-
-  useEffect(() => {
-    chat = io.connect("/chat");
-  }, []);
+  const [currentSessionUrl, setCurrentSessionUrl] = useState("");
+  const [currentSessionId, setCurrentSessionId] = useState("");
+  const [connected, setConnected] = useState(false);
+  const [isViewer, setIsViewer] = useState(false);
 
   return (
     <SocketContext.Provider
@@ -28,7 +25,15 @@ export function SocketProvider(props) {
         usernameLive,
         setUsernameLive,
         roomNameLive,
-        setRoomNameLive
+        setRoomNameLive,
+        currentSessionUrl,
+        setCurrentSessionUrl,
+        currentSessionId,
+        setCurrentSessionId,
+        isViewer,
+        setIsViewer,
+        connected,
+        setConnected
       }}
     >
       {props.children}

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
+import { useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Hidden from "@material-ui/core/Hidden";
@@ -10,8 +11,12 @@ import Tab from "@material-ui/core/Tab";
 import TeamSection from "./TeamSection";
 import PlayerSection from "./PlayerSection";
 import Dialogs from "./dialogs/Dialogs";
+import { socket } from "../socket";
 
-import { setPlayerOrder, setTeams } from "../actions/boardActions";
+import { timeoutPromise } from "../helpers/playerFetchLogic";
+import { setBoard, setPlayerOrder, setTeams } from "../actions/boardActions";
+import { SocketContext } from "../contexts/SocketContext";
+import { setSession } from "../actions/sessionActions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,9 +39,63 @@ const useStyles = makeStyles(theme => ({
 export default function Board() {
   const classes = useStyles();
   const dispatch = useDispatch();
+  let { sessionUrl } = useParams();
+  const currentBoard = useSelector(state => state.board);
+  const currentSession = useSelector(state => state.session);
   const playerOrder = useSelector(state => state.board.player.playerOrder);
   const teams = useSelector(state => state.board.team.teams);
+  const {
+    setCurrentSessionUrl,
+    currentSessionId,
+    setCurrentSessionId,
+    isViewer,
+    setIsViewer,
+    connected,
+    setConnected
+  } = useContext(SocketContext);
   const [value, setValue] = useState(0);
+  const [showing, setShowing] = useState("board");
+
+  useEffect(() => {
+    if (sessionUrl) {
+      setShowing("loading");
+      // fetch sessionID
+      timeoutPromise(1000 * 10, fetch(`/session/get?url=${sessionUrl}`))
+        .then(res => res.json())
+        .then(data => {
+
+          const newSessionId = data.sessionId;
+          setCurrentSessionId(newSessionId);
+          setIsViewer(data.isViewer);
+
+          setShowing("board");
+          setCurrentSessionUrl(sessionUrl);
+          socket.emit("join-session", { sessionUrl, newSessionId });
+        })
+        .catch(err => {
+          console.log(err);
+          setShowing("no-session-found");
+        });
+
+      socket.on("update-board", newBoard => {
+        dispatch(setBoard(newBoard));
+      });
+
+      socket.on("update-session", newSession => {
+        dispatch(setSession(newSession));
+      });
+    }
+  }, [sessionUrl]);
+
+  useEffect(() => {
+    if (currentSessionId && currentSession.connected) {
+      socket.emit("board-changed", {
+        sessionUrl,
+        sessionId: currentSessionId,
+        newBoard: currentBoard
+      });
+    }
+  }, [currentBoard]);
 
   const onDragEnd = result => {
     /* logic for drag-and-drop functions */
@@ -119,33 +178,43 @@ export default function Board() {
     setValue(newValue);
   };
 
-  return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Hidden smUp>
-        <Paper variant="outlined" className={classes.tabs} square>
-          <Tabs
-            value={value}
-            indicatorColor="primary"
-            textColor="primary"
-            onChange={handleTabChange}
-            className={classes.tabs}
-            centered
-          >
-            <Tab label="Teams" />
-            <Tab label="Players" />
-          </Tabs>
-        </Paper>
-      </Hidden>
-      <Paper elevation={0} className={classes.root}>
-        <Hidden smUp>
-          {value === 0 ? <TeamSection /> : <PlayerSection />}
-        </Hidden>
-        <Hidden xsDown>
-          <TeamSection />
-          <PlayerSection />
-        </Hidden>
-        <Dialogs />
-      </Paper>
-    </DragDropContext>
-  );
+  const renderBoard = () => {
+    if (showing === "board") {
+      return (
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Hidden smUp>
+            <Paper variant="outlined" className={classes.tabs} square>
+              <Tabs
+                value={value}
+                indicatorColor="primary"
+                textColor="primary"
+                onChange={handleTabChange}
+                className={classes.tabs}
+                centered
+              >
+                <Tab label="Teams" />
+                <Tab label="Players" />
+              </Tabs>
+            </Paper>
+          </Hidden>
+          <Paper elevation={0} className={classes.root}>
+            <Hidden smUp>
+              {value === 0 ? <TeamSection /> : <PlayerSection />}
+            </Hidden>
+            <Hidden xsDown>
+              <TeamSection />
+              <PlayerSection />
+            </Hidden>
+            <Dialogs />
+          </Paper>
+        </DragDropContext>
+      );
+    } else if (showing === "loading") {
+      return <p>Loading...</p>;
+    } else if (showing === "no-session-found") {
+      return <p>No session found.</p>;
+    }
+  };
+
+  return renderBoard();
 }

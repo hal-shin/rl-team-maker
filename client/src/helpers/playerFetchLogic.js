@@ -34,18 +34,3 @@ export const makeCancelableFunction = fn => {
     }
   };
 };
-
-export const makePlayerDataFetch = (searchId, platform) => {
-  return fetch(`/search/add?id=${searchId}${"&platform=" + platform}`);
-};
-
-export const makeCancelablePlayerDataFetch = (searchId, platform, waitTime) => {
-  const cancelablePromise = makeCancelableFunction(
-    timeoutPromise(
-      waitTime * 1000,
-      fetch(`/search/add?id=${searchId}${"&platform=" + platform}`)
-    )
-  );
-
-  return cancelablePromise;
-};

@@ -1,3 +1,8 @@
+export const setBoard = newBoard => ({
+  type: "SET_BOARD",
+  newBoard
+});
+
 export const setPlayerOrder = newPlayerOrder => ({
   type: "SET_PLAYER_ORDER",
   newPlayerOrder
@@ -34,7 +39,6 @@ export const sortTeams = (newTeams, newTeamOrder, newPlayerOrder) => ({
   newTeamOrder,
   newPlayerOrder
 });
-
 
 export const reset = () => ({
   type: "RESET"

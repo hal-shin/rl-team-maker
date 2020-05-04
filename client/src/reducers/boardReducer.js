@@ -1,10 +1,11 @@
-import {
-  prepBlankTeamsAndTeamOrder,
-} from "../helpers/teamSortingLogic";
+import { prepBlankTeamsAndTeamOrder } from "../helpers/teamSortingLogic";
 import { initialData } from "./boardReducerInitialData";
 
 const board = (state = initialData, action) => {
   switch (action.type) {
+    case "SET_BOARD":
+      return action.newBoard;
+
     case "SET_PLAYERS":
       return {
         ...state,

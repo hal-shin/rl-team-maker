@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
 import clsx from "clsx";
+import { Switch, Route, BrowserRouter } from "react-router-dom";
+import IconButton from "@material-ui/core/IconButton";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import HelpIcon from "@material-ui/icons/Help";
@@ -22,6 +23,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import Hidden from "@material-ui/core/Hidden";
 
 import { lightTheme, darkTheme, useStyles } from "./AppStyles";
 import Board from "./components/Board";
@@ -31,15 +33,19 @@ import { DialogContext } from "./contexts/DialogContext";
 import { SocketContext } from "./contexts/SocketContext";
 import { ThemeContext } from "./contexts/ThemeContext";
 import logo from "./assets/logo.png";
-import Hidden from "@material-ui/core/Hidden";
+import { socket } from "./socket";
+import { useSelector } from "react-redux";
 
 export default function App() {
   const classes = useStyles();
+  const connected = useSelector(state => state.session.connected);
   const { setOpen } = useContext(DialogContext);
   const { isDarkMode, toggleIsDarkMode, viewMode, setViewMode } = useContext(
     ThemeContext
   );
-  const { roomNameLive } = useContext(SocketContext);
+  const { roomNameLive, currentSessionId, isViewer } = useContext(
+    SocketContext
+  );
   const [menuOpen, setMenuOpen] = useState(false);
   const { setOpenPlayerContextMenu } = useContext(DialogContext);
 
@@ -107,6 +113,10 @@ export default function App() {
               variant="h6"
               noWrap
               style={{ flexGrow: 1, paddingLeft: 10 }}
+              onClick={() => {
+                socket.emit("pinged", currentSessionId);
+                console.log(currentSessionId);
+              }}
             >
               RL Team Maker
             </Typography>
@@ -170,7 +180,7 @@ export default function App() {
               button
               onClick={() => setOpen("host")}
               key="Host"
-              disabled
+              disabled={Boolean(isViewer)}
             >
               <ListItemIcon>
                 <MeetingRoomIcon />
@@ -181,7 +191,7 @@ export default function App() {
               button
               onClick={() => setOpen("join")}
               key="Join"
-              disabled={roomNameLive !== ""}
+              disabled={connected}
             >
               <ListItemIcon>
                 <PeopleIcon />
@@ -207,7 +217,16 @@ export default function App() {
           })}
         >
           <div className={classes.drawerHeader} />
-          <Board />
+          <BrowserRouter>
+            <Switch>
+              <Route path="/session/:sessionUrl">
+                <Board />
+              </Route>
+              <Route path="/">
+                <Board />
+              </Route>
+            </Switch>
+          </BrowserRouter>
         </main>
       </div>
     </MuiThemeProvider>

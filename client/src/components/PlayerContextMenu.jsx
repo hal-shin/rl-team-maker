@@ -4,6 +4,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { DialogContext } from "../contexts/DialogContext";
 import { setPlayers, setPlayerOrder, setTeams } from "../actions/boardActions";
+import { SocketContext } from "../contexts/SocketContext";
 
 const initialState = {
   mouseX: null,
@@ -20,6 +21,7 @@ export default function PlayerContextMenu() {
     setOpenPlayerContextMenu,
     currentPlayerInfo
   } = useContext(DialogContext);
+  const { isViewer } = useContext(SocketContext);
 
   const handleClose = () => {
     setOpenPlayerContextMenu(initialState);
@@ -72,9 +74,11 @@ export default function PlayerContextMenu() {
         }
       >
         <MenuItem onClick={handleOpenPlayerInfo}>Info</MenuItem>
-        <MenuItem color="secondary" onClick={handleDelete}>
-          Delete
-        </MenuItem>
+        {!isViewer && (
+          <MenuItem color="secondary" onClick={handleDelete}>
+            Delete
+          </MenuItem>
+        )}
       </Menu>
     </div>
   );

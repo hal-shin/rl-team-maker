@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import InputBase from "@material-ui/core/InputBase";
@@ -7,10 +7,11 @@ import Typography from "@material-ui/core/Typography";
 import SendIcon from "@material-ui/icons/Send";
 import { Paper } from "@material-ui/core";
 
+import { useStyles } from "./ChatStyles";
 import ChatAvatars from "./ChatAvatars";
 import { DialogContext } from "../contexts/DialogContext";
 import { SocketContext } from "../contexts/SocketContext";
-import { chat } from "../contexts/SocketContext";
+import { socket } from "../socket";
 
 const ChatMenu = withStyles({
   paper: {
@@ -39,58 +40,9 @@ const ChatMenu = withStyles({
   />
 ));
 
-const useStyles = makeStyles(theme => ({
-  chatButton: {
-    display: "flex"
-  },
-  header: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    height: "50px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  chatLog: {
-    backgroundColor: theme.palette.background.default,
-    height: "400px",
-    display: "flex",
-    flexDirection: "column",
-    overflowY: "scroll",
-    overflowX: "hidden",
-    "& :first-child": {
-      marginTop: "auto"
-    }
-  },
-  message: {
-    height: "auto",
-    marginBottom: "6px",
-    padding: "6px",
-    fontSize: "16px",
-    wordBreak: "break-word",
-    overflow: "visible",
-    "& p": {
-      margin: 0
-    }
-  },
-  input: {
-    height: "50px",
-    display: "flex",
-    alignItems: "center",
-    borderTop: "1px solid rgba(0, 0, 0, 0.12)",
-    "& input": {
-      paddingLeft: "10px"
-    },
-    "& svg": {
-      width: "50px",
-      color: theme.palette.primary.main,
-      cursor: "pointer"
-    }
-  }
-}));
-
 export default function Chat() {
   const messagesEndRef = useRef(null);
+  const classes = useStyles();
   const {
     users,
     setUsers,
@@ -103,7 +55,6 @@ export default function Chat() {
   } = useContext(SocketContext);
   const { chatOpen, setChatOpen } = useContext(DialogContext);
   const [connected, setConnected] = useState(false);
-  const classes = useStyles();
 
   const handleClick = event => {
     setChatOpen(event.currentTarget);
@@ -114,21 +65,21 @@ export default function Chat() {
   };
 
   const connectToChat = () => {
-    chat.emit("initialize", { username: usernameLive, room: roomNameLive });
+    socket.emit("initialize", { username: usernameLive, room: roomNameLive });
 
-    chat.on("users", users => {
+    socket.on("users", users => {
       setUsers(users);
     });
 
-    chat.on("message", message => {
+    socket.on("message", message => {
       setMessages(messages => [...messages, message]);
     });
 
-    chat.on("connected", user => {
+    socket.on("connected", user => {
       setUsers(users => [...users, user]);
     });
 
-    chat.on("disconnected", id => {
+    socket.on("disconnected", id => {
       setUsers(users => {
         return users.filter(user => user.id !== id);
       });
@@ -147,14 +98,14 @@ export default function Chat() {
     event.preventDefault();
     console.log("USERS:", users);
     if (message === "") return;
-    chat.emit("sendMessage", message);
+    socket.emit("sendMessage", message);
     setMessage("");
   };
 
   const handleKeyPress = event => {
     if (message === "") return;
     if (event.charCode === 13) {
-      chat.emit("sendMessage", message);
+      socket.emit("sendMessage", message);
       setMessage("");
     }
   };

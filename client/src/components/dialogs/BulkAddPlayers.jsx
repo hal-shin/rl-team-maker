@@ -6,6 +6,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -33,7 +34,8 @@ const useStyles = makeStyles(theme => ({
   },
   centered: {
     display: "flex",
-    justifyContent: "center"
+    flexDirection: "column",
+    alignItems: "center"
   }
 }));
 
@@ -41,13 +43,16 @@ export default function BulkAddPlayers() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { players, playerOrder } = useSelector(state => state.board.player);
-  const [playerIds, setPlayerIds] = useState("");
+  const { open, setOpen } = useContext(DialogContext);
   const [showing, setShowing] = useState("input");
   const [fetchedPlayers, setFetchedPlayers] = useState({});
-  const { open, setOpen } = useContext(DialogContext);
+  const [playerIds, setPlayerIds] = useState("");
+  const [loadingCounter, setLoadingCounter] = useState(0);
+  const [noDuplicatePlayerCheck, setNoDuplicatePlayerCheck] = useState(null);
 
   const handleChange = event => {
     setPlayerIds(event.target.value);
+    checkDuplicatePlayerName(event.target.value);
   };
 
   const handleClose = () => {
@@ -55,9 +60,29 @@ export default function BulkAddPlayers() {
       bulkController.abort();
     }
     setOpen(false);
-    setShowing("input");
     setFetchedPlayers({});
     setPlayerIds("");
+    setLoadingCounter(0);
+    setShowing("input");
+    setNoDuplicatePlayerCheck(null);
+  };
+
+  const checkDuplicatePlayerName = input => {
+    // sanitize playerIds string
+    const currentPlayersArray = Object.keys(players);
+    let allowSearch = true;
+    if (input) {
+      const playersArray = input.replace(/ /g, "").split(",");
+      playersArray.forEach(id => {
+        if (currentPlayersArray.includes(id)) {
+          allowSearch = false;
+          setNoDuplicatePlayerCheck(id);
+        }
+      });
+    }
+    if (allowSearch) {
+      setNoDuplicatePlayerCheck(null);
+    }
   };
 
   const fetchPlayers = () => {
@@ -66,10 +91,14 @@ export default function BulkAddPlayers() {
 
     // sanitize playerIds string
     let input = playerIds.replace(/ /g, "");
+    const inputLength = input.split(",").length;
 
-    fetch(`/search/bulkAdd?ids=${input}`, {
-      signal: bulkController.signal
-    })
+    timeoutPromise(
+      1000 * (inputLength + 2) * 5,
+      fetch(`/search/bulkAdd?ids=${input}`, {
+        signal: bulkController.signal
+      })
+    )
       .then(response => response.json())
       .then(data => {
         if (!bulkController.signal.aborted) {
@@ -102,6 +131,22 @@ export default function BulkAddPlayers() {
     handleClose();
   };
 
+  const handleLoadingProgress = () => {
+    let playersLength = playerIds.replace(/ /g, "").split(",").length;
+    let timer = setInterval(() => {
+      if (loadingCounter < playersLength) {
+        setLoadingCounter(loadingCounter + 1);
+      } else {
+        clearInterval(timer);
+      }
+    }, 5000);
+    return (
+      <Typography variant="body2" style={{ marginBottom: 16 }}>
+        Completed: {loadingCounter}/{playersLength}
+      </Typography>
+    );
+  };
+
   const renderDialog = () => {
     if (showing === "input") {
       // initial form dialog
@@ -123,6 +168,11 @@ export default function BulkAddPlayers() {
                 variant="outlined"
                 onChange={handleChange}
                 value={playerIds}
+                error={Boolean(noDuplicatePlayerCheck)}
+                helperText={
+                  noDuplicatePlayerCheck &&
+                  `${noDuplicatePlayerCheck} is already in the player list.`
+                }
                 required
               />
             </div>
@@ -134,7 +184,9 @@ export default function BulkAddPlayers() {
             <Button
               onClick={fetchPlayers}
               color="primary"
-              disabled={playerIds.length === 0}
+              disabled={
+                playerIds.length === 0 || Boolean(noDuplicatePlayerCheck)
+              }
             >
               Take the shot!
             </Button>
@@ -173,6 +225,7 @@ export default function BulkAddPlayers() {
       return (
         <>
           <DialogContent className={classes.centered}>
+            {handleLoadingProgress()}
             <CircularProgress />
           </DialogContent>
           <DialogActions>

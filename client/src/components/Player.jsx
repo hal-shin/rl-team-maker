@@ -17,6 +17,7 @@ import useToggle from "../hooks/useToggleState";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { DialogContext } from "../contexts/DialogContext";
 import { setPlayerOrder, setPlayers, setTeams } from "../actions/boardActions";
+import { SocketContext } from "../contexts/SocketContext";
 
 const useStyles = makeStyles({
   root: {
@@ -53,6 +54,7 @@ export default function Player(props) {
   const { players, playerOrder } = useSelector(state => state.board.player);
   const gameMode = useSelector(state => state.board.meta.gameMode);
   const teams = useSelector(state => state.board.team.teams);
+  const { isViewer } = useContext(SocketContext);
   const { viewMode } = useContext(ThemeContext);
   const { setOpenPlayerContextMenu, setCurrentPlayerContext } = useContext(
     DialogContext
@@ -101,10 +103,16 @@ export default function Player(props) {
   };
 
   const handleSavePlayerTag = () => {
-    toggleIsEditing();
+    handleToggleEdit();
     const newPlayers = { ...players };
     newPlayers[id].tag = playerTag;
     dispatch(setPlayers(newPlayers));
+  };
+
+  const handleToggleEdit = () => {
+    if (!isViewer) {
+      toggleIsEditing();
+    }
   };
 
   const handleEditPlayerTag = event => {
@@ -146,7 +154,7 @@ export default function Player(props) {
         gutterBottom={viewMode !== "name"}
         variant="h5"
         className={classes.playerTag}
-        onClick={toggleIsEditing}
+        onClick={handleToggleEdit}
       >
         {props.isCaptain ? <SecurityIcon fontSize="inherit" /> : ""}
         {player.tag}
@@ -209,9 +217,11 @@ export default function Player(props) {
             <Button size="small" color="primary" onClick={handleOpenTracker}>
               Ranks
             </Button>
-            <Button size="small" color="secondary" onClick={handleDelete}>
-              Delete
-            </Button>
+            {!isViewer && (
+              <Button size="small" color="secondary" onClick={handleDelete}>
+                Delete
+              </Button>
+            )}
           </CardActions>
         </>
       );
@@ -236,7 +246,7 @@ export default function Player(props) {
   };
 
   return (
-    <Draggable draggableId={id} index={index}>
+    <Draggable draggableId={id} index={index} isDragDisabled={isViewer}>
       {provided => (
         <Card
           className={classes.root}

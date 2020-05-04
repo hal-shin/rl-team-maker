@@ -10,6 +10,7 @@ import PlayerContextMenu from "./PlayerContextMenu";
 import { setPlayerOrder } from "../actions/boardActions";
 import Button from "@material-ui/core/Button";
 import { DialogContext } from "../contexts/DialogContext";
+import { SocketContext } from "../contexts/SocketContext";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -48,6 +49,7 @@ export default function PlayerSection() {
   const { players, playerOrder } = useSelector(state => state.board.player);
   const gameMode = useSelector(state => state.board.meta.gameMode);
   const { setOpen } = useContext(DialogContext);
+  const { isViewer } = useContext(SocketContext);
 
   const handleSortPlayerList = () => {
     let newPlayerOrder = [...playerOrder];
@@ -63,16 +65,22 @@ export default function PlayerSection() {
   return (
     <div className={classes.container}>
       <div className={classes.header}>
-        <Typography variant="h4" className={classes.title} onClick={handleSortPlayerList}>
+        <Typography
+          variant="h4"
+          className={classes.title}
+          onClick={handleSortPlayerList}
+        >
           Players ({playerOrder.length})
         </Typography>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={() => setOpen("add-player")}
-        >
-          New
-        </Button>
+        {!isViewer && (
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => setOpen("add-player")}
+          >
+            New
+          </Button>
+        )}
       </div>
       <PlayerContextMenu />
       <Droppable droppableId="player-column">

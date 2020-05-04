@@ -12,11 +12,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 
-import {
-  timeoutPromise,
-  makeCancelableFunction,
-  makeCancelablePlayerDataFetch
-} from "../../helpers/playerFetchLogic";
 import { useDispatch, useSelector } from "react-redux";
 import { DialogContext } from "../../contexts/DialogContext";
 import { makeStyles } from "@material-ui/core/styles";
@@ -109,6 +104,7 @@ function AddPlayer() {
 
     // add player automatically
     setOpen("add-player-auto");
+    setUniqueId(true);
 
     abortController = new AbortController();
 
@@ -152,7 +148,6 @@ function AddPlayer() {
               autoFocus
               error={uniqueId}
               helperText="ID must be unique and at least 2 characters long"
-              // margin="dense"
               id="player-id"
               label="Player ID"
               onChange={handleSearchInput}
