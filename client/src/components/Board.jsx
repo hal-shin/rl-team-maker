@@ -90,8 +90,9 @@ export default function Board() {
   useEffect(() => {
     clearTimeout(socketTimeout);
     if (currentSessionId && currentSession.connected && isHost) {
+      console.log("Signalling that store changed...");
       socketTimeout = setTimeout(() => {
-        socket.emit("board-changed", {
+        socket.emit("store-changed", {
           sessionUrl,
           sessionId: currentSessionId,
           newStore: currentStore

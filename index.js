@@ -63,7 +63,8 @@ io.on("connection", client => {
     });
   });
 
-  client.on("board-changed", payload => {
+  client.on("store-changed", payload => {
+    console.log("Store change triggered...");
     const { sessionUrl, sessionId, newStore } = payload;
     // check if emitter is the host
     Session.findById(sessionId, (err, foundSession) => {
