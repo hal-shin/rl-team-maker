@@ -18,7 +18,9 @@ server.listen(port, () => {
 });
 
 // app configs
-app.use(express.static(path.join(__dirname, "client/build")));
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "client/build")));
+}
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -156,5 +158,5 @@ app.post("/session", (req, res) => {
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "/client/public", "index.html"));
+  res.sendFile(path.join(__dirname, "/client/build", "index.html"));
 });
