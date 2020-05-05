@@ -12,6 +12,7 @@ export function SocketProvider(props) {
   const [currentSessionId, setCurrentSessionId] = useState("");
   const [connected, setConnected] = useState(false);
   const [isViewer, setIsViewer] = useState(false);
+  const [isHost, setIsHost] = useState(false);
 
   return (
     <SocketContext.Provider
@@ -33,7 +34,9 @@ export function SocketProvider(props) {
         isViewer,
         setIsViewer,
         connected,
-        setConnected
+        setConnected,
+        isHost,
+        setIsHost
       }}
     >
       {props.children}

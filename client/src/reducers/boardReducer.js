@@ -3,8 +3,11 @@ import { initialData } from "./boardReducerInitialData";
 
 const board = (state = initialData, action) => {
   switch (action.type) {
+    case "SET_STORE":
+      return { ...action.newStore.board };
+
     case "SET_BOARD":
-      return action.newBoard;
+      return { ...action.newBoard };
 
     case "SET_PLAYERS":
       return {
@@ -16,6 +19,7 @@ const board = (state = initialData, action) => {
           }
         }
       };
+
     case "SET_PLAYER_ORDER":
       return {
         ...state,
@@ -24,6 +28,7 @@ const board = (state = initialData, action) => {
           playerOrder: action.newPlayerOrder
         }
       };
+
     case "SET_TEAMS":
       return {
         ...state,
@@ -32,6 +37,7 @@ const board = (state = initialData, action) => {
           teams: { ...action.newTeams }
         }
       };
+
     case "SET_TEAM_ORDER":
       return {
         ...state,
@@ -72,6 +78,7 @@ const board = (state = initialData, action) => {
           teamOrder: action.newTeamOrder
         }
       };
+
     case "RESET":
       let [newTeams, newTeamOrder] = prepBlankTeamsAndTeamOrder(
         state.player.players,

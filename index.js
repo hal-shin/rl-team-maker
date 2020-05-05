@@ -1,4 +1,5 @@
 require("dotenv").config();
+const _ = require("lodash");
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -56,9 +57,8 @@ io.on("connection", client => {
       if (err) return console.log("SESSION NOT FOUND");
       else {
         const newStore = JSON.parse(foundSession.store);
-
-        client.emit("update-board", newStore.board);
-        client.emit("update-session", foundSession.session);
+        console.log("TRIGGER 1");
+        client.emit("update-store", newStore);
       }
     });
   });
@@ -69,20 +69,31 @@ io.on("connection", client => {
     Session.findById(sessionId, (err, foundSession) => {
       if (err) return console.log("SESSION NOT FOUND");
       else {
-        if (foundSession.session.hostUrl === sessionUrl) {
-          Session.findByIdAndUpdate(
-            sessionId,
-            { store: JSON.stringify(newStore) },
-            (err, updatedStore) => {
-              if (err) console.log("Session data update failed.");
-            }
-          );
-          client
-            .to(foundSession.session.viewerUrl)
-            .emit("update-board", newStore.board);
-          client
-            .to(foundSession.session.hostUrl)
-            .emit("update-board", newStore.board);
+        const oldStore = JSON.parse(foundSession.store);
+
+        console.log("HOST SESSION URL:", oldStore.session.hostUrl);
+        if (oldStore.session.hostUrl === sessionUrl) {
+          // check if stores are different, if so, update
+          if (!_.isEqual(oldStore, newStore)) {
+            console.log("Stores are different. Updating...");
+            console.log("OLD STORE:", oldStore);
+            console.log("NEW STORE:", newStore);
+
+            Session.findByIdAndUpdate(
+              sessionId,
+              { store: JSON.stringify(newStore) },
+              err => {
+                if (err) console.log("Session data update failed.");
+              }
+            );
+
+            console.log("TRIGGER 2");
+
+            client
+              .to(oldStore.session.viewerUrl)
+              .emit("update-store", newStore);
+            client.to(oldStore.session.hostUrl).emit("update-store", newStore);
+          }
         }
       }
     });

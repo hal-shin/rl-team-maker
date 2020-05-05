@@ -49,6 +49,10 @@ export const useStyles = makeStyles(theme => ({
   logo: {
     maxWidth: 28
   },
+  buttonText: {
+    ...theme.typography.button,
+    color: "red"
+  },
   menuButton: {
     marginRight: theme.spacing(2)
   },

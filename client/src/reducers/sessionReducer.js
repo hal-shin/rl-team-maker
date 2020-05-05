@@ -1,5 +1,7 @@
 const session = (state = { connected: false }, action) => {
   switch (action.type) {
+    case "SET_STORE":
+      return { ...action.newStore.session };
     case "SET_SESSION":
       return {
         ...state,

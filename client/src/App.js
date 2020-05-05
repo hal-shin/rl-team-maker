@@ -43,7 +43,7 @@ export default function App() {
   const { isDarkMode, toggleIsDarkMode, viewMode, setViewMode } = useContext(
     ThemeContext
   );
-  const { currentSessionId, isViewer } = useContext(SocketContext);
+  const { currentSessionId, isViewer, isHost } = useContext(SocketContext);
   const [menuOpen, setMenuOpen] = useState(false);
   const { setOpenPlayerContextMenu } = useContext(DialogContext);
 
@@ -116,7 +116,8 @@ export default function App() {
                 console.log(currentSessionId);
               }}
             >
-              RL Team Maker
+              RL Team Maker{" "}
+              <span className={classes.buttonText}>{isHost && "LIVE"}</span>
             </Typography>
             <Chat />
             <Hidden lgUp>

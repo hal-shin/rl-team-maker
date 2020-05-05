@@ -17,6 +17,9 @@ import { timeoutPromise } from "../helpers/playerFetchLogic";
 import { setBoard, setPlayerOrder, setTeams } from "../actions/boardActions";
 import { SocketContext } from "../contexts/SocketContext";
 import { setSession } from "../actions/sessionActions";
+import { setStore } from "../actions/storeActions";
+
+var socketTimeout;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,12 +52,15 @@ export default function Board() {
     setCurrentSessionUrl,
     currentSessionId,
     setCurrentSessionId,
-    setIsViewer
+    setIsViewer,
+    isHost,
+    setIsHost
   } = useContext(SocketContext);
   const [value, setValue] = useState(0);
   const [showing, setShowing] = useState("board");
 
   useEffect(() => {
+    console.log("SESSION URL CHANGED");
     if (sessionUrl) {
       setShowing("loading");
       // fetch sessionID
@@ -64,7 +70,7 @@ export default function Board() {
           const newSessionId = data.sessionId;
           setCurrentSessionId(newSessionId);
           setIsViewer(data.isViewer);
-
+          setIsHost(!data.isViewer);
           setShowing("board");
           setCurrentSessionUrl(sessionUrl);
           socket.emit("join-session", { sessionUrl, newSessionId });
@@ -74,24 +80,23 @@ export default function Board() {
           setShowing("no-session-found");
         });
 
-      socket.on("update-board", newBoard => {
-        console.log("INCOMING BOARD:", newBoard);
-        dispatch(setBoard(newBoard));
-      });
-
-      socket.on("update-session", newSession => {
-        dispatch(setSession(newSession));
+      socket.on("update-store", newStore => {
+        console.log("INCOMING STORE:", newStore);
+        dispatch(setStore(newStore));
       });
     }
   }, [sessionUrl]);
 
   useEffect(() => {
-    if (currentSessionId && currentSession.connected) {
-      socket.emit("board-changed", {
-        sessionUrl,
-        sessionId: currentSessionId,
-        newStore: currentStore
-      });
+    clearTimeout(socketTimeout);
+    if (currentSessionId && currentSession.connected && isHost) {
+      socketTimeout = setTimeout(() => {
+        socket.emit("board-changed", {
+          sessionUrl,
+          sessionId: currentSessionId,
+          newStore: currentStore
+        });
+      }, 2000);
     }
   }, [currentBoard]);
 
