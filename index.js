@@ -12,7 +12,6 @@ const port = process.env.PORT || 5000;
 const io = require("socket.io")(server);
 const tracker = require("./routes/tracker");
 const Session = require("./schemas/sessionSchema");
-const blankBoard = require("./emptyBoardTemplate");
 
 server.listen(port, () => {
   console.log("Server listening at port %d", port);
@@ -54,46 +53,40 @@ io.on("connection", client => {
     client.join(sessionUrl);
 
     Session.findById(newSessionId, (err, foundSession) => {
-      if (err) return console.log("SESSION NOT FOUND");
+      if (err) return console.log(`Session (${sessionUrl}) not found.`);
       else {
         const newStore = JSON.parse(foundSession.store);
-        console.log("TRIGGER 1");
         client.emit("update-store", newStore);
       }
     });
   });
 
   client.on("store-changed", payload => {
-    console.log("Store change triggered...");
     const { sessionUrl, sessionId, newStore } = payload;
     // check if emitter is the host
     Session.findById(sessionId, (err, foundSession) => {
-      if (err) return console.log("SESSION NOT FOUND");
+      if (err) return console.log(`Session (${sessionUrl}) not found.`);
       else {
-        const oldStore = JSON.parse(foundSession.store);
-
-        console.log("HOST SESSION URL:", oldStore.session.hostUrl);
-        if (oldStore.session.hostUrl === sessionUrl) {
+        if (foundSession.session.hostUrl === sessionUrl) {
           // check if stores are different, if so, update
+          const oldStore = JSON.parse(foundSession.store);
           if (!_.isEqual(oldStore, newStore)) {
-            console.log("Stores are different. Updating...");
-            console.log("OLD STORE:", oldStore);
-            console.log("NEW STORE:", newStore);
-
             Session.findByIdAndUpdate(
               sessionId,
-              { store: JSON.stringify(newStore) },
+              {
+                store: JSON.stringify(newStore)
+              },
               err => {
                 if (err) console.log("Session data update failed.");
               }
             );
 
-            console.log("TRIGGER 2");
-
             client
-              .to(oldStore.session.viewerUrl)
+              .to(foundSession.session.viewerUrl)
               .emit("update-store", newStore);
-            client.to(oldStore.session.hostUrl).emit("update-store", newStore);
+            client
+              .to(foundSession.session.hostUrl)
+              .emit("update-store", newStore);
           }
         }
       }
@@ -118,19 +111,25 @@ app.get("/session", (req, res) => {
         res.status(404);
         res.send("No such session found");
       } else {
-        // console.log("FOUND SESSION:", foundSession);
         if (foundSession.session.hostUrl === sessionUrl) isViewer = false;
-        res.json({ sessionId: foundSession._id, isViewer });
+
+        const outputSession = {
+          ...foundSession.session,
+          id: foundSession._id,
+          isViewer,
+          isHost: !isViewer
+        };
+
+        res.json(outputSession);
       }
     });
   }
 });
 
 app.post("/session", (req, res) => {
-  let { newBoard, storeData, boardData, hostName } = req.body;
+  let { storeData, hostName } = req.body;
 
   hostName = hostName || "Admin";
-  newBoard = newBoard || false;
 
   const newHostUrl = randomString.generate({
     length: 8,
@@ -140,10 +139,6 @@ app.post("/session", (req, res) => {
     length: 8,
     charset: "alphabetic"
   });
-
-  if (newBoard === true) {
-    boardData = blankBoard;
-  }
 
   const newSession = new Session({
     urls: [newHostUrl, newViewerUrl],
@@ -162,6 +157,8 @@ app.post("/session", (req, res) => {
       res.status(400);
       res.send("something went wrong.");
     } else {
+      const newSessionData = JSON.parse(doc.store);
+      console.log("CREATING NEW SESSION:", newSessionData.session);
       res.json(doc);
     }
   });

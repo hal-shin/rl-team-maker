@@ -8,11 +8,11 @@ export function SocketProvider(props) {
   const [messages, setMessages] = useState([]);
   const [usernameLive, setUsernameLive] = useState("");
   const [roomNameLive, setRoomNameLive] = useState("");
-  const [currentSessionUrl, setCurrentSessionUrl] = useState("");
-  const [currentSessionId, setCurrentSessionId] = useState("");
-  const [connected, setConnected] = useState(false);
-  const [isViewer, setIsViewer] = useState(false);
-  const [isHost, setIsHost] = useState(false);
+  const [session, setSession] = useState({
+    connected: false,
+    isHost: false,
+    isViewer: false
+  });
 
   return (
     <SocketContext.Provider
@@ -27,16 +27,9 @@ export function SocketProvider(props) {
         setUsernameLive,
         roomNameLive,
         setRoomNameLive,
-        currentSessionUrl,
-        setCurrentSessionUrl,
-        currentSessionId,
-        setCurrentSessionId,
-        isViewer,
-        setIsViewer,
-        connected,
-        setConnected,
-        isHost,
-        setIsHost
+
+        session,
+        setSession
       }}
     >
       {props.children}

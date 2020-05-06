@@ -13,10 +13,9 @@ import PlayerSection from "./PlayerSection";
 import Dialogs from "./dialogs/Dialogs";
 import { socket } from "../socket";
 
-import { timeoutPromise } from "../helpers/playerFetchLogic";
-import { setBoard, setPlayerOrder, setTeams } from "../actions/boardActions";
 import { SocketContext } from "../contexts/SocketContext";
-import { setSession } from "../actions/sessionActions";
+import { timeoutPromise } from "../helpers/playerFetchLogic";
+import { setPlayerOrder, setTeams } from "../actions/boardActions";
 import { setStore } from "../actions/storeActions";
 
 var socketTimeout;
@@ -44,36 +43,27 @@ export default function Board() {
   const dispatch = useDispatch();
   let { sessionUrl } = useParams();
   const currentStore = useSelector(state => state);
-  const currentBoard = useSelector(state => state.board);
-  const currentSession = useSelector(state => state.session);
   const playerOrder = useSelector(state => state.board.player.playerOrder);
   const teams = useSelector(state => state.board.team.teams);
-  const {
-    setCurrentSessionUrl,
-    currentSessionId,
-    setCurrentSessionId,
-    setIsViewer,
-    isHost,
-    setIsHost
-  } = useContext(SocketContext);
+  const { session, setSession } = useContext(SocketContext);
   const [value, setValue] = useState(0);
   const [showing, setShowing] = useState("board");
 
   useEffect(() => {
-    console.log("SESSION URL CHANGED");
     if (sessionUrl) {
       setShowing("loading");
+
       // fetch sessionID
       timeoutPromise(1000 * 10, fetch(`/session?url=${sessionUrl}`))
         .then(res => res.json())
         .then(data => {
-          const newSessionId = data.sessionId;
-          setCurrentSessionId(newSessionId);
-          setIsViewer(data.isViewer);
-          setIsHost(!data.isViewer);
+          setSession(data);
           setShowing("board");
-          setCurrentSessionUrl(sessionUrl);
-          socket.emit("join-session", { sessionUrl, newSessionId });
+
+          socket.emit("join-session", {
+            sessionUrl,
+            newSessionId: data.id
+          });
         })
         .catch(err => {
           console.log(err);
@@ -81,25 +71,23 @@ export default function Board() {
         });
 
       socket.on("update-store", newStore => {
-        console.log("INCOMING STORE:", newStore);
         dispatch(setStore(newStore));
       });
     }
-  }, [sessionUrl]);
+  }, [sessionUrl, dispatch, setSession]);
 
   useEffect(() => {
     clearTimeout(socketTimeout);
-    if (currentSessionId && currentSession.connected && isHost) {
-      console.log("Signalling that store changed...");
+    if (session.id && session.connected && session.isHost) {
       socketTimeout = setTimeout(() => {
         socket.emit("store-changed", {
           sessionUrl,
-          sessionId: currentSessionId,
+          sessionId: session.id,
           newStore: currentStore
         });
       }, 2000);
     }
-  }, [currentBoard]);
+  }, [currentStore, session]);
 
   const onDragEnd = result => {
     /* logic for drag-and-drop functions */

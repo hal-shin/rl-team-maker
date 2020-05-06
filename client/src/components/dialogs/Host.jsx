@@ -12,6 +12,7 @@ import { CircularProgress } from "@material-ui/core";
 import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
 import { DialogContext } from "../../contexts/DialogContext";
+import { SocketContext } from "../../contexts/SocketContext";
 
 const useStyles = makeStyles(theme => ({
   inputs: {
@@ -37,20 +38,19 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function Host() {
   const classes = useStyles();
   const currentStore = useSelector(state => state);
-  const currentBoard = useSelector(state => state.board);
   const { open, setOpen } = useContext(DialogContext);
-  const currentSession = useSelector(state => state.session);
+  const { session } = useContext(SocketContext);
   const [username, setUsername] = useState("");
   const [fetchedSession, setFetchedSession] = useState({});
   const [fetchSuccessful, setFetchSuccessful] = useState(false);
   const [showing, setShowing] = useState("default");
 
   useEffect(() => {
-    if (currentSession.connected) {
-      setFetchedSession({ session: { ...currentSession } });
+    if (session.connected) {
+      setFetchedSession({ ...session });
       setShowing("success");
     }
-  }, [currentSession.connected]);
+  }, [session]);
 
   const handleClose = () => {
     if (fetchSuccessful) {
@@ -73,14 +73,13 @@ export default function Host() {
       },
       body: JSON.stringify({
         storeData: currentStore,
-        boardData: currentBoard,
-        newBoard: false,
+        newBoard: false, // future feature: optional blank board for new host
         hostName: username
       })
     })
       .then(res => res.json())
       .then(data => {
-        setFetchedSession(data);
+        setFetchedSession(data.session);
         setFetchSuccessful(true);
         setShowing("success");
       })
@@ -175,30 +174,27 @@ export default function Host() {
             <TextField
               label="Join Code"
               id="session-code"
-              value={fetchedSession.session.viewerUrl}
-              // style={{ margin: 8 }}
+              value={fetchedSession.viewerUrl}
               margin="normal"
               fullWidth
             />
             <TextField
               label="Public URL"
               id="session-viewer-url"
-              value={appLink + fetchedSession.session.viewerUrl}
-              // style={{ margin: 8 }}
+              value={appLink + fetchedSession.viewerUrl}
               margin="normal"
               fullWidth
             />
             <TextField
               label="Host URL"
               id="session-host-url"
-              value={appLink + fetchedSession.session.hostUrl}
-              // style={{ margin: 8 }}
+              value={appLink + fetchedSession.hostUrl}
               margin="normal"
               fullWidth
             />
           </DialogContent>
           <DialogActions>
-            <Link to={`/session/${fetchedSession.session.hostUrl}`}>
+            <Link to={`/session/${fetchedSession.hostUrl}`}>
               <Button onClick={handleSessionRedirect} color="primary">
                 Great pass!
               </Button>

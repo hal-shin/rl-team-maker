@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import clsx from "clsx";
-import { Switch, Route, BrowserRouter, HashRouter } from "react-router-dom";
+import { Switch, Route, BrowserRouter } from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -28,24 +28,19 @@ import Hidden from "@material-ui/core/Hidden";
 import { lightTheme, darkTheme, useStyles } from "./AppStyles";
 import Board from "./components/Board";
 import Chat from "./components/Chat";
-// import ChatAvatars from "./components/ChatAvatars";
 import { DialogContext } from "./contexts/DialogContext";
 import { SocketContext } from "./contexts/SocketContext";
 import { ThemeContext } from "./contexts/ThemeContext";
 import logo from "./assets/logo.png";
-import { socket } from "./socket";
-import { useSelector } from "react-redux";
 
 export default function App() {
   const classes = useStyles();
-  const connected = useSelector(state => state.session.connected);
-  const { setOpen } = useContext(DialogContext);
+  const { setOpen, setOpenPlayerContextMenu } = useContext(DialogContext);
   const { isDarkMode, toggleIsDarkMode, viewMode, setViewMode } = useContext(
     ThemeContext
   );
-  const { currentSessionId, isViewer, isHost } = useContext(SocketContext);
+  const { session } = useContext(SocketContext);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { setOpenPlayerContextMenu } = useContext(DialogContext);
 
   const theme = isDarkMode ? darkTheme : lightTheme; // must come after isDarkMode declaration
 
@@ -111,13 +106,11 @@ export default function App() {
               variant="h6"
               noWrap
               style={{ flexGrow: 1, paddingLeft: 10 }}
-              onClick={() => {
-                socket.emit("pinged", currentSessionId);
-                console.log(currentSessionId);
-              }}
             >
               RL Team Maker{" "}
-              <span className={classes.buttonText}>{isHost && "LIVE"}</span>
+              <span className={classes.buttonText}>
+                {session.isHost && "LIVE"}
+              </span>
             </Typography>
             <Chat />
             <Hidden lgUp>
@@ -179,7 +172,7 @@ export default function App() {
               button
               onClick={() => setOpen("host")}
               key="Host"
-              disabled={Boolean(isViewer)}
+              disabled={Boolean(session.isViewer)}
             >
               <ListItemIcon>
                 <MeetingRoomIcon />
@@ -190,7 +183,7 @@ export default function App() {
               button
               onClick={() => setOpen("join")}
               key="Join"
-              disabled={connected}
+              disabled={session.connected}
             >
               <ListItemIcon>
                 <PeopleIcon />

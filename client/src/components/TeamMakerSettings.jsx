@@ -12,11 +12,7 @@ import {
   generateBalancedTeams,
   generateCaptainsDraftTeams
 } from "../helpers/teamSortingLogic";
-import {
-  setGameMode,
-  reset,
-  sortTeams
-} from "../actions/boardActions";
+import { setGameMode, reset, sortTeams } from "../actions/boardActions";
 
 const useStyles = makeStyles({
   container: {
@@ -41,7 +37,7 @@ export default function TeamMakerSettings() {
 
   useEffect(() => {
     dispatch(reset());
-  }, [gameMode]);
+  }, [gameMode, dispatch]);
 
   const handleBalanceTeams = () => {
     try {

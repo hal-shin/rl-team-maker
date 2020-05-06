@@ -94,7 +94,7 @@ export default function Team(props) {
       return accumulator + players[id].ranks.currentSeason[gameMode];
     }, 0);
     setTotalMMR(newTotalMMR);
-  }, [teams]);
+  }, [teams, players, team.members, gameMode]);
 
   const handleEditTeamName = evt => {
     setTempTeamName(evt.target.value);
@@ -220,7 +220,11 @@ export default function Team(props) {
         justify="space-around"
       >
         <Grid item xs={6}>
-          <Typography component="div" variant="body2" className={classes.footerText}>
+          <Typography
+            component="div"
+            variant="body2"
+            className={classes.footerText}
+          >
             <Box pl={2}>TOTAL: {totalMMR}</Box>
           </Typography>
         </Grid>
