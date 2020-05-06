@@ -9,9 +9,9 @@ import { Paper } from "@material-ui/core";
 
 import { useStyles } from "./ChatStyles";
 import ChatAvatars from "./ChatAvatars";
-import { DialogContext } from "../contexts/DialogContext";
-import { SocketContext } from "../contexts/SocketContext";
-import { socket } from "../socket";
+import { DialogContext } from "../../contexts/DialogContext";
+import { SocketContext } from "../../contexts/SocketContext";
+import { socket } from "../../socket";
 
 const ChatMenu = withStyles({
   paper: {

@@ -5,14 +5,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
-import Player from "./Player";
-import PlayerContextMenu from "./PlayerContextMenu";
-import { setPlayerOrder } from "../actions/boardActions";
+import Player from "../player/Player";
+import PlayerContextMenu from "../player/PlayerContextMenu";
+import { setPlayerOrder } from "../../actions/boardActions";
 import Button from "@material-ui/core/Button";
-import { DialogContext } from "../contexts/DialogContext";
-import { SocketContext } from "../contexts/SocketContext";
+import { DialogContext } from "../../contexts/DialogContext";
+import { SocketContext } from "../../contexts/SocketContext";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   container: {
     minWidth: "250px"
   },
@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     msOverflowStyle: "none",
     "&::-webkit-scrollbar": { width: "0 !important" }
   }
-}));
+});
 
 export default function PlayerSection() {
   const classes = useStyles();

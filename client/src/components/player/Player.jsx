@@ -13,11 +13,11 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 
-import useToggle from "../hooks/useToggleState";
-import { ThemeContext } from "../contexts/ThemeContext";
-import { DialogContext } from "../contexts/DialogContext";
-import { setPlayerOrder, setPlayers, setTeams } from "../actions/boardActions";
-import { SocketContext } from "../contexts/SocketContext";
+import useToggle from "../../hooks/useToggleState";
+import { ThemeContext } from "../../contexts/ThemeContext";
+import { DialogContext } from "../../contexts/DialogContext";
+import { setPlayerOrder, setPlayers, setTeams } from "../../actions/boardActions";
+import { SocketContext } from "../../contexts/SocketContext";
 
 const useStyles = makeStyles({
   root: {

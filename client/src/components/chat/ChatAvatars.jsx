@@ -3,7 +3,7 @@ import Avatar from "@material-ui/core/Avatar";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { SocketContext } from "../contexts/SocketContext";
+import { SocketContext } from "../../contexts/SocketContext";
 
 const useStyles = makeStyles(theme => ({
   primary: {

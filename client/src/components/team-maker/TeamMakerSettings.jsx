@@ -7,12 +7,12 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
-import { DialogContext } from "../contexts/DialogContext";
+import { DialogContext } from "../../contexts/DialogContext";
 import {
   generateBalancedTeams,
   generateCaptainsDraftTeams
-} from "../helpers/teamSortingLogic";
-import { setGameMode, reset, sortTeams } from "../actions/boardActions";
+} from "../../helpers/teamSortingLogic";
+import { setGameMode, reset, sortTeams } from "../../actions/boardActions";
 
 const useStyles = makeStyles({
   container: {

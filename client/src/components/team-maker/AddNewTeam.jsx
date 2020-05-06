@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Button from "@material-ui/core/Button";
 
-import { setTeams, setTeamOrder } from "../actions/boardActions";
+import { setTeams, setTeamOrder } from "../../actions/boardActions";
 
 export default function AddNewTeam() {
   const dispatch = useDispatch();

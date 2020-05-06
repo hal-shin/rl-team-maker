@@ -2,9 +2,9 @@ import React, { useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import { DialogContext } from "../contexts/DialogContext";
-import { setPlayers, setPlayerOrder, setTeams } from "../actions/boardActions";
-import { SocketContext } from "../contexts/SocketContext";
+import { DialogContext } from "../../contexts/DialogContext";
+import { setPlayers, setPlayerOrder, setTeams } from "../../actions/boardActions";
+import { SocketContext } from "../../contexts/SocketContext";
 
 const initialState = {
   mouseX: null,

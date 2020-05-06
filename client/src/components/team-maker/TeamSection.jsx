@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import TeamBoard from "./TeamBoard";
 import TeamMakerSettings from "./TeamMakerSettings";
 import AddNewTeam from "./AddNewTeam";
-import { SocketContext } from "../contexts/SocketContext";
+import { SocketContext } from "../../contexts/SocketContext";
 
 const useStyles = makeStyles(theme => ({
   container: {

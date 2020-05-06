@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import PlayerStatic from "../PlayerStatic";
+import PlayerStatic from "../player/PlayerStatic";
 import { CircularProgress } from "@material-ui/core";
 import { setPlayerOrder, setPlayers } from "../../actions/boardActions";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,6 +24,12 @@ function AddPlayerAutomatically() {
     setFetchedPlayer
   } = useContext(DialogContext);
   const [uniqueId, setUniqueId] = useState(false);
+
+  useEffect(() => {
+    if (Object.keys(players).includes(fetchedPlayer.id)) {
+      setUniqueId(true);
+    }
+  }, [fetchedPlayer]);
 
   const handleClose = () => {
     if (abortController) {

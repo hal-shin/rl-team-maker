@@ -13,9 +13,9 @@ import Divider from "@material-ui/core/Divider";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 
-import Player from "./Player";
-import useToggle from "../hooks/useToggleState";
-import { setTeams } from "../actions/boardActions";
+import Player from "../player/Player";
+import useToggle from "../../hooks/useToggleState";
+import { setTeams } from "../../actions/boardActions";
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -6,7 +6,7 @@ import { createStore } from "redux";
 import rootReducer from "./reducers/rootReducer";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { DialogProvider } from "./contexts/DialogContext";
-import App from "./App";
+import App from "./App.jsx";
 import "./index.css";
 import { SocketProvider } from "./contexts/SocketContext";
 
