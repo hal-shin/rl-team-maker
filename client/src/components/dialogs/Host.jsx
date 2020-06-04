@@ -194,7 +194,10 @@ export default function Host() {
             />
           </DialogContent>
           <DialogActions>
-            <Link to={`/session/${fetchedSession.hostUrl}`}>
+            <Link
+              to={`/session/${fetchedSession.hostUrl}`}
+              style={{ textDecoration: "none" }}
+            >
               <Button onClick={handleSessionRedirect} color="primary">
                 Great pass!
               </Button>

@@ -81,6 +81,8 @@ export default function LeftDrawer(props) {
         return setViewMode("name");
       case "name":
         return setViewMode("card");
+      default:
+        return;
     }
   };
 

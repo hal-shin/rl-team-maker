@@ -157,8 +157,6 @@ app.post("/session", (req, res) => {
       res.status(400);
       res.send("something went wrong.");
     } else {
-      const newSessionData = JSON.parse(doc.store);
-      console.log("CREATING NEW SESSION:", newSessionData.session);
       res.json(doc);
     }
   });
