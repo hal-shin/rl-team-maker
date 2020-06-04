@@ -14,6 +14,7 @@ import Chat from "./chat/Chat";
 import { drawerWidth } from "./LeftDrawer";
 import { SocketContext } from "../contexts/SocketContext";
 import { DialogContext } from "../contexts/DialogContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 export const useStyles = makeStyles(theme => ({
   appBar: {
@@ -53,6 +54,7 @@ function TopAppBar(props) {
   const { handleDrawerOpen, menuOpen } = props;
   const { session } = useContext(SocketContext);
   const { setOpen } = useContext(DialogContext);
+  const { boardShowing } = useContext(ThemeContext);
 
   const handleAltMenuOpen = () => {
     setOpen("alt-menu");
@@ -83,7 +85,7 @@ function TopAppBar(props) {
           noWrap
           style={{ flexGrow: 1, paddingLeft: 10 }}
         >
-          RL Team Maker{" "}
+          {boardShowing === "tournament" ? "Tournament Bracket" : "Team Maker"}{" "}
           <span className={classes.buttonText}>{session.isHost && "LIVE"}</span>
         </Typography>
         <Chat />

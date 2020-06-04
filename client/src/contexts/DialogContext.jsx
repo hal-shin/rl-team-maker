@@ -27,7 +27,7 @@ export function DialogProvider(props) {
         openPlayerContextMenu,
         setOpenPlayerContextMenu,
         currentPlayerInfo,
-        setCurrentPlayerContext: setCurrentPlayerInfo
+        setCurrentPlayerInfo
       }}
     >
       {props.children}

@@ -6,7 +6,6 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TeamSection from "./TeamSection";
 import PlayerSection from "./PlayerSection";
-import Dialogs from "../dialogs/Dialogs";
 import { setPlayerOrder, setTeams } from "../../actions/boardActions";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
@@ -142,7 +141,6 @@ export default function TeamMaker() {
           <TeamSection />
           <PlayerSection />
         </Hidden>
-        <Dialogs />
       </Paper>
     </DragDropContext>
   );

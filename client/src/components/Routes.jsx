@@ -9,7 +9,7 @@ export default function Routes() {
         <Route exact path="/session/:sessionUrl">
           <Board />
         </Route>
-        <Route path="/">
+        <Route exact path="/">
           <Board />
         </Route>
       </Switch>

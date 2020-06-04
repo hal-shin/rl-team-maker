@@ -29,7 +29,7 @@ function AddPlayerAutomatically() {
     if (Object.keys(players).includes(fetchedPlayer.id)) {
       setUniqueId(true);
     }
-  }, [fetchedPlayer]);
+  }, [fetchedPlayer, players]);
 
   const handleClose = () => {
     if (abortController) {

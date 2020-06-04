@@ -51,22 +51,36 @@ export const useStyles = makeStyles(theme => ({
   }
 }));
 
-function LeftDrawer(props) {
+const MenuItem = ({ icon, text, ...props }) => {
+  return (
+    <ListItem button {...props}>
+      <ListItemIcon>{icon}</ListItemIcon>
+      <ListItemText primary={text} />
+    </ListItem>
+  );
+};
+
+export default function LeftDrawer(props) {
   const classes = useStyles();
   const { handleDrawerClose, menuOpen, theme } = props;
   const { session } = useContext(SocketContext);
   const { setOpen } = useContext(DialogContext);
-  const { isDarkMode, toggleIsDarkMode, viewMode, setViewMode } = useContext(
-    ThemeContext
-  );
+  const {
+    isDarkMode,
+    toggleIsDarkMode,
+    viewMode,
+    setViewMode,
+    setBoardShowing
+  } = useContext(ThemeContext);
 
   const handleChangeViewMode = () => {
-    if (viewMode === "card") {
-      setViewMode("condensed");
-    } else if (viewMode === "condensed") {
-      setViewMode("name");
-    } else if (viewMode === "name") {
-      setViewMode("card");
+    switch (viewMode) {
+      case "card":
+        return setViewMode("condensed");
+      case "condensed":
+        return setViewMode("name");
+      case "name":
+        return setViewMode("card");
     }
   };
 
@@ -90,92 +104,53 @@ function LeftDrawer(props) {
         </IconButton>
       </div>
       <Divider />
-
       <List>
-        {/*   Team Maker   */}
-        <ListItem button>
-          <ListItemIcon>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Team Maker" />
-        </ListItem>
-
-        {/*   Tournament Bracket   */}
-        <ListItem button>
-          <ListItemIcon>
-            <GradeIcon />
-          </ListItemIcon>
-          <ListItemText primary="Tournament Bracket" />
-        </ListItem>
+        <MenuItem
+          onClick={() => setBoardShowing("team-maker")}
+          icon={<PeopleIcon />}
+          text="Team Maker"
+        />
+        <MenuItem
+          onClick={() => setBoardShowing("tournament")}
+          icon={<GradeIcon />}
+          text="Tournament Bracket"
+          disabled
+        />
       </List>
-
       <Divider />
-
       <List>
-        {/*   View Change Button   */}
-        <ListItem button onClick={handleChangeViewMode}>
-          <ListItemIcon>
-            <ViewAgendaIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary={
-              viewMode === "card"
-                ? "Condensed View"
-                : viewMode === "condensed"
-                ? "Name View"
-                : "Card View"
-            }
-          />
-        </ListItem>
-
-        {/*   Dark Mode Button   */}
-        <ListItem button onClick={toggleIsDarkMode}>
-          <ListItemIcon>
-            <Brightness4Icon />
-          </ListItemIcon>
-          <ListItemText primary={isDarkMode ? "Light Mode" : "Dark Mode"} />
-        </ListItem>
+        <MenuItem
+          onClick={handleChangeViewMode}
+          icon={<ViewAgendaIcon />}
+          text={
+            viewMode === "card"
+              ? "Condensed View"
+              : viewMode === "condensed"
+              ? "Name View"
+              : "Card View"
+          }
+        />
+        <MenuItem
+          onClick={toggleIsDarkMode}
+          icon={<Brightness4Icon />}
+          text={isDarkMode ? "Light Mode" : "Dark Mode"}
+        />
       </List>
-
       <Divider />
-
       <List>
-        {/*   Host Button   */}
-        <ListItem
-          button
+        <MenuItem
           onClick={() => setOpen("host")}
-          key="Host"
           disabled={Boolean(session.isViewer)}
-        >
-          <ListItemIcon>
-            <MeetingRoomIcon />
-          </ListItemIcon>
-          <ListItemText primary="Host" />
-        </ListItem>
-
-        {/*   Join Button   */}
-        {/*<ListItem*/}
-        {/*  button*/}
-        {/*  onClick={() => setOpen("join")}*/}
-        {/*  key="Join"*/}
-        {/*  disabled={session.connected}*/}
-        {/*>*/}
-        {/*  <ListItemIcon>*/}
-        {/*    <PeopleIcon />*/}
-        {/*  </ListItemIcon>*/}
-        {/*  <ListItemText primary="Join" />*/}
-        {/*</ListItem>*/}
-
-        {/*   Help Button   */}
-        <ListItem button key="Help" onClick={() => setOpen("help")}>
-          <ListItemIcon>
-            <HelpIcon />
-          </ListItemIcon>
-          <ListItemText primary="Help" />
-        </ListItem>
+          icon={<MeetingRoomIcon />}
+          text="Host"
+        />
+        <MenuItem
+          onClick={() => setOpen("help")}
+          disabled={Boolean(session.isViewer)}
+          icon={<HelpIcon />}
+          text="Help"
+        />
       </List>
-
-      {/*   Footer   */}
       <div className={classes.footer}>
         <Typography variant="overline" align="center">
           Made with <FavoriteIcon fontSize="inherit" /> by HS
@@ -184,5 +159,3 @@ function LeftDrawer(props) {
     </Drawer>
   );
 }
-
-export default LeftDrawer;

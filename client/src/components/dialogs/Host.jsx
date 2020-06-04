@@ -164,7 +164,7 @@ export default function Host() {
         </div>
       );
     } else if (showing === "success") {
-      const appLink = "https://still-wildwood-39043.herokuapp.com/session/";
+      const appLink = "https://rl-team-maker.herokuapp.com/session/";
       return (
         <div>
           <DialogTitle id="host-session-dialog">

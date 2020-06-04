@@ -56,7 +56,7 @@ export default function Player(props) {
   const teams = useSelector(state => state.board.team.teams);
   const { isViewer } = useContext(SocketContext);
   const { viewMode } = useContext(ThemeContext);
-  const { setOpenPlayerContextMenu, setCurrentPlayerContext } = useContext(
+  const { setOpenPlayerContextMenu, setCurrentPlayerInfo } = useContext(
     DialogContext
   );
   const [isEditing, toggleIsEditing] = useToggle(false);
@@ -127,7 +127,7 @@ export default function Player(props) {
 
   const handleMouseUp = event => {
     if (event.button === 2) {
-      setCurrentPlayerContext(player);
+      setCurrentPlayerInfo(player);
       setOpenPlayerContextMenu({
         mouseX: event.clientX - 2,
         mouseY: event.clientY - 4
