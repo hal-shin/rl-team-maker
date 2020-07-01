@@ -116,7 +116,7 @@ export default function LeftDrawer(props) {
           onClick={() => setBoardShowing("tournament")}
           icon={<GradeIcon />}
           text="Tournament Bracket"
-          disabled
+          // disabled
         />
       </List>
       <Divider />

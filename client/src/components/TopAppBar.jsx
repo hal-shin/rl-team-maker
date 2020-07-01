@@ -1,13 +1,16 @@
 import React, { useContext } from "react";
 import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import Typography from "@material-ui/core/Typography";
-import Hidden from "@material-ui/core/Hidden";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import AppBar from "@material-ui/core/AppBar";
+import { useAuth0 } from "@auth0/auth0-react";
+import {
+  makeStyles,
+  Typography,
+  Toolbar,
+  IconButton,
+  Hidden,
+  AppBar,
+  Button
+} from "@material-ui/core";
+import { Menu, MoreVert } from "@material-ui/icons";
 
 import logo from "../assets/logo.png";
 import Chat from "./chat/Chat";
@@ -49,9 +52,9 @@ export const useStyles = makeStyles(theme => ({
   }
 }));
 
-function TopAppBar(props) {
+export default function TopAppBar({ handleDrawerOpen, menuOpen }) {
   const classes = useStyles();
-  const { handleDrawerOpen, menuOpen } = props;
+  const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
   const { session } = useContext(SocketContext);
   const { setOpen } = useContext(DialogContext);
   const { boardShowing } = useContext(ThemeContext);
@@ -77,7 +80,7 @@ function TopAppBar(props) {
           edge="start"
           className={clsx(classes.menuButton, menuOpen && classes.hide)}
         >
-          <MenuIcon />
+          <Menu />
         </IconButton>
         <img src={logo} alt="application logo" className={classes.logo} />
         <Typography
@@ -89,18 +92,23 @@ function TopAppBar(props) {
           <span className={classes.buttonText}>{session.isHost && "LIVE"}</span>
         </Typography>
         <Chat />
+        <div>
+          {isAuthenticated ? (
+            <Button onClick={() => logout()}>Logout</Button>
+          ) : (
+            <Button onClick={() => loginWithRedirect()}>Login/Signup</Button>
+          )}
+        </div>
         <Hidden lgUp>
           <IconButton
             color="inherit"
             aria-label="open alt menu"
             onClick={handleAltMenuOpen}
           >
-            <MoreVertIcon />
+            <MoreVert />
           </IconButton>
         </Hidden>
       </Toolbar>
     </AppBar>
   );
 }
-
-export default TopAppBar;
