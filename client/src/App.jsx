@@ -37,13 +37,12 @@ export default function App() {
     }
   };
 
-  console.log(process.env.REACT_APP_AUTH0_DOMAIN)
-
   return (
     <Auth0Provider
       domain={process.env.REACT_APP_AUTH0_DOMAIN}
       clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
       redirectUri={window.location.origin}
+      audience={process.env.REACT_APP_AUTH0_IDENTIFIER}
     >
       <MuiThemeProvider theme={theme}>
         <div

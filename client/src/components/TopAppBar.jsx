@@ -54,7 +54,11 @@ export const useStyles = makeStyles(theme => ({
 
 export default function TopAppBar({ handleDrawerOpen, menuOpen }) {
   const classes = useStyles();
-  const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
+  const {
+    loginWithRedirect,
+    isAuthenticated,
+    logout,
+  } = useAuth0();
   const { session } = useContext(SocketContext);
   const { setOpen } = useContext(DialogContext);
   const { boardShowing } = useContext(ThemeContext);
