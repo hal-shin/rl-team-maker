@@ -8,8 +8,8 @@ import { timeoutPromise } from "../helpers/playerFetchLogic";
 import { setStore } from "../actions/storeActions";
 import TeamMaker from "./team-maker/TeamMaker";
 import { ThemeContext } from "../contexts/ThemeContext";
-import TournamentBracket from "./tournament/TournamentBracket";
-import Dialogs from "./dialogs/Dialogs";
+import TournamentBracket from "./bracket/TournamentBracket";
+import Dialogs from "./dialogs";
 
 var socketTimeout;
 
@@ -66,7 +66,7 @@ export default function Board() {
     switch (boardShowing) {
       case "team-maker":
         return <TeamMaker />;
-      case "tournament":
+      case "bracket":
         return <TournamentBracket />;
       case "loading":
         return <p>Loading...</p>;

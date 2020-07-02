@@ -52,16 +52,12 @@ export const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TopAppBar({ handleDrawerOpen, menuOpen }) {
+export default function TopAppBar() {
   const classes = useStyles();
-  const {
-    loginWithRedirect,
-    isAuthenticated,
-    logout,
-  } = useAuth0();
+  const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
   const { session } = useContext(SocketContext);
   const { setOpen } = useContext(DialogContext);
-  const { boardShowing } = useContext(ThemeContext);
+  const { boardShowing, handleDrawerOpen, menuOpen } = useContext(ThemeContext);
 
   const handleAltMenuOpen = () => {
     setOpen("alt-menu");
@@ -92,7 +88,7 @@ export default function TopAppBar({ handleDrawerOpen, menuOpen }) {
           noWrap
           style={{ flexGrow: 1, paddingLeft: 10 }}
         >
-          {boardShowing === "tournament" ? "Tournament Bracket" : "Team Maker"}{" "}
+          {boardShowing === "bracket" ? "Tournament Bracket" : "Team Maker"}{" "}
           <span className={classes.buttonText}>{session.isHost && "LIVE"}</span>
         </Typography>
         <Chat />

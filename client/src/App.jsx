@@ -1,32 +1,18 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import clsx from "clsx";
-import { Auth0Provider } from "@auth0/auth0-react";
-import { MuiThemeProvider } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
 
-import Routes from "./components/Routes";
 import TopAppBar from "./components/TopAppBar";
 import LeftDrawer from "./components/LeftDrawer";
 
-import { lightTheme, darkTheme, useStyles } from "./AppStyles";
-import { DialogContext } from "./contexts/DialogContext";
-import { ThemeContext } from "./contexts/ThemeContext";
+import { useStyles } from "./AppStyles";
+import { DialogContext, ThemeContext } from "./contexts";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import {Board, Landing, Snackbars} from "./components";
 
 export default function App() {
   const classes = useStyles();
   const { setOpenPlayerContextMenu } = useContext(DialogContext);
-  const { isDarkMode } = useContext(ThemeContext);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const theme = isDarkMode ? darkTheme : lightTheme; // must come after isDarkMode declaration
-
-  const handleDrawerOpen = () => {
-    setMenuOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setMenuOpen(false);
-  };
+  const { menuOpen } = useContext(ThemeContext);
 
   const handleMouseDown = event => {
     if (event.button === 2) {
@@ -38,36 +24,30 @@ export default function App() {
   };
 
   return (
-    <Auth0Provider
-      domain={process.env.REACT_APP_AUTH0_DOMAIN}
-      clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
-      redirectUri={window.location.origin}
-      audience={process.env.REACT_APP_AUTH0_IDENTIFIER}
+    <div
+      className={classes.root}
+      onContextMenu={e => e.preventDefault()}
+      onMouseDown={handleMouseDown}
     >
-      <MuiThemeProvider theme={theme}>
-        <div
-          className={classes.root}
-          onContextMenu={e => e.preventDefault()}
-          onMouseDown={handleMouseDown}
+      <BrowserRouter>
+        <TopAppBar />
+        <LeftDrawer />
+        <main
+          className={clsx(classes.content, {
+            [classes.contentShift]: menuOpen
+          })}
         >
-          <CssBaseline />
-          <TopAppBar handleDrawerOpen={handleDrawerOpen} menuOpen={menuOpen} />
-          <LeftDrawer
-            theme={theme}
-            handleDrawerClose={handleDrawerClose}
-            menuOpen={menuOpen}
-          />
+          <div className={classes.drawerHeader} />
 
-          <main
-            className={clsx(classes.content, {
-              [classes.contentShift]: menuOpen
-            })}
-          >
-            <div className={classes.drawerHeader} />
-            <Routes />
-          </main>
-        </div>
-      </MuiThemeProvider>
-    </Auth0Provider>
+          <Switch>
+            <Route exact path="/session/:sessionUrl" render={() => <Board />} />
+            <Route exact path="/board" render={() => <Board />} />
+            <Route exact path="/" render={() => <Landing />} />
+          </Switch>
+
+          <Snackbars />
+        </main>
+      </BrowserRouter>
+    </div>
   );
 }
