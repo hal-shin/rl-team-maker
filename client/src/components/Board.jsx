@@ -9,7 +9,6 @@ import { setStore } from "../actions/storeActions";
 import TeamMaker from "./team-maker/TeamMaker";
 import { ThemeContext } from "../contexts/ThemeContext";
 import TournamentBracket from "./bracket/TournamentBracket";
-import Dialogs from "./dialogs";
 
 var socketTimeout;
 
@@ -80,7 +79,6 @@ export default function Board() {
   return (
     <div>
       {renderBoard()}
-      <Dialogs />
     </div>
   );
 }

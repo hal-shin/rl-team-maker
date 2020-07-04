@@ -2,7 +2,7 @@ import React, { createContext, useState } from "react";
 import { MuiThemeProvider, CssBaseline } from "@material-ui/core";
 
 import useToggle from "../hooks/useToggleState";
-import {darkTheme, lightTheme} from "../themes";
+import { darkTheme, lightTheme } from "../themes";
 
 export const ThemeContext = createContext();
 
@@ -10,6 +10,7 @@ export function ThemeProvider(props) {
   const [isDarkMode, toggleIsDarkMode] = useToggle(false);
   const [boardShowing, setBoardShowing] = useState("team-maker");
   const [viewMode, setViewMode] = useState("card");
+  const [accountMenuEl, setAccountMenuEl] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleDrawerOpen = () => {
@@ -31,6 +32,8 @@ export function ThemeProvider(props) {
         setBoardShowing,
         menuOpen,
         setMenuOpen,
+        accountMenuEl,
+        setAccountMenuEl,
         handleDrawerOpen,
         handleDrawerClose
       }}

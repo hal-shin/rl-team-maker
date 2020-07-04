@@ -10,6 +10,7 @@ import Help from "./Help";
 import TeamError from "./TeamError";
 import Host from "./Host";
 import Join from "./Join";
+import AccountMenu from "./AccountMenu";
 
 export {
   AddPlayerManually,
@@ -20,10 +21,11 @@ export {
   Help,
   TeamError,
   Host,
-  Join
+  Join,
+  AccountMenu
 };
 
-export default function Index() {
+export default function Dialogs() {
   return (
     <div>
       <AltMenu />
@@ -36,6 +38,7 @@ export default function Index() {
       <TeamError />
       <Host />
       <Join />
+      <AccountMenu />
     </div>
   );
 }

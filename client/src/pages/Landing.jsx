@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 
 import { tournaments } from "../mocks";
-import { TournamentCard } from "./index";
+import { TournamentCard } from "../components";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -52,7 +52,6 @@ const useStyles = makeStyles(theme => ({
     color: "white",
     fontWeight: 300
   },
-  container: {},
   paper: {
     margin: theme.spacing(3, 0),
     padding: theme.spacing(3)
@@ -74,7 +73,7 @@ export default function Landing() {
           Create teams, generate brackets, and host tournaments.
         </Typography>
       </div>
-      <Container maxWidth="lg" className={classes.container}>
+      <Container maxWidth="lg">
         <Paper className={classes.paper} variant="outlined">
           <Typography variant="h4" className={classes.contentHeader}>
             Featured Tournaments

@@ -8,19 +8,19 @@ import {
   IconButton,
   Hidden,
   AppBar,
-  Button
+  Button,
+  Avatar
 } from "@material-ui/core";
 import { Menu, MoreVert } from "@material-ui/icons";
 
 import logo from "../assets/logo.png";
 import Chat from "./chat/Chat";
 import { drawerWidth } from "./LeftDrawer";
-import { SocketContext } from "../contexts/SocketContext";
-import { DialogContext } from "../contexts/DialogContext";
-import { ThemeContext } from "../contexts/ThemeContext";
+import { SocketContext, DialogContext, ThemeContext } from "../contexts";
 
 export const useStyles = makeStyles(theme => ({
   appBar: {
+    zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
@@ -32,13 +32,18 @@ export const useStyles = makeStyles(theme => ({
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen
     })
   },
   logo: {
     maxWidth: 28
+  },
+  header: {
+    fontWeight: 400,
+    flexGrow: 1,
+    paddingLeft: 10
   },
   buttonText: {
     ...theme.typography.button,
@@ -49,18 +54,37 @@ export const useStyles = makeStyles(theme => ({
   },
   hide: {
     display: "none"
+  },
+  avatar: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+    cursor: "pointer"
+  },
+  accountMenu: {
+    display: "flex",
+    "& > *": { marginLeft: theme.spacing(1) }
+  },
+  accountIcon: {
+    display: "flex",
+    alignItems: "center"
   }
 }));
 
 export default function TopAppBar() {
   const classes = useStyles();
-  const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
+  const { loginWithRedirect, isAuthenticated, user } = useAuth0();
   const { session } = useContext(SocketContext);
   const { setOpen } = useContext(DialogContext);
-  const { boardShowing, handleDrawerOpen, menuOpen } = useContext(ThemeContext);
+  const { handleDrawerOpen, menuOpen, setAccountMenuEl } = useContext(
+    ThemeContext
+  );
 
   const handleAltMenuOpen = () => {
     setOpen("alt-menu");
+  };
+
+  const handleOpenAccountMenu = event => {
+    setAccountMenuEl(event.currentTarget);
   };
 
   return (
@@ -83,18 +107,23 @@ export default function TopAppBar() {
           <Menu />
         </IconButton>
         <img src={logo} alt="application logo" className={classes.logo} />
-        <Typography
-          variant="h6"
-          noWrap
-          style={{ flexGrow: 1, paddingLeft: 10 }}
-        >
-          {boardShowing === "bracket" ? "Tournament Bracket" : "Team Maker"}{" "}
+        <Typography variant="h6" noWrap className={classes.header}>
+          RL Tournament App
           <span className={classes.buttonText}>{session.isHost && "LIVE"}</span>
         </Typography>
         <Chat />
-        <div>
+        <div className={classes.accountMenu}>
           {isAuthenticated ? (
-            <Button onClick={() => logout()}>Logout</Button>
+            <div className={classes.accountIcon}>
+              <Avatar
+                alt={user.nickname}
+                className={classes.avatar}
+                onClick={handleOpenAccountMenu}
+                color="primary"
+              >
+                {user.nickname[0].toUpperCase()}
+              </Avatar>
+            </div>
           ) : (
             <Button onClick={() => loginWithRedirect()}>Login/Signup</Button>
           )}

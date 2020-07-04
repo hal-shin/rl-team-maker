@@ -1,5 +1,4 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { drawerWidth } from "./components/LeftDrawer";
 
 export const useStyles = makeStyles(theme => ({
   root: {
@@ -19,8 +18,7 @@ export const useStyles = makeStyles(theme => ({
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
-    }),
-    marginLeft: -drawerWidth
+    })
   },
   contentShift: {
     transition: theme.transitions.create("margin", {

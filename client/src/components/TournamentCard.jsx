@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Avatar,
   Card,
@@ -9,11 +10,14 @@ import {
   Grid,
   IconButton,
   makeStyles,
-  Typography
+  Typography,
+  Button
 } from "@material-ui/core";
 import { Favorite, Share } from "@material-ui/icons";
 import { red } from "@material-ui/core/colors";
-import { DialogContext } from "../contexts";
+
+import { DialogContext, UserContext } from "../contexts";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const useStyles = makeStyles(theme => ({
   gridItem: {
@@ -39,16 +43,70 @@ const useStyles = makeStyles(theme => ({
     width: 245
   },
   avatar: {
-    backgroundColor: red[500]
+    backgroundColor: red[500],
+    width: theme.spacing(5),
+    height: theme.spacing(5)
+  },
+  actions: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: theme.spacing(1, 2)
+  },
+  liked: {
+    color: red[500]
   }
 }));
 
-function TournamentCard({ event }) {
+export default function TournamentCard({ event }) {
   const classes = useStyles();
+  const history = useHistory();
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { user, refetchUser } = useContext(UserContext);
   const { setSnackbarOpen } = useContext(DialogContext);
+  const liked = user && user.events.liked.includes(event.id.toString());
 
   const handleFavorite = () => {
-    setSnackbarOpen("favorite-event")
+    if (isAuthenticated) {
+      liked ? unlike() : like();
+    } else {
+      setSnackbarOpen("favorite-event");
+    }
+  };
+
+  const like = async () => {
+    const accessToken = await getAccessTokenSilently();
+
+    const resp = await fetch(
+      `/user/like?userId=${user._id}&eventId=${event.id}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    );
+
+    const data = await resp.json();
+
+    if (data.success) refetchUser();
+  };
+
+  const unlike = async () => {
+    const accessToken = await getAccessTokenSilently();
+
+    const resp = await fetch(
+      `/user/unlike?userId=${user._id}&eventId=${event.id}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    );
+
+    const data = await resp.json();
+
+    if (data.success) refetchUser();
   };
 
   return (
@@ -61,7 +119,7 @@ function TournamentCard({ event }) {
         />
         <CardMedia
           className={classes.media}
-          image="https://steamcdn-a.akamaihd.net/steam/apps/252950/header_alt_assets_11.jpg?t=1585155609"
+          image={event.image}
           title="Tournament Feature Image"
         />
         <CardContent className={classes.cardContent}>
@@ -83,17 +141,23 @@ function TournamentCard({ event }) {
               event.endDate.toDateString()}
           </Typography>
         </CardContent>
-        <CardActions>
-          <IconButton onClick={handleFavorite}>
-            <Favorite />
-          </IconButton>
-          <IconButton>
-            <Share />
-          </IconButton>
+        <CardActions className={classes.actions}>
+          <Button
+            variant="outlined"
+            onClick={() => history.push(`/tournament/${event.id}`)}
+          >
+            Go to Event
+          </Button>
+          <div>
+            <IconButton>
+              <Share />
+            </IconButton>
+            <IconButton onClick={handleFavorite}>
+              <Favorite className={liked ? classes.liked : ""} />
+            </IconButton>
+          </div>
         </CardActions>
       </Card>
     </Grid>
   );
 }
-
-export default TournamentCard;

@@ -5,11 +5,14 @@ import { createStore } from "redux";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 import rootReducer from "./reducers/rootReducer";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import { DialogProvider } from "./contexts/DialogContext";
+import {
+  ThemeProvider,
+  DialogProvider,
+  SocketProvider,
+  UserProvider
+} from "./contexts";
 import App from "./App.jsx";
 import "./index.css";
-import { SocketProvider } from "./contexts/SocketContext";
 
 const store = createStore(rootReducer);
 
@@ -21,13 +24,15 @@ ReactDOM.render(
       redirectUri={window.location.origin}
       audience={process.env.REACT_APP_AUTH0_IDENTIFIER}
     >
-      <ThemeProvider>
-        <DialogProvider>
-          <SocketProvider>
-            <App />
-          </SocketProvider>
-        </DialogProvider>
-      </ThemeProvider>
+      <UserProvider>
+        <ThemeProvider>
+          <DialogProvider>
+            <SocketProvider>
+              <App />
+            </SocketProvider>
+          </DialogProvider>
+        </ThemeProvider>
+      </UserProvider>
     </Auth0Provider>
   </Provider>,
   document.getElementById("root")

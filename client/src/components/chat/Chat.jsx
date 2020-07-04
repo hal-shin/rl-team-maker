@@ -1,17 +1,19 @@
 import React, { useContext, useRef, useState } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Menu from "@material-ui/core/Menu";
-import InputBase from "@material-ui/core/InputBase";
-import Typography from "@material-ui/core/Typography";
-import SendIcon from "@material-ui/icons/Send";
-import { Paper } from "@material-ui/core";
+import {
+  withStyles,
+  Button,
+  Menu,
+  InputBase,
+  Typography,
+  Paper
+} from "@material-ui/core";
+import { Send } from "@material-ui/icons";
 
 import { useStyles } from "./ChatStyles";
 import ChatAvatars from "./ChatAvatars";
-import { DialogContext } from "../../contexts/DialogContext";
-import { SocketContext } from "../../contexts/SocketContext";
+import { DialogContext, SocketContext } from "../../contexts";
 import { socket } from "../../socket";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const ChatMenu = withStyles({
   paper: {
@@ -49,12 +51,13 @@ export default function Chat() {
     message,
     setMessage,
     messages,
-    setMessages,
-    usernameLive,
-    roomNameLive
+    setMessages
+    // usernameLive,
+    // roomNameLive
   } = useContext(SocketContext);
   const { chatOpen, setChatOpen } = useContext(DialogContext);
   const [connected, setConnected] = useState(false);
+  const { isAuthenticated, user } = useAuth0();
 
   const handleClick = event => {
     setChatOpen(event.currentTarget);
@@ -65,7 +68,7 @@ export default function Chat() {
   };
 
   const connectToChat = () => {
-    socket.emit("initialize", { username: usernameLive, room: roomNameLive });
+    socket.emit("connect-chat", { username: user.nickname, room: "general" });
 
     socket.on("users", users => {
       setUsers(users);
@@ -112,7 +115,7 @@ export default function Chat() {
 
   return (
     <div>
-      {usernameLive !== "" && (
+      {isAuthenticated && (
         <div className={classes.chatButton}>
           <ChatAvatars />
           <Button
@@ -161,7 +164,7 @@ export default function Chat() {
             value={message}
             fullWidth
           />
-          <SendIcon onClick={submitMessage} />
+          <Send onClick={submitMessage} />
         </Paper>
       </ChatMenu>
     </div>
