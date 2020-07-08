@@ -1,5 +1,13 @@
-import React from "react";
-import { makeStyles, Container, Paper, Typography } from "@material-ui/core";
+import React, { useState } from "react";
+import {
+  makeStyles,
+  Container,
+  Paper,
+  Typography,
+  Grid,
+  TextField,
+  Button
+} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,11 +22,60 @@ const useStyles = makeStyles(theme => ({
   },
   contentHeader: {
     marginBottom: theme.spacing(3)
+  },
+  form: {
+    maxWidth: "700px"
   }
 }));
 
+const getDateAndTime = () => {
+  const today = new Date();
+  const date = today.toLocaleDateString().split("/");
+  const time = today.toLocaleTimeString();
+  let output = "";
+
+  output += date[2];
+  output += "-";
+  Number(date[0]) < 10 ? (output += `0${date[0]}`) : (output += date[0]);
+  output += "-";
+  Number(date[1]) < 10 ? (output += `0${date[1]}`) : (output += date[1]);
+  output += "T";
+  if (time.includes("P")) {
+    Number(time.slice(0, 2)) < 12
+      ? (output += Number(time.slice(0, 2)) + 12)
+      : (output += time.slice(0, 2));
+  } else {
+    output += time.slice(0, 2);
+  }
+  output += ":";
+  output += time.slice(3, 5);
+
+  return output;
+};
+
+const initialData = {
+  title: "",
+  startDate: getDateAndTime(),
+  endDate: getDateAndTime(),
+  description: ""
+};
+
 export default function NewEvent() {
   const classes = useStyles();
+  const [data, setData] = useState(initialData);
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    console.log(data);
+  };
+
+  const handleReset = () => {
+    setData(initialData);
+  };
+
+  const handleChange = event => {
+    setData({ ...data, [event.target.id]: event.target.value });
+  };
 
   return (
     <div className={classes.root}>
@@ -28,35 +85,69 @@ export default function NewEvent() {
             New Event
           </Typography>
           <Typography variant="body1">
-            The RL Tournament App is specifically designed to help organize
-            Rocket League tournaments. Here are some of the key features to help
-            organizers do their job better:
+            You can create a new tournament here. Please input the following
+            fields.
           </Typography>
-          <ul>
-            <li>
-              <Typography>
-                Automatic fetching of a player's MMR given their platform
-                username.
-              </Typography>
-            </li>
-            <li>
-              <Typography>
-                Easy balancing of teams through either an automated team sorting
-                mechanism or a captain's draft.
-              </Typography>
-            </li>
-            <li>
-              <Typography>
-                Simple visualization of the available teams and players
-              </Typography>
-            </li>
-            <li>
-              <Typography>
-                Live hosting features -- changes to the tournament board is
-                reflected automatically without refreshing the page for viewers
-              </Typography>
-            </li>
-          </ul>
+          <form
+            onSubmit={handleSubmit}
+            noValidate
+            autoComplete="off"
+            className={classes.form}
+          >
+            <Grid container justify="flex-start" spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  id="title"
+                  label="Event Name"
+                  value={data.title}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  id="startDate"
+                  label="Event Start Date"
+                  type="datetime-local"
+                  value={data.startDate}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  id="endDate"
+                  label="Event End Date"
+                  type="datetime-local"
+                  value={data.endDate}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="description"
+                  label="Description"
+                  value={data.description}
+                  onChange={handleChange}
+                  multiline
+                  fullWidth
+                  rowsMax={6}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  onClick={handleSubmit}
+                  variant="contained"
+                  color="primary"
+                  style={{ marginRight: 8 }}
+                >
+                  Submit
+                </Button>
+                <Button onClick={handleReset} color="secondary">
+                  Reset
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
         </Paper>
       </Container>
     </div>

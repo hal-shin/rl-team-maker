@@ -1,31 +1,35 @@
 const mongoose = require("mongoose");
 
 const tournamentSchema = new mongoose.Schema({
-  url: [String],
-  registrants: [String],
-
-
-
-
-
-  session: {
-    hostUrl: {
-      type: String,
-      require: true,
-      unique: true
-    },
-    viewerUrl: {
-      type: String,
-      require: true,
-      unique: true
-    },
-    hostName: {
-      type: String,
-      require: true
-    },
-    connected: Boolean
+  title: { type: String, require: true },
+  description: { type: String, require: true },
+  image: {
+    type: String,
+    require: true,
+    default:
+      "https://steamcdn-a.akamaihd.net/steam/apps/252950/header_alt_assets_11.jpg?t=1585155609"
   },
-  store: { type: String, require: true }
+  startDate: { type: Date, default: Date.now },
+  endDate: { type: Date, default: Date.now },
+  private: { type: Boolean, default: false },
+  url: [String],
+  status: String,
+  streamLinks: [String],
+  phase: String,
+  creator: {
+    id: { type: String, required: true },
+    name: { type: String, required: true }
+  },
+  people: {
+    registrants: [String],
+    participants: [String],
+    admins: [String],
+    casters: [String]
+  },
+  tournament: {
+    board: [Object],
+    bracket: [Object]
+  }
 });
 
 module.exports = mongoose.model("Tournament", tournamentSchema, "tournaments");

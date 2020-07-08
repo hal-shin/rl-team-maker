@@ -61,7 +61,7 @@ export default function TournamentCard({ event }) {
   const classes = useStyles();
   const history = useHistory();
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
-  const { user, refetchUser } = useContext(UserContext);
+  const { user, fetchUser } = useContext(UserContext);
   const { setSnackbarOpen } = useContext(DialogContext);
   const liked = user && user.events.liked.includes(event.id.toString());
 
@@ -88,7 +88,7 @@ export default function TournamentCard({ event }) {
 
     const data = await resp.json();
 
-    if (data.success) refetchUser();
+    if (data.success) fetchUser();
   };
 
   const unlike = async () => {
@@ -106,7 +106,7 @@ export default function TournamentCard({ event }) {
 
     const data = await resp.json();
 
-    if (data.success) refetchUser();
+    if (data.success) fetchUser();
   };
 
   return (

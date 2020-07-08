@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import clsx from "clsx";
 import { useAuth0 } from "@auth0/auth0-react";
 import {
@@ -12,6 +12,7 @@ import {
   Avatar
 } from "@material-ui/core";
 import { Menu, MoreVert } from "@material-ui/icons";
+import { useHistory } from "react-router-dom";
 
 import logo from "../assets/logo.png";
 import Chat from "./chat/Chat";
@@ -72,12 +73,40 @@ export const useStyles = makeStyles(theme => ({
 
 export default function TopAppBar() {
   const classes = useStyles();
-  const { loginWithRedirect, isAuthenticated, user } = useAuth0();
+  const {
+    loginWithRedirect,
+    isAuthenticated,
+    user,
+    getAccessTokenSilently
+  } = useAuth0();
+  const history = useHistory();
   const { session } = useContext(SocketContext);
   const { setOpen } = useContext(DialogContext);
   const { handleDrawerOpen, menuOpen, setAccountMenuEl } = useContext(
     ThemeContext
   );
+
+  useEffect(() => {
+    const getUser = async () => {
+      const token = await getAccessTokenSilently();
+      const resp = await fetch(
+        process.env.REACT_APP_AUTH0_IDENTIFIER + "users/" + user.sub.slice(6),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      // console.log("Response:", resp);
+      const data = await resp.json();
+
+      // console.log("Data:", data);
+    };
+    if (user) {
+      getUser();
+    }
+  });
 
   const handleAltMenuOpen = () => {
     setOpen("alt-menu");
@@ -111,19 +140,25 @@ export default function TopAppBar() {
           RL Tournament App
           <span className={classes.buttonText}>{session.isHost && "LIVE"}</span>
         </Typography>
-        <Chat />
+        {/*<Chat />*/}
+
         <div className={classes.accountMenu}>
           {isAuthenticated ? (
-            <div className={classes.accountIcon}>
-              <Avatar
-                alt={user.nickname}
-                className={classes.avatar}
-                onClick={handleOpenAccountMenu}
-                color="primary"
-              >
-                {user.nickname[0].toUpperCase()}
-              </Avatar>
-            </div>
+            <>
+              <Button onClick={() => history.push("/tournament/new")}>
+                New Event
+              </Button>
+              <div className={classes.accountIcon}>
+                <Avatar
+                  alt={user.nickname}
+                  className={classes.avatar}
+                  onClick={handleOpenAccountMenu}
+                  color="primary"
+                >
+                  {user.nickname[0].toUpperCase()}
+                </Avatar>
+              </div>
+            </>
           ) : (
             <Button onClick={() => loginWithRedirect()}>Login/Signup</Button>
           )}

@@ -5,7 +5,7 @@ export const UserContext = createContext();
 export function UserProvider(props) {
   const [user, setUser] = useState(null);
 
-  const refetchUser = async () => {
+  const fetchUser = async () => {
     if (user) {
       const resp = await fetch(`/user?userId=${user._id}`);
       const data = await resp.json();
@@ -18,7 +18,7 @@ export function UserProvider(props) {
       value={{
         user,
         setUser,
-        refetchUser
+        fetchUser
       }}
     >
       {props.children}
