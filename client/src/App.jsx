@@ -37,10 +37,10 @@ export default function App() {
         body: JSON.stringify({ user })
       });
 
+      const data = await resp.json();
+
       if (resp.status >= 200 && resp.status <= 299) {
-        const data = await resp.json();
         setUser(data);
-        console.log("logged in successfully");
       } else {
         console.log(resp.status, resp.statusText);
       }

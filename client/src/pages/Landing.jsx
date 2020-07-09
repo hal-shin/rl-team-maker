@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   makeStyles,
   Container,
@@ -58,11 +58,27 @@ const useStyles = makeStyles(theme => ({
   },
   contentHeader: {
     marginBottom: theme.spacing(3)
+  },
+  grid: {
+    marginBottom: theme.spacing(3)
   }
 }));
 
 export default function Landing() {
   const classes = useStyles();
+  const [allEvents, setAllEvents] = useState({ loading: true, data: {} });
+
+  useEffect(() => {
+    fetch("/tournament/all")
+      .then(resp => resp.json())
+      .then(data => {
+        if (!data.message) {
+          setAllEvents({ loading: false, data });
+        }
+      })
+      .catch(err => console.log("ERROR:", err));
+  }, []);
+
   return (
     <div className={classes.root}>
       <div className={classes.jumbotron}>
@@ -79,11 +95,22 @@ export default function Landing() {
             Featured Tournaments
           </Typography>
 
-          <Grid container spacing={3}>
+          <Grid container spacing={3} className={classes.grid}>
             {Object.keys(tournaments).map((id, index) => {
               const event = { ...tournaments[id] };
               return <TournamentCard key={index} event={event} />;
             })}
+          </Grid>
+          <Typography variant="h4" className={classes.contentHeader}>
+            All Tournaments
+          </Typography>
+
+          <Grid container spacing={3} className={classes.grid}>
+            {allEvents.loading
+              ? "loading..."
+              : allEvents.data.map((event, index) => (
+                  <TournamentCard key={index} event={event} />
+                ))}
           </Grid>
         </Paper>
       </Container>

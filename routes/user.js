@@ -29,7 +29,9 @@ app.post("/", checkJwt, (req, res) => {
         {
           _id: userId,
           email: user.email,
-          picture: user.picture
+          picture: user.picture,
+          username: user["https://rl/username"],
+          nickname: user.nickname
         },
         (err, createdUser) => {
           if (err) return console.log("User creation failed.");

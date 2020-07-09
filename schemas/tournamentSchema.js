@@ -5,7 +5,6 @@ const tournamentSchema = new mongoose.Schema({
   description: { type: String, require: true },
   image: {
     type: String,
-    require: true,
     default:
       "https://steamcdn-a.akamaihd.net/steam/apps/252950/header_alt_assets_11.jpg?t=1585155609"
   },

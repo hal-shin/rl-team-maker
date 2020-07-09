@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   makeStyles,
   Container,
@@ -8,6 +8,8 @@ import {
   TextField,
   Button
 } from "@material-ui/core";
+import { useAuth0 } from "@auth0/auth0-react";
+import { UserContext } from "../contexts";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,24 +33,14 @@ const useStyles = makeStyles(theme => ({
 const getDateAndTime = () => {
   const today = new Date();
   const date = today.toLocaleDateString().split("/");
-  const time = today.toLocaleTimeString();
-  let output = "";
-
-  output += date[2];
-  output += "-";
-  Number(date[0]) < 10 ? (output += `0${date[0]}`) : (output += date[0]);
-  output += "-";
-  Number(date[1]) < 10 ? (output += `0${date[1]}`) : (output += date[1]);
-  output += "T";
-  if (time.includes("P")) {
-    Number(time.slice(0, 2)) < 12
-      ? (output += Number(time.slice(0, 2)) + 12)
-      : (output += time.slice(0, 2));
-  } else {
-    output += time.slice(0, 2);
+  const time = today.toLocaleTimeString().split(/[ :]/);
+  let output = `${date[2]}-${Number(date[0]) < 10 ? `0${date[0]}` : date[0]}-${
+    Number(date[1]) < 10 ? `0${date[1]}` : date[1]
+  }T`;
+  if (time[3] === "PM" && Number(time[0]) < 12) {
+    time[0] = (Number(time[0]) + 12).toString();
   }
-  output += ":";
-  output += time.slice(3, 5);
+  output += `${Number(time[0]) < 10 ? `0${time[0]}` : time[0]}:${time[1]}`;
 
   return output;
 };
@@ -62,11 +54,36 @@ const initialData = {
 
 export default function NewEvent() {
   const classes = useStyles();
+  const { getAccessTokenSilently } = useAuth0();
+  const { user } = useContext(UserContext);
   const [data, setData] = useState(initialData);
+
+  const createEvent = async () => {
+    const accessToken = await getAccessTokenSilently();
+
+    const resp = await fetch("/tournament/new", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({ formData: data, user })
+    });
+
+    console.log("Form response:", resp);
+
+    const respData = await resp.json();
+
+    if (resp.status >= 200 && resp.status <= 299) {
+      console.log("Event created successfully");
+    } else {
+      console.log("Event creation failed:", respData.message);
+    }
+  };
 
   const handleSubmit = event => {
     event.preventDefault();
-    console.log(data);
+    createEvent();
   };
 
   const handleReset = () => {

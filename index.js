@@ -15,6 +15,7 @@ const trackerRoutes = require("./routes/tracker");
 const apiRoutes = require("./routes/api");
 const sessionRoutes = require("./routes/session");
 const userRoutes = require("./routes/user");
+const tournamentRoutes = require("./routes/tournament");
 
 // app configs
 if (process.env.NODE_ENV === "production") {
@@ -50,10 +51,11 @@ io.on("connection", client => {
 });
 
 // Tracker route
+app.use("/", sessionRoutes);
 app.use("/search", trackerRoutes);
 app.use("/api", apiRoutes);
-app.use("/", sessionRoutes);
 app.use("/user", userRoutes);
+app.use("/tournament", tournamentRoutes);
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.

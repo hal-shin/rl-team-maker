@@ -63,7 +63,7 @@ export default function TournamentCard({ event }) {
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
   const { user, fetchUser } = useContext(UserContext);
   const { setSnackbarOpen } = useContext(DialogContext);
-  const liked = user && user.events.liked.includes(event.id.toString());
+  const liked = user && user.events.liked.includes(event._id);
 
   const handleFavorite = () => {
     if (isAuthenticated) {
@@ -77,7 +77,7 @@ export default function TournamentCard({ event }) {
     const accessToken = await getAccessTokenSilently();
 
     const resp = await fetch(
-      `/user/like?userId=${user._id}&eventId=${event.id}`,
+      `/user/like?userId=${user._id}&eventId=${event._id}`,
       {
         method: "POST",
         headers: {
@@ -95,7 +95,7 @@ export default function TournamentCard({ event }) {
     const accessToken = await getAccessTokenSilently();
 
     const resp = await fetch(
-      `/user/unlike?userId=${user._id}&eventId=${event.id}`,
+      `/user/unlike?userId=${user._id}&eventId=${event._id}`,
       {
         method: "POST",
         headers: {
@@ -113,9 +113,9 @@ export default function TournamentCard({ event }) {
     <Grid item xs={12} sm={6} md={4} lg={3} className={classes.gridItem}>
       <Card className={classes.card} variant="outlined">
         <CardHeader
-          avatar={<Avatar className={classes.avatar}>R</Avatar>}
-          title={event.host}
-          subheader={event.status}
+          avatar={<Avatar className={classes.avatar}>{event.title[0]}</Avatar>}
+          title={event.creator.name}
+          subheader={event.status || "In Progress"}
         />
         <CardMedia
           className={classes.media}
@@ -131,20 +131,21 @@ export default function TournamentCard({ event }) {
             {event.title}
           </Typography>
           <Typography variant="body2" component="p">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec
-            sagittis risus. Duis sit amet orci ante. Aliquam at lacus fermentum,
-            elementum odio in, ultrices urna.
+            {event.description ||
+              `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec
+              sagittis risus. Duis sit amet orci ante. Aliquam at lacus fermentum,
+              elementum odio in, ultrices urna.`}
           </Typography>
           <Typography variant="body2" component="p" color="textSecondary">
-            {event.startDate.toDateString() +
+            {new Date(event.startDate).toDateString() +
               " - " +
-              event.endDate.toDateString()}
+              new Date(event.endDate).toDateString()}
           </Typography>
         </CardContent>
         <CardActions className={classes.actions}>
           <Button
             variant="outlined"
-            onClick={() => history.push(`/tournament/${event.id}`)}
+            onClick={() => history.push(`/tournament/${event._id}`)}
           >
             Go to Event
           </Button>

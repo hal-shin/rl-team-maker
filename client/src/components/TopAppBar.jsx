@@ -12,12 +12,16 @@ import {
   Avatar
 } from "@material-ui/core";
 import { Menu, MoreVert } from "@material-ui/icons";
-import { useHistory } from "react-router-dom";
 
 import logo from "../assets/logo.png";
 import Chat from "./chat/Chat";
 import { drawerWidth } from "./LeftDrawer";
-import { SocketContext, DialogContext, ThemeContext } from "../contexts";
+import {
+  SocketContext,
+  DialogContext,
+  ThemeContext,
+  UserContext
+} from "../contexts";
 
 export const useStyles = makeStyles(theme => ({
   appBar: {
@@ -68,6 +72,10 @@ export const useStyles = makeStyles(theme => ({
   accountIcon: {
     display: "flex",
     alignItems: "center"
+  },
+  centerVert: {
+    display: "flex",
+    alignItems: "center"
   }
 }));
 
@@ -75,38 +83,13 @@ export default function TopAppBar() {
   const classes = useStyles();
   const {
     loginWithRedirect,
-    isAuthenticated,
-    user,
-    getAccessTokenSilently
   } = useAuth0();
-  const history = useHistory();
   const { session } = useContext(SocketContext);
   const { setOpen } = useContext(DialogContext);
   const { handleDrawerOpen, menuOpen, setAccountMenuEl } = useContext(
     ThemeContext
   );
-
-  useEffect(() => {
-    const getUser = async () => {
-      const token = await getAccessTokenSilently();
-      const resp = await fetch(
-        process.env.REACT_APP_AUTH0_IDENTIFIER + "users/" + user.sub.slice(6),
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      // console.log("Response:", resp);
-      const data = await resp.json();
-
-      // console.log("Data:", data);
-    };
-    if (user) {
-      getUser();
-    }
-  });
+  const { user } = useContext(UserContext);
 
   const handleAltMenuOpen = () => {
     setOpen("alt-menu");
@@ -143,11 +126,11 @@ export default function TopAppBar() {
         {/*<Chat />*/}
 
         <div className={classes.accountMenu}>
-          {isAuthenticated ? (
+          {user ? (
             <>
-              <Button onClick={() => history.push("/tournament/new")}>
-                New Event
-              </Button>
+              <Typography variant="body1" className={classes.centerVert}>
+                Welcome, {user.username}
+              </Typography>
               <div className={classes.accountIcon}>
                 <Avatar
                   alt={user.nickname}
