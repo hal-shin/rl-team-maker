@@ -1,13 +1,16 @@
 import React, { createContext, useState } from "react";
 import { MuiThemeProvider, CssBaseline } from "@material-ui/core";
 
-import useToggle from "../hooks/useToggleState";
 import { darkTheme, lightTheme } from "../themes";
+import { useLocalStorageState } from "../hooks";
 
 export const ThemeContext = createContext();
 
 export function ThemeProvider(props) {
-  const [isDarkMode, toggleIsDarkMode] = useToggle(false);
+  const [isDarkMode, setIsDarkMode] = useLocalStorageState(
+    "rl-tournament-app-darkmode",
+    false
+  );
   const [boardShowing, setBoardShowing] = useState("team-maker");
   const [viewMode, setViewMode] = useState("card");
   const [accountMenuEl, setAccountMenuEl] = useState(null);
@@ -25,7 +28,7 @@ export function ThemeProvider(props) {
     <ThemeContext.Provider
       value={{
         isDarkMode,
-        toggleIsDarkMode,
+        setIsDarkMode,
         viewMode,
         setViewMode,
         boardShowing,

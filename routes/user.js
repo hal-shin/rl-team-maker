@@ -1,6 +1,7 @@
 const app = require("express").Router();
 const checkJwt = require("../middlewares/jwt");
 const User = require("../schemas/userSchema");
+const Tournament = require("../schemas/tournamentSchema");
 
 app.get("/", (req, res) => {
   const { userId } = req.query;
@@ -34,7 +35,7 @@ app.post("/", checkJwt, (req, res) => {
           nickname: user.nickname
         },
         (err, createdUser) => {
-          if (err) return console.log("User creation failed.");
+          if (err) return console.log("User creation failed:", err);
           return console.log("User successfully created:", createdUser);
         }
       );
@@ -78,6 +79,33 @@ app.post("/unlike", checkJwt, (req, res) => {
       return res.send({ success: true });
     }
   );
+});
+
+app.get("/tournaments", checkJwt, (req, res) => {
+  const { userid } = req.headers;
+
+  User.findById(userid, async (err, foundUser) => {
+    if (!err) {
+      const output = {};
+      const eventArray = Object.keys(foundUser.events);
+      eventArray.shift();
+      for (let event in eventArray) {
+        await Tournament.find(
+          {
+            _id: {
+              $in: foundUser.events[eventArray[event]]
+            }
+          },
+          (err, foundTourneys) => {
+            if (foundTourneys) output[eventArray[event]] = foundTourneys;
+          }
+        );
+      }
+      res.send(output);
+    } else {
+      res.status(404).send({ message: "No user found" });
+    }
+  });
 });
 
 module.exports = app;

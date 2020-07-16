@@ -12,7 +12,7 @@ import {
   generateBalancedTeams,
   generateCaptainsDraftTeams
 } from "../../helpers/teamSortingLogic";
-import { setGameMode, reset, sortTeams } from "../../actions/boardActions";
+import { setGameMode, reset, sortTeams } from "../../actions/eventActions";
 
 const useStyles = makeStyles({
   container: {
@@ -30,8 +30,8 @@ const useStyles = makeStyles({
 export default function TeamMakerSettings() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { players } = useSelector(state => state.board.player);
-  const gameMode = useSelector(state => state.board.meta.gameMode);
+  const { players } = useSelector(state => state.event.player);
+  const gameMode = useSelector(state => state.event.meta.gameMode);
   const [gameModeSelector, setGameModeSelector] = useState("2v2");
   const { setOpen } = useContext(DialogContext);
 

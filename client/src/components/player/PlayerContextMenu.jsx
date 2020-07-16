@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { DialogContext } from "../../contexts/DialogContext";
-import { setPlayers, setPlayerOrder, setTeams } from "../../actions/boardActions";
+import { setPlayers, setPlayerOrder, setTeams } from "../../actions/eventActions";
 import { SocketContext } from "../../contexts/SocketContext";
 
 const initialState = {
@@ -13,8 +13,8 @@ const initialState = {
 
 export default function PlayerContextMenu() {
   const dispatch = useDispatch();
-  const { players, playerOrder } = useSelector(state => state.board.player);
-  const teams = useSelector(state => state.board.team.teams);
+  const { players, playerOrder } = useSelector(state => state.event.player);
+  const teams = useSelector(state => state.event.team.teams);
   const {
     setOpen,
     openPlayerContextMenu,

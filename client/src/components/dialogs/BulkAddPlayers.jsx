@@ -15,7 +15,7 @@ import { CircularProgress } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { DialogContext } from "../../contexts/DialogContext";
-import { setPlayers, setPlayerOrder } from "../../actions/boardActions";
+import { setPlayers, setPlayerOrder } from "../../actions/eventActions";
 import { timeoutPromise } from "../../helpers/playerFetchLogic";
 
 let bulkController;
@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 export default function BulkAddPlayers() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { players, playerOrder } = useSelector(state => state.board.player);
+  const { players, playerOrder } = useSelector(state => state.event.player);
   const { open, setOpen } = useContext(DialogContext);
   const [showing, setShowing] = useState("input");
   const [fetchedPlayers, setFetchedPlayers] = useState({});

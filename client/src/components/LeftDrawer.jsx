@@ -1,9 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import clsx from "clsx";
 import {
-  makeStyles,
-  withStyles,
   Tooltip,
   Drawer,
   Typography,
@@ -29,79 +27,21 @@ import {
   Create,
   Home,
   Info,
-  Add
+  Add,
+  Subject,
+  Settings
 } from "@material-ui/icons";
 
 import { ThemeContext, DialogContext, SocketContext } from "../contexts";
 import { useAuth0 } from "@auth0/auth0-react";
-
-export const drawerWidth = 240;
-
-export const useStyles = makeStyles(theme => ({
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: "nowrap"
-  },
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  drawerClose: {
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
-    overflowX: "hidden",
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(7)
-    }
-  },
-  drawerHeader: {
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    minHeight: "48px",
-    justifyContent: "flex-end"
-  },
-  header: {
-    display: "flex",
-    justifyContent: "center"
-  },
-  footer: {
-    flexGrow: 1,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    paddingBottom: "10px"
-  }
-}));
-
-const StyledTooltip = withStyles(theme => ({
-  tooltip: {
-    fontSize: 14
-  }
-}))(Tooltip);
-
-const MenuItem = ({ icon, text, ...props }) => {
-  return (
-    <StyledTooltip placement="right" title={text}>
-      <ListItem button {...props}>
-        <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText primary={text} />
-      </ListItem>
-    </StyledTooltip>
-  );
-};
+import { useStyles, useTooltipStyles } from "./LeftDrawerStyles";
+import { useDispatch, useSelector } from "react-redux";
+import { setViewing } from "../actions/metaActions";
 
 export default function LeftDrawer() {
+  const dispatch = useDispatch();
   const classes = useStyles();
+  const tooltipClasses = useTooltipStyles();
   const theme = useTheme();
   const history = useHistory();
   const location = useLocation();
@@ -113,11 +53,18 @@ export default function LeftDrawer() {
     handleDrawerClose,
     menuOpen,
     isDarkMode,
-    toggleIsDarkMode,
+    setIsDarkMode,
     viewMode,
-    setViewMode,
-    setBoardShowing
+    setViewMode
   } = useContext(ThemeContext);
+  const { isViewing } = useSelector(state => state.meta);
+  const { isAdmin } = useSelector(state => state.event);
+
+  useEffect(() => {
+    if (urlArray[1] !== "tournament" && isViewing) {
+      dispatch(setViewing(false));
+    }
+  }, [urlArray]);
 
   const handleChangeViewMode = () => {
     switch (viewMode) {
@@ -130,6 +77,21 @@ export default function LeftDrawer() {
       default:
         return;
     }
+  };
+
+  const MenuItem = ({ icon, text, ...props }) => {
+    return (
+      <Tooltip
+        placement="right"
+        classes={tooltipClasses}
+        title={menuOpen ? "" : text}
+      >
+        <ListItem button {...props}>
+          <ListItemIcon>{icon}</ListItemIcon>
+          <ListItemText primary={text} />
+        </ListItem>
+      </Tooltip>
+    );
   };
 
   return (
@@ -155,7 +117,9 @@ export default function LeftDrawer() {
       </div>
       <Divider />
       <List
-        subheader={menuOpen ? <ListSubheader>Navigation</ListSubheader> : ""}
+        subheader={
+          menuOpen ? <ListSubheader>Page Navigation</ListSubheader> : ""
+        }
       >
         <MenuItem
           onClick={() => history.push("/")}
@@ -179,22 +143,42 @@ export default function LeftDrawer() {
               }
             >
               <MenuItem
-                onClick={() => setBoardShowing("team-maker")}
+                onClick={() =>
+                  history.push(`/tournament/${urlArray[2]}/overview`)
+                }
+                icon={<Subject />}
+                text="Overview"
+              />
+              <MenuItem
+                onClick={() => history.push(`/tournament/${urlArray[2]}/team`)}
                 icon={<People />}
                 text="Team Maker"
               />
               <MenuItem
-                onClick={() => setBoardShowing("bracket")}
+                onClick={() =>
+                  history.push(`/tournament/${urlArray[2]}/bracket`)
+                }
                 icon={<Grade />}
                 text="Tournament Bracket"
                 // disabled
               />
+              {isAdmin && (
+                <MenuItem
+                  onClick={() =>
+                    history.push(`/tournament/${urlArray[2]}/admin`)
+                  }
+                  icon={<Settings />}
+                  text="Admin"
+                />
+              )}
             </List>
           </>
         )}
       <Divider />
       <List
-        subheader={menuOpen ? <ListSubheader>Tournament</ListSubheader> : ""}
+        subheader={
+          menuOpen ? <ListSubheader>My Tournaments</ListSubheader> : ""
+        }
       >
         {isAuthenticated && (
           <MenuItem
@@ -204,38 +188,42 @@ export default function LeftDrawer() {
           />
         )}
         <MenuItem
-          onClick={() => history.push("/tournament/sample/board")}
+          onClick={() => history.push("/tournament/sample/overview")}
           icon={<Create />}
           text="Event Sandbox"
         />
       </List>
       <Divider />
       <List subheader={menuOpen ? <ListSubheader>Visuals</ListSubheader> : ""}>
+        {isViewing && (
+          <MenuItem
+            onClick={handleChangeViewMode}
+            icon={<ViewAgenda />}
+            text={
+              viewMode === "card"
+                ? "Condensed View"
+                : viewMode === "condensed"
+                ? "Name View"
+                : "Card View"
+            }
+          />
+        )}
         <MenuItem
-          onClick={handleChangeViewMode}
-          icon={<ViewAgenda />}
-          text={
-            viewMode === "card"
-              ? "Condensed View"
-              : viewMode === "condensed"
-              ? "Name View"
-              : "Card View"
-          }
-        />
-        <MenuItem
-          onClick={toggleIsDarkMode}
+          onClick={() => setIsDarkMode(!isDarkMode)}
           icon={<Brightness4 />}
           text={isDarkMode ? "Light Mode" : "Dark Mode"}
         />
       </List>
       <Divider />
       <List subheader={menuOpen ? <ListSubheader>Other</ListSubheader> : ""}>
-        <MenuItem
-          onClick={() => setOpen("host")}
-          disabled={Boolean(session.isViewer)}
-          icon={<MeetingRoom />}
-          text="Host"
-        />
+        {isViewing && (
+          <MenuItem
+            onClick={() => setOpen("host")}
+            disabled={Boolean(session.isViewer)}
+            icon={<MeetingRoom />}
+            text="Host"
+          />
+        )}
         <MenuItem
           onClick={() => setOpen("help")}
           disabled={Boolean(session.isViewer)}

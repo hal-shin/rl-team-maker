@@ -1,4 +1,20 @@
-export const initialData = {
+export const sampleData = {
+  id: "sample",
+  url: "/tournament/sample",
+  title: "Sample Event",
+  description: "This event is for sampling purposes.",
+  image:
+    "https://steamcdn-a.akamaihd.net/steam/apps/252950/header_alt_assets_11.jpg?t=1585155609",
+  startDate: new Date("July 1, 2020"),
+  endDate: new Date("July 1, 2020"),
+  status: "In Progress",
+  private: false,
+  creator: {
+    id: "5f0031d1652e5a0019ce3150",
+    name: "thewarriorofblue"
+  },
+  registrants: {},
+  admin: ["5f0031d1652e5a0019ce3150"],
   player: {
     players: {
       nuclearbacon235: {
@@ -118,5 +134,38 @@ export const initialData = {
       { query: "sql_lall", platform: "steam" },
       { query: "wundero", platform: "steam" }
     ]
-  }
+  },
+  isAdmin: true
+};
+
+export const initialData = {
+  id: "",
+  url: "",
+  title: "",
+  description: "",
+  image:
+    "https://steamcdn-a.akamaihd.net/steam/apps/252950/header_alt_assets_11.jpg?t=1585155609",
+  startDate: new Date(),
+  endDate: new Date(),
+  status: "",
+  private: false,
+  creator: {
+    id: "",
+    name: ""
+  },
+  registrants: {},
+  admin: [],
+  player: {
+    players: {},
+    playerOrder: []
+  },
+  team: {
+    teams: {},
+    teamOrder: []
+  },
+  meta: {
+    gameMode: "twos",
+    recentSearches: []
+  },
+  isAdmin: true
 };

@@ -1,13 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
-import Hidden from "@material-ui/core/Hidden";
-import Typography from "@material-ui/core/Typography";
+import { makeStyles,Hidden, Typography } from "@material-ui/core";
 
 import TeamBoard from "./TeamBoard";
 import TeamMakerSettings from "./TeamMakerSettings";
 import AddNewTeam from "./AddNewTeam";
-import { SocketContext } from "../../contexts/SocketContext";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -45,8 +42,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function TeamSection() {
   const classes = useStyles();
-  const { isViewer } = useContext(SocketContext);
-  const teams = useSelector(state => state.board.team.teams);
+  const teams = useSelector(state => state.event.team.teams);
+  const { isAdmin } = useSelector(state => state.event);
   return (
     <div className={classes.container}>
       <div className={classes.header}>
@@ -54,9 +51,9 @@ export default function TeamSection() {
           <Typography className={classes.title} variant="h4">
             Teams ({Object.keys(teams).length})
           </Typography>
-          <div className={classes.buttonDiv}>{!isViewer && <AddNewTeam />}</div>
+          <div className={classes.buttonDiv}>{isAdmin && <AddNewTeam />}</div>
         </div>
-        <Hidden mdDown>{!isViewer && <TeamMakerSettings />}</Hidden>
+        <Hidden mdDown>{isAdmin && <TeamMakerSettings />}</Hidden>
       </div>
       <TeamBoard />
     </div>

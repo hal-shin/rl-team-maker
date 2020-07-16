@@ -1,13 +1,13 @@
 import { prepBlankTeamsAndTeamOrder } from "../helpers/teamSortingLogic";
-import { initialData } from "./boardReducerInitialData";
+import { initialData } from "./eventReducerInitialData";
 
-const board = (state = initialData, action) => {
+const event = (state = initialData, action) => {
   switch (action.type) {
-    case "SET_STORE":
-      return { ...action.newStore.board };
+    case "SET_EVENT":
+      return { ...action.newEvent };
 
-    case "SET_BOARD":
-      return { ...action.newBoard };
+    case "SET_STORE":
+      return { ...action.newStore.event };
 
     case "SET_PLAYERS":
       return {
@@ -96,10 +96,9 @@ const board = (state = initialData, action) => {
           teamOrder: newTeamOrder
         }
       };
-
     default:
       return state;
   }
 };
 
-export default board;
+export default event;

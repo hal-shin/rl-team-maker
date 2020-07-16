@@ -1,21 +1,23 @@
 import React, { useContext, useState } from "react";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import Chip from "@material-ui/core/Chip";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-
 import { useDispatch, useSelector } from "react-redux";
+import {
+  makeStyles,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  FormControl,
+  TextField,
+  InputLabel,
+  Select,
+  MenuItem,
+  Chip,
+  DialogActions,
+  Button,
+  Dialog
+} from "@material-ui/core";
+
 import { DialogContext } from "../../contexts/DialogContext";
-import { makeStyles } from "@material-ui/core/styles";
-import { setRecentSearches } from "../../actions/boardActions";
+import { setRecentSearches } from "../../actions/eventActions";
 
 export let abortController;
 
@@ -32,8 +34,8 @@ const useStyles = makeStyles(theme => ({
 function AddPlayer() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { players } = useSelector(state => state.board.player);
-  const recentSearches = useSelector(state => state.board.meta.recentSearches);
+  const { players } = useSelector(state => state.event.player);
+  const recentSearches = useSelector(state => state.event.meta.recentSearches);
 
   const { open, setOpen, setLoading, setFetchedPlayer } = useContext(
     DialogContext

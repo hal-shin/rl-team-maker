@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function TeamBoard() {
   const classes = useStyles();
-  const teamOrder = useSelector(state => state.board.team.teamOrder);
+  const teamOrder = useSelector(state => state.event.team.teamOrder);
 
   return (
     <div className={classes.container}>

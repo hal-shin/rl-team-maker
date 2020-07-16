@@ -1,7 +1,6 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   withStyles,
-  Button,
   Menu,
   InputBase,
   Typography,
@@ -10,7 +9,6 @@ import {
 import { Send } from "@material-ui/icons";
 
 import { useStyles } from "./ChatStyles";
-import ChatAvatars from "./ChatAvatars";
 import { DialogContext, SocketContext } from "../../contexts";
 import { socket } from "../../socket";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -46,10 +44,7 @@ export default function Chat() {
   const messagesEndRef = useRef(null);
   const classes = useStyles();
   const {
-    users,
     setUsers,
-    message,
-    setMessage,
     messages,
     setMessages
     // usernameLive,
@@ -57,18 +52,21 @@ export default function Chat() {
   } = useContext(SocketContext);
   const { chatOpen, setChatOpen } = useContext(DialogContext);
   const [connected, setConnected] = useState(false);
-  const { isAuthenticated, user } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
+  const [message, setMessage] = useState("");
 
-  const handleClick = event => {
-    setChatOpen(event.currentTarget);
-    if (!connected) {
+  useEffect(() => {
+    if (!connected && isAuthenticated) {
       connectToChat();
       setConnected(true);
     }
-  };
+  }, [chatOpen]);
 
   const connectToChat = () => {
-    socket.emit("connect-chat", { username: user.nickname, room: "general" });
+    socket.emit("connect-chat", {
+      username: user["https://rl/username"],
+      room: "general"
+    });
 
     socket.on("users", users => {
       setUsers(users);
@@ -76,6 +74,7 @@ export default function Chat() {
 
     socket.on("message", message => {
       setMessages(messages => [...messages, message]);
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     });
 
     socket.on("connected", user => {
@@ -97,76 +96,63 @@ export default function Chat() {
     setMessage(event.target.value);
   };
 
-  const submitMessage = event => {
-    event.preventDefault();
-    console.log("USERS:", users);
+  const submitMessage = () => {
+    // event.preventDefault();
     if (message === "") return;
-    socket.emit("sendMessage", message);
+    const sendMessage = {
+      text: message,
+      username: user["https://rl/username"]
+    };
+    socket.emit("sendMessage", sendMessage);
     setMessage("");
   };
 
   const handleKeyPress = event => {
     if (message === "") return;
     if (event.charCode === 13) {
-      socket.emit("sendMessage", message);
-      setMessage("");
+      submitMessage();
     }
   };
 
   return (
-    <div>
-      {isAuthenticated && (
-        <div className={classes.chatButton}>
-          <ChatAvatars />
-          <Button
-            aria-controls="simple-menu"
-            aria-haspopup="true"
-            color="inherit"
-            onClick={handleClick}
-          >
-            Open Chat
-          </Button>
-        </div>
-      )}
-      <ChatMenu
-        id="simple-menu"
-        className={classes.menu}
-        anchorEl={chatOpen}
-        keepMounted
-        open={Boolean(chatOpen)}
-        onClose={handleClose}
-      >
-        <Paper elevation={0} color="inherit" className={classes.header} square>
-          <Typography variant="h5" align="center">
-            Chat Box
-          </Typography>
-        </Paper>
-        <Paper elevation={0} className={classes.chatLog} square>
-          {messages.map((message, index) => {
-            return (
-              <Paper
-                variant="outlined"
-                className={classes.message}
-                key={index}
-                square
-              >
-                <strong>{message.user.name}: </strong>
-                {message.text}
-              </Paper>
-            );
-          })}
-          <div ref={messagesEndRef} style={{ opacity: 0 }} />
-        </Paper>
-        <Paper elevation={0} className={classes.input} square>
-          <InputBase
-            onChange={handleInput}
-            onKeyPress={handleKeyPress}
-            value={message}
-            fullWidth
-          />
-          <Send onClick={submitMessage} />
-        </Paper>
-      </ChatMenu>
-    </div>
+    <ChatMenu
+      id="chat-menu"
+      className={classes.menu}
+      anchorEl={chatOpen}
+      keepMounted
+      open={Boolean(chatOpen)}
+      onClose={handleClose}
+    >
+      <Paper elevation={0} color="inherit" className={classes.header} square>
+        <Typography variant="h5" align="center">
+          Chat Box
+        </Typography>
+      </Paper>
+      <Paper elevation={0} className={classes.chatLog} square>
+        {messages.map((message, index) => {
+          return (
+            <Paper
+              variant="outlined"
+              className={classes.message}
+              key={index}
+              square
+            >
+              <strong>{message.username}: </strong>
+              {message.text}
+            </Paper>
+          );
+        })}
+        <div ref={messagesEndRef} style={{ opacity: 0 }} />
+      </Paper>
+      <Paper elevation={0} className={classes.input} square>
+        <InputBase
+          onChange={handleInput}
+          onKeyPress={handleKeyPress}
+          value={message}
+          fullWidth
+        />
+        <Send onClick={submitMessage} />
+      </Paper>
+    </ChatMenu>
   );
 }

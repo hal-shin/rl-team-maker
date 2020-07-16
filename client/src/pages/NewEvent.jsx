@@ -9,6 +9,8 @@ import {
   Button
 } from "@material-ui/core";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useHistory } from "react-router-dom";
+
 import { UserContext } from "../contexts";
 
 const useStyles = makeStyles(theme => ({
@@ -54,11 +56,13 @@ const initialData = {
 
 export default function NewEvent() {
   const classes = useStyles();
+  const history = useHistory();
   const { getAccessTokenSilently } = useAuth0();
   const { user } = useContext(UserContext);
   const [data, setData] = useState(initialData);
 
   const createEvent = async () => {
+    console.log("Create event triggered");
     const accessToken = await getAccessTokenSilently();
 
     const resp = await fetch("/tournament/new", {
@@ -76,6 +80,7 @@ export default function NewEvent() {
 
     if (resp.status >= 200 && resp.status <= 299) {
       console.log("Event created successfully");
+      history.push("/");
     } else {
       console.log("Event creation failed:", respData.message);
     }

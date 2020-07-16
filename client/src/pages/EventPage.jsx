@@ -1,93 +1,95 @@
-import React, { useEffect, useState } from "react";
-import {
-  makeStyles,
-  Container,
-  Paper,
-  Typography,
-  Button
-} from "@material-ui/core";
+import React, { useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
+import { makeStyles } from "@material-ui/core";
 
-import { tournaments } from "../mocks";
+import { Overview, Admin } from "../components";
+import TeamMaker from "../components/team-maker/TeamMaker";
+import TournamentBracket from "../components/bracket/TournamentBracket";
+import { sampleData } from "../reducers/eventReducerInitialData";
+import { setEvent } from "../actions/eventActions";
+import { setViewing } from "../actions/metaActions";
+import { UserContext } from "../contexts";
+import ChatSpeedDial from "../components/chat/ChatSpeedDial";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    alignContent: "center",
-    height: "calc(100vh - 48px)"
-  },
-  paper: {
-    margin: theme.spacing(3, 0),
-    padding: theme.spacing(3)
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start"
-  },
-  contentHeader: {
-    marginBottom: theme.spacing(3)
-  },
-  coverImage: {
-    border: "1px solid red"
+  save: {
+    position: "absolute",
+    top: "calc(100vh - 45px)",
+    left: "100px",
+    color: "grey"
   }
 }));
 
+var saveTimeout;
+
 export default function EventPage({ match }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const { path } = useRouteMatch();
   const {
     params: { tournamentId }
   } = match;
-  const [loading, setLoading] = useState(true);
-  const [event, setEvent] = useState({});
+  const { isAuthenticated, isLoading, user } = useAuth0();
+  const { event } = useSelector(state => state);
+  const { authFetch } = useContext(UserContext);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    fetch(`/tournament?tournamentId=${tournamentId}`)
-      .then(resp => resp.json())
-      .then(data => {
-        console.log(data);
-        if (!data.message) setEvent(data);
-        setLoading(false);
-      });
-  }, [tournamentId]);
+    const getTournamentData = () => {
+      if (tournamentId === "sample") {
+        dispatch(setEvent(sampleData));
+      } else {
+        fetch(
+          `/tournament?tournamentId=${tournamentId}&userId=${user &&
+            user.sub.slice(6)}`
+        )
+          .then(resp => resp.json())
+          .then(data => {
+            if (!data.message) dispatch(setEvent(data));
+          });
+      }
+      dispatch(setViewing(true));
+    };
 
-  const renderContent = () => {
-    if (loading) {
-      return <Typography variant="body1">Loading...</Typography>;
-    } else if (!event) {
-      return (
-        <Typography variant="body1">This event does not exist.</Typography>
-      );
-    } else {
-      return (
-        <>
-          <div className={classes.header}>
-            <Typography variant="h4" className={classes.contentHeader}>
-              {event.title}
-            </Typography>
-            <Button variant="contained" color="primary">
-              Register
-            </Button>
-          </div>
-          <div className={classes.coverImage}>
-            <img src={event.image} />
-          </div>
-          <div>
-            <Typography variant="h5">Description</Typography>
-            <Typography variant="body1">{event.description}</Typography>
-          </div>
-        </>
-      );
+    if (!isLoading && tournamentId !== event._id) {
+      getTournamentData();
     }
-  };
+  }, [tournamentId, dispatch, isLoading]);
+
+  useEffect(() => {
+    if (isAuthenticated && event.isAdmin && tournamentId !== "sample") {
+      setIsSaving(true);
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        authFetch("/tournament/update", {
+          method: "POST",
+          body: JSON.stringify({ event })
+        }).then(() => {
+          setIsSaving(false);
+        });
+      }, 2000);
+    }
+  }, [event]);
 
   return (
-    <div className={classes.root}>
-      <Container maxWidth="lg">
-        <Paper variant="outlined" className={classes.paper}>
-          {renderContent()}
-        </Paper>
-      </Container>
-    </div>
+    <>
+      {tournamentId !== "sample" && event.isAdmin && (
+        <div className={classes.save}>
+          {isSaving ? "Autosaving..." : "Autosaved!"}
+        </div>
+      )}
+      <ChatSpeedDial />
+      <Switch>
+        <Route exact path={path}>
+          <Redirect to={`/tournament/${tournamentId}/overview`} />
+        </Route>
+        <Route exact path={`${path}/overview`} component={Overview} />
+        <Route exact path={`${path}/team`} component={TeamMaker} />
+        <Route exact path={`${path}/bracket`} component={TournamentBracket} />
+        <Route exact path={`${path}/admin`} component={Admin} />
+      </Switch>
+    </>
   );
 }

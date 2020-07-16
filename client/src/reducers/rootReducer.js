@@ -1,8 +1,11 @@
 import { combineReducers } from "redux";
-import board from "./boardReducer";
+import event from "./eventReducer";
+import meta from "./metaReducer";
+
 // import chat from "./chatReducer";
 
 export default combineReducers({
-  board,
+  event,
+  meta
   // chat,
 });

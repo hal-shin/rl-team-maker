@@ -1,83 +1,23 @@
-import React, { useEffect, useState } from "react";
-import {
-  makeStyles,
-  Container,
-  Paper,
-  Typography,
-  Grid
-} from "@material-ui/core";
+import React, { useContext } from "react";
+import { Container, Paper, Typography, Grid } from "@material-ui/core";
 
+import { useStyles } from "./LandingStyles";
 import { tournaments } from "../mocks";
 import { TournamentCard } from "../components";
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    alignContent: "center",
-    height: "calc(100vh - 48px)"
-  },
-  jumbotron: {
-    backgroundImage:
-      'linear-gradient(0deg, rgba(50, 50, 150, 0.5), rgba(50, 50, 150, 0.5)), url("https://rocketleague.media.zestyio.com/rl_cross-play_asset_rl_1920.309bf22bd29c2e411e9dd8eb07575bb1.jpg")',
-    backgroundRepeat: "none",
-    backgroundPosition: "center",
-    backgroundSize: "cover",
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 200,
-    [theme.breakpoints.up("sm")]: {
-      minHeight: 300
-    },
-    [theme.breakpoints.up("md")]: {
-      minHeight: 400
-    },
-    [theme.breakpoints.up("lg")]: {
-      minHeight: 460
-    }
-  },
-  jumboHeader: {
-    background: "rgba(0,0,0,0.3)",
-    padding: theme.spacing(0, 2),
-    color: "white",
-    fontWeight: 500
-  },
-  jumboSubheader: {
-    padding: theme.spacing(0, 2),
-    marginTop: theme.spacing(1),
-    background: "rgba(0,0,0,0.3)",
-    color: "white",
-    fontWeight: 300
-  },
-  paper: {
-    margin: theme.spacing(3, 0),
-    padding: theme.spacing(3)
-  },
-  contentHeader: {
-    marginBottom: theme.spacing(3)
-  },
-  grid: {
-    marginBottom: theme.spacing(3)
-  }
-}));
+import { useAuthFetch, useFetch } from "../hooks";
+import { UserContext } from "../contexts";
 
 export default function Landing() {
   const classes = useStyles();
-  const [allEvents, setAllEvents] = useState({ loading: true, data: {} });
-
-  useEffect(() => {
-    fetch("/tournament/all")
-      .then(resp => resp.json())
-      .then(data => {
-        if (!data.message) {
-          setAllEvents({ loading: false, data });
-        }
-      })
-      .catch(err => console.log("ERROR:", err));
-  }, []);
+  const { user } = useContext(UserContext);
+  const {
+    response: allTournaments,
+    isLoading: allTournamentsLoading
+  } = useFetch("/tournament/all");
+  const {
+    response: myTournaments,
+    isLoading: myTournamentsLoading
+  } = useAuthFetch(`/user/tournaments`);
 
   return (
     <div className={classes.root}>
@@ -101,14 +41,63 @@ export default function Landing() {
               return <TournamentCard key={index} event={event} />;
             })}
           </Grid>
+
+          {user && user.events.hosting.length > 0 && (
+            <>
+              <Typography variant="h4" className={classes.contentHeader}>
+                Hosting
+              </Typography>
+
+              <Grid container spacing={3} className={classes.grid}>
+                {myTournamentsLoading
+                  ? "loading..."
+                  : myTournaments.hosting.map((event, index) => (
+                      <TournamentCard key={index} event={event} />
+                    ))}
+              </Grid>
+            </>
+          )}
+
+          {user && user.events.participating.length > 0 && (
+            <>
+              <Typography variant="h4" className={classes.contentHeader}>
+                Participating
+              </Typography>
+
+              <Grid container spacing={3} className={classes.grid}>
+                {myTournamentsLoading
+                  ? "loading..."
+                  : myTournaments.participating.map((event, index) => (
+                      <TournamentCard key={index} event={event} />
+                    ))}
+              </Grid>
+            </>
+          )}
+
+          {user && user.events.liked.length > 0 && (
+            <>
+              <Typography variant="h4" className={classes.contentHeader}>
+                Liked Tournaments
+              </Typography>
+
+              <Grid container spacing={3} className={classes.grid}>
+                {myTournamentsLoading
+                  ? "loading..."
+                  : myTournaments.liked.map((event, index) => (
+                      <TournamentCard key={index} event={event} />
+                    ))}
+              </Grid>
+            </>
+          )}
+
           <Typography variant="h4" className={classes.contentHeader}>
             All Tournaments
           </Typography>
 
           <Grid container spacing={3} className={classes.grid}>
-            {allEvents.loading
+            {allTournamentsLoading
               ? "loading..."
-              : allEvents.data.map((event, index) => (
+              : allTournaments.map((event, index) => (
                   <TournamentCard key={index} event={event} />
                 ))}
           </Grid>

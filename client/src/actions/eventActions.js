@@ -1,6 +1,6 @@
-export const setBoard = newBoard => ({
-  type: "SET_BOARD",
-  newBoard
+export const setEvent = newEvent => ({
+  type: "SET_EVENT",
+  newEvent
 });
 
 export const setPlayerOrder = newPlayerOrder => ({

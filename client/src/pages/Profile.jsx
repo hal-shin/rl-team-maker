@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { makeStyles, Container, Paper, Typography } from "@material-ui/core";
+import { useFetch } from "../hooks";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,34 +23,22 @@ export default function Profile({ match }) {
   const {
     params: { userId }
   } = match;
-  const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState({});
-
-  useEffect(() => {
-    fetch(`/user?userId=${userId}`)
-      .then(resp => resp.json())
-      .then(data => {
-        setLoading(false);
-        if (data.message) return;
-        setProfile(data);
-      })
-      .catch(err => setLoading(false));
-  }, []);
+  const { response, isLoading } = useFetch(`/user?userId=${userId}`);
 
   const renderContent = () => {
-    if (loading) {
+    if (isLoading) {
       return (
         <Typography variant="h4" className={classes.contentHeader}>
           Loading
         </Typography>
       );
-    } else if (Object.keys(profile).length === 0) {
+    } else if (!response) {
       return <Typography variant="body1">This user does not exist.</Typography>;
     } else {
       return (
         <>
           <Typography variant="h4" className={classes.contentHeader}>
-            Profile - {profile.email}
+            Profile - {response.email}
           </Typography>
         </>
       );

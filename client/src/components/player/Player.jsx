@@ -1,23 +1,27 @@
 import React, { useContext, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Draggable } from "react-beautiful-dnd";
-import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Button from "@material-ui/core/Button";
+import {
+  makeStyles,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Button,
+  Box,
+  Grid,
+  Typography,
+  TextField
+} from "@material-ui/core";
 import SecurityIcon from "@material-ui/icons/Security";
-import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
 
-import useToggle from "../../hooks/useToggleState";
-import { ThemeContext } from "../../contexts/ThemeContext";
-import { DialogContext } from "../../contexts/DialogContext";
-import { setPlayerOrder, setPlayers, setTeams } from "../../actions/boardActions";
-import { SocketContext } from "../../contexts/SocketContext";
+import { useToggle } from "../../hooks";
+import { ThemeContext, DialogContext } from "../../contexts";
+import {
+  setPlayerOrder,
+  setPlayers,
+  setTeams
+} from "../../actions/eventActions";
 
 const useStyles = makeStyles({
   root: {
@@ -40,7 +44,7 @@ const useStyles = makeStyles({
     flexDirection: "column",
     alignItems: "center"
   },
-  textfieldTag: {
+  textFieldTag: {
     // width: "133px",
     paddingBottom: "9px"
   }
@@ -51,10 +55,10 @@ export default function Player(props) {
   const classes = useStyles();
   const { player, id, index } = props;
 
-  const { players, playerOrder } = useSelector(state => state.board.player);
-  const gameMode = useSelector(state => state.board.meta.gameMode);
-  const teams = useSelector(state => state.board.team.teams);
-  const { isViewer } = useContext(SocketContext);
+  const { players, playerOrder } = useSelector(state => state.event.player);
+  const gameMode = useSelector(state => state.event.meta.gameMode);
+  const teams = useSelector(state => state.event.team.teams);
+  const { isAdmin } = useSelector(state => state.event);
   const { viewMode } = useContext(ThemeContext);
   const { setOpenPlayerContextMenu, setCurrentPlayerInfo } = useContext(
     DialogContext
@@ -110,7 +114,7 @@ export default function Player(props) {
   };
 
   const handleToggleEdit = () => {
-    if (!isViewer) {
+    if (isAdmin) {
       toggleIsEditing();
     }
   };
@@ -143,7 +147,7 @@ export default function Player(props) {
           defaultValue={player.tag}
           onChange={handleEditPlayerTag}
           onBlur={handleSavePlayerTag}
-          className={classes.textfieldTag}
+          className={classes.textFieldTag}
           onKeyPress={handleKeyPress}
           autoFocus
         />
@@ -217,7 +221,7 @@ export default function Player(props) {
             <Button size="small" color="primary" onClick={handleOpenTracker}>
               Ranks
             </Button>
-            {!isViewer && (
+            {isAdmin && (
               <Button size="small" color="secondary" onClick={handleDelete}>
                 Delete
               </Button>
@@ -246,7 +250,7 @@ export default function Player(props) {
   };
 
   return (
-    <Draggable draggableId={id} index={index} isDragDisabled={isViewer}>
+    <Draggable draggableId={id} index={index} isDragDisabled={!isAdmin}>
       {provided => (
         <Card
           className={classes.root}

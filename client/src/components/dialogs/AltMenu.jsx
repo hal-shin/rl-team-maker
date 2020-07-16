@@ -18,7 +18,7 @@ import {
   generateBalancedTeams,
   generateCaptainsDraftTeams
 } from "../../helpers/teamSortingLogic";
-import { setGameMode, sortTeams, reset } from "../../actions/boardActions";
+import { setGameMode, sortTeams, reset } from "../../actions/eventActions";
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -37,8 +37,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function AltMenu() {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const players = useSelector(state => state.board.player.players);
-  const gameMode = useSelector(state => state.board.meta.gameMode);
+  const players = useSelector(state => state.event.player.players);
+  const gameMode = useSelector(state => state.event.meta.gameMode);
 
   const { open, setOpen } = useContext(DialogContext);
 

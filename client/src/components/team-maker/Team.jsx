@@ -15,7 +15,7 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 
 import Player from "../player/Player";
 import useToggle from "../../hooks/useToggleState";
-import { setTeams } from "../../actions/boardActions";
+import { setTeams } from "../../actions/eventActions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -79,9 +79,10 @@ const buttonStyles = {
 export default function Team(props) {
   const classes = useStyles(props);
   const dispatch = useDispatch();
-  const teams = useSelector(state => state.board.team.teams);
-  const players = useSelector(state => state.board.player.players);
-  const gameMode = useSelector(state => state.board.meta.gameMode);
+  const teams = useSelector(state => state.event.team.teams);
+  const players = useSelector(state => state.event.player.players);
+  const gameMode = useSelector(state => state.event.meta.gameMode);
+  const { isAdmin } = useSelector(state => state.event);
   const team = teams[props.id];
   const [isEditing, toggleIsEditing] = useToggle(false);
   const [tempTeamName, setTempTeamName] = useState(team.teamName); // must come after team variable
@@ -115,6 +116,12 @@ export default function Team(props) {
   const handleKeyPress = event => {
     if (event.charCode === 13) {
       handleSaveTeamName();
+    }
+  };
+
+  const handleToggleEditing = () => {
+    if (isAdmin) {
+      toggleIsEditing();
     }
   };
 
@@ -159,7 +166,7 @@ export default function Team(props) {
       <div className={classes.teamName}>
         <Typography
           variant="h5"
-          onClick={toggleIsEditing}
+          onClick={handleToggleEditing}
           style={{ cursor: "pointer" }}
         >
           {team.teamName}

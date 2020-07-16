@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import {
   Avatar,
@@ -9,53 +9,14 @@ import {
   CardMedia,
   Grid,
   IconButton,
-  makeStyles,
   Typography,
   Button
 } from "@material-ui/core";
 import { Favorite, Share } from "@material-ui/icons";
-import { red } from "@material-ui/core/colors";
 
+import { useStyles } from "./TournamentCardStyles";
 import { DialogContext, UserContext } from "../contexts";
 import { useAuth0 } from "@auth0/auth0-react";
-
-const useStyles = makeStyles(theme => ({
-  gridItem: {
-    display: "flex",
-    justifyContent: "center"
-  },
-  card: {
-    maxWidth: 345
-  },
-  media: {
-    height: 140
-  },
-  cardContent: {
-    paddingBottom: 0,
-    "& > :not(:first-child)": {
-      marginTop: theme.spacing(1)
-    }
-  },
-  eventHeader: {
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    width: 245
-  },
-  avatar: {
-    backgroundColor: red[500],
-    width: theme.spacing(5),
-    height: theme.spacing(5)
-  },
-  actions: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: theme.spacing(1, 2)
-  },
-  liked: {
-    color: red[500]
-  }
-}));
 
 export default function TournamentCard({ event }) {
   const classes = useStyles();

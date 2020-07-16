@@ -4,7 +4,6 @@ export const SocketContext = createContext();
 
 export function SocketProvider(props) {
   const [users, setUsers] = useState([]);
-  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [usernameLive, setUsernameLive] = useState("");
   const [roomNameLive, setRoomNameLive] = useState("");
@@ -19,8 +18,6 @@ export function SocketProvider(props) {
       value={{
         users,
         setUsers,
-        message,
-        setMessage,
         messages,
         setMessages,
         usernameLive,

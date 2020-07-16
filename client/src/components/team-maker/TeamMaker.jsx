@@ -6,7 +6,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TeamSection from "./TeamSection";
 import PlayerSection from "./PlayerSection";
-import { setPlayerOrder, setTeams } from "../../actions/boardActions";
+import { setPlayerOrder, setTeams } from "../../actions/eventActions";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -31,8 +31,8 @@ const useStyles = makeStyles(theme => ({
 export default function TeamMaker() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const playerOrder = useSelector(state => state.board.player.playerOrder);
-  const teams = useSelector(state => state.board.team.teams);
+  const playerOrder = useSelector(state => state.event.player.playerOrder);
+  const teams = useSelector(state => state.event.team.teams);
   const [value, setValue] = useState(0);
 
   const onDragEnd = result => {

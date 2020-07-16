@@ -1,16 +1,11 @@
 import React, { useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Droppable } from "react-beautiful-dnd";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import { makeStyles, Paper, Typography, Button } from "@material-ui/core";
 
-import Player from "../player/Player";
-import PlayerContextMenu from "../player/PlayerContextMenu";
-import { setPlayerOrder } from "../../actions/boardActions";
-import Button from "@material-ui/core/Button";
-import { DialogContext } from "../../contexts/DialogContext";
-import { SocketContext } from "../../contexts/SocketContext";
+import { Player, PlayerContextMenu } from "../player";
+import { setPlayerOrder } from "../../actions/eventActions";
+import { DialogContext } from "../../contexts";
 
 const useStyles = makeStyles({
   container: {
@@ -46,10 +41,10 @@ const useStyles = makeStyles({
 export default function PlayerSection() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { players, playerOrder } = useSelector(state => state.board.player);
-  const gameMode = useSelector(state => state.board.meta.gameMode);
+  const { players, playerOrder } = useSelector(state => state.event.player);
+  const gameMode = useSelector(state => state.event.meta.gameMode);
+  const { isAdmin } = useSelector(state => state.event);
   const { setOpen } = useContext(DialogContext);
-  const { isViewer } = useContext(SocketContext);
 
   const handleSortPlayerList = () => {
     let newPlayerOrder = [...playerOrder];
@@ -72,7 +67,7 @@ export default function PlayerSection() {
         >
           Players ({playerOrder.length})
         </Typography>
-        {!isViewer && (
+        {isAdmin && (
           <Button
             variant="outlined"
             color="primary"

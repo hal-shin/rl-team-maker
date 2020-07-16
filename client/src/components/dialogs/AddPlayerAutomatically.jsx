@@ -6,15 +6,14 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import PlayerStatic from "../player/PlayerStatic";
 import { CircularProgress } from "@material-ui/core";
-import { setPlayerOrder, setPlayers } from "../../actions/boardActions";
+import { setPlayerOrder, setPlayers } from "../../actions/eventActions";
 import { useDispatch, useSelector } from "react-redux";
 import { DialogContext } from "../../contexts/DialogContext";
 import { abortController } from "./AddPlayer";
 
 function AddPlayerAutomatically() {
   const dispatch = useDispatch();
-  const { players, playerOrder } = useSelector(state => state.board.player);
-
+  const { players, playerOrder } = useSelector(state => state.event.player);
   const {
     open,
     setOpen,

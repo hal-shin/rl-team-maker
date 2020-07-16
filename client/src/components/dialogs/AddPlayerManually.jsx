@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, { useContext, useState } from "react";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
@@ -8,13 +8,13 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import {useDispatch, useSelector} from "react-redux";
-import {DialogContext} from "../../contexts/DialogContext";
-import {setPlayerOrder, setPlayers} from "../../actions/boardActions";
+import { useDispatch, useSelector } from "react-redux";
+import { DialogContext } from "../../contexts/DialogContext";
+import { setPlayerOrder, setPlayers } from "../../actions/eventActions";
 
 function AddPlayerManually() {
   const dispatch = useDispatch();
-  const { players, playerOrder } = useSelector(state => state.board.player);
+  const { players, playerOrder } = useSelector(state => state.event.player);
   const { open, setOpen } = useContext(DialogContext);
   const [uniqueId, setUniqueId] = useState(false);
   const [reasonableRank, setReasonableRank] = useState(false);
