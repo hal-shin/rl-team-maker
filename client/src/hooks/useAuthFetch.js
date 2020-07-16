@@ -12,6 +12,9 @@ export default function useAuthFetch(endpoint, { body, ...customConfig } = {}) {
       try {
         setIsLoading(true);
         const accessToken = await getAccessTokenSilently();
+
+        console.log("Access Token:", accessToken);
+
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,

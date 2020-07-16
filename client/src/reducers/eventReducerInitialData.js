@@ -1,5 +1,5 @@
 export const sampleData = {
-  id: "sample",
+  _id: "sample",
   url: "/tournament/sample",
   title: "Sample Event",
   description: "This event is for sampling purposes.",
