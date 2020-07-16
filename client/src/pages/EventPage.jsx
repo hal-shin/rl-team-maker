@@ -37,6 +37,7 @@ export default function EventPage({ match }) {
   const [isSaving, setIsSaving] = useState(false);
 
   console.log("Event Data:", event);
+  console.log("Tournamend ID:", tournamentId);
 
   useEffect(() => {
     const getTournamentData = () => {
