@@ -65,7 +65,7 @@ export default function Landing() {
               </Typography>
 
               <Grid container spacing={3} className={classes.grid}>
-                {myTournamentsLoading
+                {myTournamentsLoading && myTournaments
                   ? "loading..."
                   : myTournaments.participating.map((event, index) => (
                       <TournamentCard key={index} event={event} />
