@@ -36,6 +36,8 @@ export default function EventPage({ match }) {
   const { authFetch } = useContext(UserContext);
   const [isSaving, setIsSaving] = useState(false);
 
+  console.log("Event Data:", event);
+
   useEffect(() => {
     const getTournamentData = () => {
       if (tournamentId === "sample") {
