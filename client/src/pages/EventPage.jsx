@@ -11,7 +11,6 @@ import { sampleData } from "../reducers/eventReducerInitialData";
 import { setEvent } from "../actions/eventActions";
 import { setViewing } from "../actions/metaActions";
 import { UserContext } from "../contexts";
-import ChatSpeedDial from "../components/chat/ChatSpeedDial";
 
 const useStyles = makeStyles(theme => ({
   save: {
@@ -36,9 +35,6 @@ export default function EventPage({ match }) {
   const { authFetch } = useContext(UserContext);
   const [isSaving, setIsSaving] = useState(false);
 
-  console.log("Event Data:", event);
-  console.log("Tournamend ID:", tournamentId);
-
   useEffect(() => {
     const getTournamentData = () => {
       if (tournamentId === "sample") {
@@ -62,7 +58,12 @@ export default function EventPage({ match }) {
   }, [tournamentId, dispatch, isLoading]);
 
   useEffect(() => {
-    if (isAuthenticated && event.isAdmin && tournamentId !== "sample") {
+    if (
+      isAuthenticated &&
+      event.isAdmin &&
+      tournamentId !== "sample" &&
+      tournamentId === event._id
+    ) {
       setIsSaving(true);
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(() => {
@@ -83,7 +84,7 @@ export default function EventPage({ match }) {
           {isSaving ? "Autosaving..." : "Autosaved!"}
         </div>
       )}
-      <ChatSpeedDial />
+
       <Switch>
         <Route exact path={path}>
           <Redirect to={`/tournament/${tournamentId}/overview`} />

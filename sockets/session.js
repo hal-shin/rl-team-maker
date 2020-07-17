@@ -1,7 +1,7 @@
 const Session = require("../schemas/sessionSchema");
 const _ = require("lodash");
 
-const session = client => {
+const session = (io, client) => {
   client.on("join-session", payload => {
     const { sessionUrl, newSessionId } = payload;
     console.log("Someone joined", sessionUrl);

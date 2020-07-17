@@ -46,8 +46,8 @@ mongoose.connect(
 io.on("connection", client => {
   client.emit("general-connect");
 
-  SocketLogic.session(client);
-  SocketLogic.chat(client);
+  SocketLogic.session(io, client);
+  SocketLogic.chat(io, client);
 });
 
 // Tracker route

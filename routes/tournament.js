@@ -2,6 +2,7 @@ const app = require("express").Router();
 const checkJwt = require("../middlewares/jwt");
 const Tournament = require("../schemas/tournamentSchema");
 const User = require("../schemas/userSchema");
+const _ = require("lodash");
 
 app.get("/", (req, res) => {
   const { tournamentId, userId } = req.query;

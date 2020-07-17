@@ -5,8 +5,7 @@ export const SocketContext = createContext();
 export function SocketProvider(props) {
   const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
-  const [usernameLive, setUsernameLive] = useState("");
-  const [roomNameLive, setRoomNameLive] = useState("");
+  const [room, setRoom] = useState("");
   const [session, setSession] = useState({
     connected: false,
     isHost: false,
@@ -20,13 +19,10 @@ export function SocketProvider(props) {
         setUsers,
         messages,
         setMessages,
-        usernameLive,
-        setUsernameLive,
-        roomNameLive,
-        setRoomNameLive,
-
         session,
-        setSession
+        setSession,
+        room,
+        setRoom
       }}
     >
       {props.children}

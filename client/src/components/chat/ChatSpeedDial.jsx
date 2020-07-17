@@ -3,8 +3,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Chat, Person } from "@material-ui/icons";
 import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
 
-import { DialogContext } from "../../contexts";
+import { DialogContext, SocketContext } from "../../contexts";
 import { makeStyles } from "@material-ui/core";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles(theme => ({
   speedDial: {
@@ -18,20 +19,21 @@ function ChatSpeedDial() {
   const classes = useStyles();
   const { isAuthenticated } = useAuth0();
   const { setChatOpen } = useContext(DialogContext);
+  const { setRoom } = useContext(SocketContext);
   const [speedDialOpen, setSpeedDialOpen] = useState(false);
+  const { _id, title } = useSelector(state => state.event);
 
   const handleSpeedDialOpen = () => {
-
-      setSpeedDialOpen(true);
-
+    setSpeedDialOpen(true);
   };
 
   const handleSpeedDialClose = () => {
     setSpeedDialOpen(false);
   };
 
-  const handleClick = event => {
+  const handleClick = (event, room) => {
     setChatOpen(event.currentTarget);
+    setRoom(room);
   };
 
   return (
@@ -48,8 +50,15 @@ function ChatSpeedDial() {
         <SpeedDialAction
           tooltipTitle="General Chat"
           icon={<Person />}
-          onClick={handleClick}
+          onClick={event => handleClick(event, "general")}
         />
+        {_id && title && (
+          <SpeedDialAction
+            tooltipTitle={`${title} General Chat`}
+            icon={<Person />}
+            onClick={event => handleClick(event, _id)}
+          />
+        )}
       </SpeedDial>
     )
   );

@@ -1,10 +1,11 @@
-const chat = client => {
+const chat = (io, client) => {
   client.on("connect-chat", payload => {
-    console.log(`${payload.username} joined the chat`);
+    client.join(payload.room);
+    console.log(`${payload.username} joined ${payload.room}`);
   });
 
-  client.on("sendMessage", message => {
-    client.emit("message", message);
+  client.on("sendMessage", payload => {
+    client.to(payload.room).emit("message", payload.message);
   });
 };
 

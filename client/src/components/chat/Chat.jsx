@@ -43,13 +43,7 @@ const ChatMenu = withStyles({
 export default function Chat() {
   const messagesEndRef = useRef(null);
   const classes = useStyles();
-  const {
-    setUsers,
-    messages,
-    setMessages
-    // usernameLive,
-    // roomNameLive
-  } = useContext(SocketContext);
+  const { setUsers, messages, setMessages, room } = useContext(SocketContext);
   const { chatOpen, setChatOpen } = useContext(DialogContext);
   const [connected, setConnected] = useState(false);
   const { user, isAuthenticated } = useAuth0();
@@ -62,10 +56,16 @@ export default function Chat() {
     }
   }, [chatOpen]);
 
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   const connectToChat = () => {
     socket.emit("connect-chat", {
       username: user["https://rl/username"],
-      room: "general"
+      room
     });
 
     socket.on("users", users => {
@@ -74,7 +74,6 @@ export default function Chat() {
 
     socket.on("message", message => {
       setMessages(messages => [...messages, message]);
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     });
 
     socket.on("connected", user => {
@@ -97,13 +96,18 @@ export default function Chat() {
   };
 
   const submitMessage = () => {
-    // event.preventDefault();
     if (message === "") return;
-    const sendMessage = {
-      text: message,
-      username: user["https://rl/username"]
+
+    const payload = {
+      message: {
+        text: message,
+        username: user["https://rl/username"]
+      },
+      room
     };
-    socket.emit("sendMessage", sendMessage);
+
+    socket.emit("sendMessage", payload);
+    setMessages(messages => [...messages, payload.message]);
     setMessage("");
   };
 

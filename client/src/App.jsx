@@ -14,7 +14,7 @@ import {
   PageNotFound
 } from "./pages";
 import { useAuthFetch } from "./hooks";
-import Chat from "./components/chat/Chat";
+import { Chat, ChatSpeedDial } from "./components/chat";
 
 export default function App() {
   const classes = useStyles();
@@ -63,9 +63,10 @@ export default function App() {
             <Route exact path="/" render={() => <Landing />} />
             <Route component={PageNotFound} />
           </Switch>
-          <Chat />
           <Dialogs />
           <Snackbars />
+          <Chat />
+          <ChatSpeedDial />
         </main>
       </BrowserRouter>
     </div>

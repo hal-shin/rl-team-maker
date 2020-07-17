@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -30,12 +30,17 @@ const useStyles = makeStyles({
 export default function TeamMakerSettings() {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const isFirstRun = useRef(true);
   const { players } = useSelector(state => state.event.player);
   const gameMode = useSelector(state => state.event.meta.gameMode);
   const [gameModeSelector, setGameModeSelector] = useState("2v2");
   const { setOpen } = useContext(DialogContext);
 
   useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
     dispatch(reset());
   }, [gameMode, dispatch]);
 

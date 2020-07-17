@@ -1,14 +1,10 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
-import Hidden from "@material-ui/core/Hidden";
-import Paper from "@material-ui/core/Paper";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import { makeStyles, Hidden, Paper, Tabs, Tab } from "@material-ui/core";
 import TeamSection from "./TeamSection";
 import PlayerSection from "./PlayerSection";
 import { setPlayerOrder, setTeams } from "../../actions/eventActions";
-import { useDispatch, useSelector } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
   root: {
