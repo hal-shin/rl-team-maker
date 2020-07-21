@@ -9,9 +9,11 @@ import {
 import { Send } from "@material-ui/icons";
 
 import { useStyles } from "./ChatStyles";
-import { DialogContext, SocketContext } from "../../contexts";
+import { ChatContext, DialogContext } from "../../contexts";
 import { socket } from "../../socket";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useDispatch, useSelector } from "react-redux";
+import { addMessage, joinRoom, setRoom } from "../../actions/chatActions";
 
 const ChatMenu = withStyles({
   paper: {
@@ -41,26 +43,37 @@ const ChatMenu = withStyles({
 ));
 
 export default function Chat() {
-  const messagesEndRef = useRef(null);
   const classes = useStyles();
-  const { setUsers, messages, setMessages, room } = useContext(SocketContext);
-  const { chatOpen, setChatOpen } = useContext(DialogContext);
-  const [connected, setConnected] = useState(false);
+  const dispatch = useDispatch();
   const { user, isAuthenticated } = useAuth0();
+  const messagesEndRef = useRef(null);
+  const { room, rooms } = useSelector(state => state.chat);
+  const { chatOpen, setChatOpen } = useContext(DialogContext);
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!connected && isAuthenticated) {
-      connectToChat();
-      setConnected(true);
-    }
-  }, [chatOpen]);
+    if (isAuthenticated && room && chatOpen) initializeRoom();
+  }, [chatOpen, room]);
+
+  useEffect(() => {
+    if (rooms[room]) setIsLoading(false);
+  }, [chatOpen, rooms, setIsLoading]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [rooms[room]]);
+
+  const initializeRoom = () => {
+    if (!rooms[room]) {
+      dispatch(joinRoom(room));
+      connectToChat();
+    } else {
+      rooms[room].connected ? setIsLoading(false) : connectToChat();
+    }
+  };
 
   const connectToChat = () => {
     socket.emit("connect-chat", {
@@ -68,31 +81,23 @@ export default function Chat() {
       room
     });
 
-    socket.on("users", users => {
-      setUsers(users);
-    });
-
-    socket.on("message", message => {
-      setMessages(messages => [...messages, message]);
-    });
-
-    socket.on("connected", user => {
-      setUsers(users => [...users, user]);
-    });
-
-    socket.on("disconnected", id => {
-      setUsers(users => {
-        return users.filter(user => user.id !== id);
-      });
+    socket.on("message", payload => {
+      addToMessages(payload.room, payload.message);
     });
   };
 
   const handleClose = () => {
+    dispatch(setRoom(""));
+    setIsLoading(true);
     setChatOpen(null);
   };
 
   const handleInput = event => {
     setMessage(event.target.value);
+  };
+
+  const addToMessages = (chatRoom, message) => {
+    dispatch(addMessage({ message, room: chatRoom }));
   };
 
   const submitMessage = () => {
@@ -107,7 +112,7 @@ export default function Chat() {
     };
 
     socket.emit("sendMessage", payload);
-    setMessages(messages => [...messages, payload.message]);
+    addToMessages(room, payload.message);
     setMessage("");
   };
 
@@ -133,19 +138,23 @@ export default function Chat() {
         </Typography>
       </Paper>
       <Paper elevation={0} className={classes.chatLog} square>
-        {messages.map((message, index) => {
-          return (
-            <Paper
-              variant="outlined"
-              className={classes.message}
-              key={index}
-              square
-            >
-              <strong>{message.username}: </strong>
-              {message.text}
-            </Paper>
-          );
-        })}
+        {isLoading ? (
+          <div className={classes.loading}>Loading...</div>
+        ) : (
+          rooms[room].messages.map((message, index) => {
+            return (
+              <Paper
+                variant="outlined"
+                className={classes.message}
+                key={index}
+                square
+              >
+                <strong>{message.username}: </strong>
+                {message.text}
+              </Paper>
+            );
+          })
+        )}
         <div ref={messagesEndRef} style={{ opacity: 0 }} />
       </Paper>
       <Paper elevation={0} className={classes.input} square>

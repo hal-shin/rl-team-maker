@@ -47,5 +47,13 @@ export const useStyles = makeStyles(theme => ({
       color: theme.palette.primary.main,
       cursor: "pointer"
     }
+  },
+  loading: {
+    width: "100%",
+    height: "100%",
+    color: "grey",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
   }
 }));

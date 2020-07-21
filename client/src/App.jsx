@@ -3,7 +3,12 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import clsx from "clsx";
 
 import { useStyles } from "./AppStyles";
-import { DialogContext, ThemeContext, UserContext } from "./contexts";
+import {
+  DialogContext,
+  ThemeContext,
+  UserContext,
+  ChatProvider
+} from "./contexts";
 import { TopAppBar, LeftDrawer, Board, Snackbars, Dialogs } from "./components";
 import {
   Landing,
@@ -13,21 +18,42 @@ import {
   NewEvent,
   PageNotFound
 } from "./pages";
-import { useAuthFetch } from "./hooks";
 import { Chat, ChatSpeedDial } from "./components/chat";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function App() {
   const classes = useStyles();
-  const { response, error } = useAuthFetch("/user", { body: {} });
+  const { isAuthenticated, getAccessTokenSilently, user } = useAuth0();
   const { setOpenPlayerContextMenu } = useContext(DialogContext);
   const { menuOpen } = useContext(ThemeContext);
   const { setUser } = useContext(UserContext);
 
   useEffect(() => {
-    if (response && !error) {
-      setUser(response);
-    }
-  }, [response, setUser, error]);
+    const login = async () => {
+      try {
+        const accessToken = await getAccessTokenSilently();
+
+        const res = await fetch("/user", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ user })
+        });
+
+        const data = await res.json();
+
+        if (res.status >= 200 && res.status < 300) {
+          setUser(data);
+        }
+      } catch (err) {
+        console.log("Could not login properly.");
+      }
+    };
+
+    if (isAuthenticated) login();
+  }, [isAuthenticated]);
 
   const handleMouseDown = event => {
     if (event.button === 2) {
@@ -65,8 +91,10 @@ export default function App() {
           </Switch>
           <Dialogs />
           <Snackbars />
-          <Chat />
-          <ChatSpeedDial />
+          <ChatProvider>
+            <Chat />
+            <ChatSpeedDial />
+          </ChatProvider>
         </main>
       </BrowserRouter>
     </div>

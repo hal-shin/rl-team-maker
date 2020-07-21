@@ -5,7 +5,8 @@ const chat = (io, client) => {
   });
 
   client.on("sendMessage", payload => {
-    client.to(payload.room).emit("message", payload.message);
+    const { message, room } = payload;
+    client.to(room).emit("message", { room, message });
   });
 };
 

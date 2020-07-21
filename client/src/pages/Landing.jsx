@@ -51,9 +51,11 @@ export default function Landing() {
               <Grid container spacing={3} className={classes.grid}>
                 {myTournamentsLoading
                   ? "loading..."
-                  : myTournaments.hosting.map((event, index) => (
+                  : myTournaments
+                  ? myTournaments.hosting.map((event, index) => (
                       <TournamentCard key={index} event={event} />
-                    ))}
+                    ))
+                  : ""}
               </Grid>
             </>
           )}
@@ -65,11 +67,13 @@ export default function Landing() {
               </Typography>
 
               <Grid container spacing={3} className={classes.grid}>
-                {myTournamentsLoading && myTournaments
+                {myTournamentsLoading
                   ? "loading..."
-                  : myTournaments.participating.map((event, index) => (
+                  : myTournaments
+                  ? myTournaments.participating.map((event, index) => (
                       <TournamentCard key={index} event={event} />
-                    ))}
+                    ))
+                  : ""}
               </Grid>
             </>
           )}
@@ -83,9 +87,11 @@ export default function Landing() {
               <Grid container spacing={3} className={classes.grid}>
                 {myTournamentsLoading
                   ? "loading..."
-                  : myTournaments.liked.map((event, index) => (
+                  : myTournaments
+                  ? myTournaments.liked.map((event, index) => (
                       <TournamentCard key={index} event={event} />
-                    ))}
+                    ))
+                  : ""}
               </Grid>
             </>
           )}

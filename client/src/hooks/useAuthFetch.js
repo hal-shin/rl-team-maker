@@ -35,6 +35,7 @@ export default function useAuthFetch(endpoint, { body, ...customConfig } = {}) {
 
         const res = await fetch(endpoint, config);
         const data = await res.json();
+
         if (res.status >= 200 && res.status < 300) {
           setResponse(data);
         } else {

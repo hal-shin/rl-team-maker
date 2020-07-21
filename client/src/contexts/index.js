@@ -2,6 +2,7 @@ import { DialogContext, DialogProvider } from "./DialogContext";
 import { SocketContext, SocketProvider } from "./SocketContext";
 import { ThemeContext, ThemeProvider } from "./ThemeContext";
 import { UserContext, UserProvider } from "./UserContext";
+import { ChatContext, ChatProvider } from "./ChatContext";
 
 export {
   DialogContext,
@@ -11,5 +12,7 @@ export {
   ThemeContext,
   ThemeProvider,
   UserContext,
-  UserProvider
+  UserProvider,
+  ChatContext,
+  ChatProvider
 };

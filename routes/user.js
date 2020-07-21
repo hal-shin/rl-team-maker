@@ -40,6 +40,7 @@ app.post("/", checkJwt, (req, res) => {
         }
       );
     } else {
+      console.log(foundUser.username + " logged in");
       return res.send(foundUser);
     }
   });
@@ -84,24 +85,47 @@ app.post("/unlike", checkJwt, (req, res) => {
 app.get("/tournaments", checkJwt, (req, res) => {
   const { userid } = req.headers;
 
-  User.findById(userid, async (err, foundUser) => {
+  User.findById(userid, (err, foundUser) => {
     if (!err) {
-      const output = {};
       const eventArray = Object.keys(foundUser.events);
       eventArray.shift();
-      for (let event in eventArray) {
-        await Tournament.find(
+
+      const events = {};
+
+      Promise.all([
+        Tournament.find(
           {
             _id: {
-              $in: foundUser.events[eventArray[event]]
+              $in: foundUser.events.liked
             }
           },
           (err, foundTourneys) => {
-            if (foundTourneys) output[eventArray[event]] = foundTourneys;
+            if (foundTourneys) events.liked = foundTourneys;
           }
-        );
-      }
-      res.send(output);
+        ),
+        Tournament.find(
+          {
+            _id: {
+              $in: foundUser.events.participating
+            }
+          },
+          (err, foundTourneys) => {
+            if (foundTourneys) events.participating = foundTourneys;
+          }
+        ),
+        Tournament.find(
+          {
+            _id: {
+              $in: foundUser.events.hosting
+            }
+          },
+          (err, foundTourneys) => {
+            if (foundTourneys) events.hosting = foundTourneys;
+          }
+        )
+      ]).then(() => {
+        res.send(events);
+      });
     } else {
       res.status(404).send({ message: "No user found" });
     }
