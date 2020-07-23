@@ -53,7 +53,7 @@ export default function App() {
     };
 
     if (isAuthenticated) login();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, getAccessTokenSilently, setUser, user]);
 
   const handleMouseDown = event => {
     if (event.button === 2) {

@@ -6,7 +6,7 @@ import { setTeams, setTeamOrder } from "../../actions/eventActions";
 
 export default function AddNewTeam() {
   const dispatch = useDispatch();
-  const { teams, teamOrder } = useSelector((state) => state.event.team);
+  const { teams, teamOrder } = useSelector(state => state.event.team);
 
   const handleAddNewTeam = () => {
     const newTeams = { ...teams };
@@ -16,6 +16,7 @@ export default function AddNewTeam() {
       id: `team-${newTeamId}`,
       teamName: `Team ${newTeamId}`,
       members: [],
+      totalMMR: 0
     };
     newTeamOrder.push(`team-${newTeamId}`);
     dispatch(setTeams(newTeams));

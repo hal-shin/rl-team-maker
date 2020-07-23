@@ -1,6 +1,16 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles(theme => ({
+  container: {
+    border: "1px solid #d3d4d5",
+    width: "350px",
+    "& ul": {
+      padding: 0,
+      height: "100%",
+      display: "flex",
+      flexDirection: "column"
+    }
+  },
   chatButton: {
     display: "flex"
   },

@@ -1,23 +1,26 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Container, Paper, Typography, Grid } from "@material-ui/core";
 
 import { useStyles } from "./LandingStyles";
 import { tournaments } from "../mocks";
 import { TournamentCard } from "../components";
-import { useAuthFetch, useFetch } from "../hooks";
+import { useAuthFetch } from "../hooks";
 import { UserContext } from "../contexts";
 
 export default function Landing() {
   const classes = useStyles();
   const { user } = useContext(UserContext);
-  const {
-    response: allTournaments,
-    isLoading: allTournamentsLoading
-  } = useFetch("/tournament/all");
+  const [allTournaments, setAllTournaments] = useState(null);
   const {
     response: myTournaments,
     isLoading: myTournamentsLoading
   } = useAuthFetch(`/user/tournaments`);
+
+  useEffect(() => {
+    fetch("/tournament/all")
+      .then(res => res.json())
+      .then(data => setAllTournaments(data));
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -101,7 +104,7 @@ export default function Landing() {
           </Typography>
 
           <Grid container spacing={3} className={classes.grid}>
-            {allTournamentsLoading
+            {!allTournaments
               ? "loading..."
               : allTournaments.map((event, index) => (
                   <TournamentCard key={index} event={event} />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { Droppable } from "react-beautiful-dnd";
@@ -81,21 +81,11 @@ export default function Team(props) {
   const dispatch = useDispatch();
   const teams = useSelector(state => state.event.team.teams);
   const players = useSelector(state => state.event.player.players);
-  const gameMode = useSelector(state => state.event.meta.gameMode);
   const { isAdmin } = useSelector(state => state.event);
   const team = teams[props.id];
   const [isEditing, toggleIsEditing] = useToggle(false);
   const [tempTeamName, setTempTeamName] = useState(team.teamName); // must come after team variable
-  const [totalMMR, setTotalMMR] = useState(0);
   const [collapsed, setCollapsed] = useState(false);
-
-  // add up MMR of players in team
-  useEffect(() => {
-    const newTotalMMR = team.members.reduce((accumulator, id) => {
-      return accumulator + players[id].ranks.currentSeason[gameMode];
-    }, 0);
-    setTotalMMR(newTotalMMR);
-  }, [teams, players, team.members, gameMode]);
 
   const handleEditTeamName = evt => {
     setTempTeamName(evt.target.value);
@@ -232,12 +222,12 @@ export default function Team(props) {
             variant="body2"
             className={classes.footerText}
           >
-            <Box pl={2}>TOTAL: {totalMMR}</Box>
+            <Box pl={2}>TOTAL: {team.totalMMR}</Box>
           </Typography>
         </Grid>
         <Grid item xs={6}>
           <Typography variant="body2" className={classes.footerText}>
-            AVERAGE: {Math.round(totalMMR / team.members.length) || 0}
+            AVERAGE: {Math.round(team.totalMMR / team.members.length) || 0}
           </Typography>
         </Grid>
       </Grid>

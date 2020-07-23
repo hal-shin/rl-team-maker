@@ -1,46 +1,19 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import {
-  withStyles,
-  Menu,
-  InputBase,
-  Typography,
-  Paper
-} from "@material-ui/core";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from "react";
+import { Popover, InputBase, Typography, Paper } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 
 import { useStyles } from "./ChatStyles";
-import { ChatContext, DialogContext } from "../../contexts";
+import { DialogContext } from "../../contexts";
 import { socket } from "../../socket";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useDispatch, useSelector } from "react-redux";
 import { addMessage, joinRoom, setRoom } from "../../actions/chatActions";
-
-const ChatMenu = withStyles({
-  paper: {
-    border: "1px solid #d3d4d5",
-    width: "350px",
-    "& ul": {
-      padding: 0,
-      height: "100%",
-      display: "flex",
-      flexDirection: "column"
-    }
-  }
-})(props => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: "bottom",
-      horizontal: "center"
-    }}
-    transformOrigin={{
-      vertical: "top",
-      horizontal: "center"
-    }}
-    {...props}
-  />
-));
 
 export default function Chat() {
   const classes = useStyles();
@@ -52,19 +25,26 @@ export default function Chat() {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
+  const scrollToBottom = useCallback(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
+
   useEffect(() => {
     if (isAuthenticated && room && chatOpen) initializeRoom();
   }, [chatOpen, room]);
 
   useEffect(() => {
-    if (rooms[room]) setIsLoading(false);
+    if (rooms[room]) {
+      setIsLoading(false);
+      scrollToBottom();
+    }
   }, [chatOpen, rooms, setIsLoading]);
 
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [rooms[room]]);
+    scrollToBottom();
+  }, [rooms[room], scrollToBottom]);
 
   const initializeRoom = () => {
     if (!rooms[room]) {
@@ -80,10 +60,6 @@ export default function Chat() {
       username: user["https://rl/username"],
       room
     });
-
-    socket.on("message", payload => {
-      addToMessages(payload.room, payload.message);
-    });
   };
 
   const handleClose = () => {
@@ -94,10 +70,6 @@ export default function Chat() {
 
   const handleInput = event => {
     setMessage(event.target.value);
-  };
-
-  const addToMessages = (chatRoom, message) => {
-    dispatch(addMessage({ message, room: chatRoom }));
   };
 
   const submitMessage = () => {
@@ -112,31 +84,38 @@ export default function Chat() {
     };
 
     socket.emit("sendMessage", payload);
-    addToMessages(room, payload.message);
+    dispatch(addMessage({ message: payload.message, room }));
     setMessage("");
   };
 
   const handleKeyPress = event => {
-    if (message === "") return;
-    if (event.charCode === 13) {
+    if (event.key === "Enter" && message) {
       submitMessage();
     }
   };
 
   return (
-    <ChatMenu
-      id="chat-menu"
-      className={classes.menu}
+    <Popover
+      id="menu-chat"
+      classes={{ paper: classes.container }}
       anchorEl={chatOpen}
       keepMounted
       open={Boolean(chatOpen)}
       onClose={handleClose}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "right"
+      }}
+      transformOrigin={{
+        vertical: "bottom",
+        horizontal: "right"
+      }}
     >
-      <Paper elevation={0} color="inherit" className={classes.header} square>
-        <Typography variant="h5" align="center">
+      <div className={classes.header}>
+        <Typography id="whatever" variant="h5" align="center">
           Chat Box
         </Typography>
-      </Paper>
+      </div>
       <Paper elevation={0} className={classes.chatLog} square>
         {isLoading ? (
           <div className={classes.loading}>Loading...</div>
@@ -162,10 +141,11 @@ export default function Chat() {
           onChange={handleInput}
           onKeyPress={handleKeyPress}
           value={message}
+          autoFocus
           fullWidth
         />
         <Send onClick={submitMessage} />
       </Paper>
-    </ChatMenu>
+    </Popover>
   );
 }

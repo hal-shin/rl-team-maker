@@ -27,9 +27,20 @@ const useStyles = makeStyles(theme => ({
 export default function TeamMaker() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const playerOrder = useSelector(state => state.event.player.playerOrder);
-  const teams = useSelector(state => state.event.team.teams);
+  const { playerOrder, players } = useSelector(state => state.event.player);
+  const { teams } = useSelector(state => state.event.team);
+  const { gameMode } = useSelector(state => state.event.meta);
+
   const [value, setValue] = useState(0);
+
+  const calculateTotalMMR = members => {
+    let output = 0;
+    members.forEach(member => {
+      output += players[member].ranks.currentSeason[gameMode];
+    });
+
+    return output;
+  };
 
   const onDragEnd = result => {
     /* logic for drag-and-drop functions */
@@ -65,6 +76,11 @@ export default function TeamMaker() {
         0,
         draggableId
       );
+
+      newTeams[destination.droppableId].totalMMR = calculateTotalMMR(
+        newTeams[destination.droppableId].members
+      );
+
       dispatch(setPlayerOrder(newPlayerList));
       dispatch(setTeams(newTeams));
       return;
@@ -92,6 +108,15 @@ export default function TeamMaker() {
         0,
         draggableId
       );
+
+      newTeams[source.droppableId].totalMMR = calculateTotalMMR(
+        newTeams[source.droppableId].members
+      );
+
+      newTeams[destination.droppableId].totalMMR = calculateTotalMMR(
+        newTeams[destination.droppableId].members
+      );
+
       dispatch(setTeams(newTeams));
       return;
     }

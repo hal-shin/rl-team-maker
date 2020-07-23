@@ -64,7 +64,7 @@ export default function LeftDrawer() {
     if (urlArray[1] !== "tournament" && isViewing) {
       dispatch(setViewing(false));
     }
-  }, [urlArray]);
+  }, [urlArray, dispatch, isViewing]);
 
   const handleChangeViewMode = () => {
     switch (viewMode) {
