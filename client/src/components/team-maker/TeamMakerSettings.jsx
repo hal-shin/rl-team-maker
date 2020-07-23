@@ -1,13 +1,15 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
+import {
+  makeStyles,
+  Button,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select
+} from "@material-ui/core";
 
-import { DialogContext } from "../../contexts/DialogContext";
+import { DialogContext } from "../../contexts";
 import {
   generateBalancedTeams,
   generateCaptainsDraftTeams

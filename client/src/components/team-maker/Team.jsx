@@ -1,86 +1,29 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
 import { Droppable } from "react-beautiful-dnd";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
-import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Divider from "@material-ui/core/Divider";
+import {
+  TextField,
+  Typography,
+  Button,
+  Box,
+  IconButton,
+  Grid,
+  Paper,
+  Divider
+} from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 
 import Player from "../player/Player";
 import useToggle from "../../hooks/useToggleState";
 import { setTeams } from "../../actions/eventActions";
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: "280px",
-    margin: "0 10px 10px 0",
-    msOverflowStyle: "none",
-    "&::-webkit-scrollbar": { width: "0 !important" },
-    flexShrink: "0"
-  },
-  header: {
-    height: "47px",
-    width: "278px",
-    background: theme.palette.background.paper,
-    position: "relative"
-  },
-  collapseIcon: {
-    position: "absolute",
-    top: 0,
-    left: 0
-  },
-  teamName: {
-    padding: "10px 0 5px 0",
-    display: "flex",
-    justifyContent: "center",
-    userSelect: "none",
-    "& input": { width: "80% !important" }
-  },
-  teammates: {
-    // scrolling container
-    minHeight: 292,
-    maxHeight: "292px",
-    overflow: "scroll",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: "10px 25px 0 25px",
-    msOverflowStyle: "none", // scrollbar hider - do not remove
-    "&::-webkit-scrollbar": {
-      display: "none" // scrollbar hider - do not remove
-    }
-  },
-  footer: {
-    height: 36
-  },
-  footerText: {
-    fontSize: 13.5,
-    fontWeight: 400,
-    letterSpacing: 0.95
-  }
-}));
-
-const buttonStyles = {
-  maxWidth: "30px",
-  maxHeight: "30px",
-  minWidth: "30px",
-  minHeight: "30px",
-  marginLeft: "5px",
-  boxShadow: "none"
-};
+import { useStyles, buttonStyles } from "./TeamStyles";
 
 export default function Team(props) {
   const classes = useStyles(props);
   const dispatch = useDispatch();
-  const teams = useSelector(state => state.event.team.teams);
-  const players = useSelector(state => state.event.player.players);
+  const { teams } = useSelector(state => state.event.team);
+  const { players } = useSelector(state => state.event.player);
   const { isAdmin } = useSelector(state => state.event);
   const team = teams[props.id];
   const [isEditing, toggleIsEditing] = useToggle(false);

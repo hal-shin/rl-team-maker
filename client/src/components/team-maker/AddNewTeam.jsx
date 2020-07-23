@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Button from "@material-ui/core/Button";
+import { Button } from "@material-ui/core";
 
 import { setTeams, setTeamOrder } from "../../actions/eventActions";
 

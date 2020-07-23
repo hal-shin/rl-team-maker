@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
 import { makeStyles, Hidden, Paper, Tabs, Tab } from "@material-ui/core";
+
 import TeamSection from "./TeamSection";
 import PlayerSection from "./PlayerSection";
 import { setPlayerOrder, setTeams } from "../../actions/eventActions";
