@@ -11,6 +11,7 @@ export default function TeamSection() {
   const classes = useStyles();
   const teams = useSelector(state => state.event.team.teams);
   const { isAdmin } = useSelector(state => state.event);
+
   return (
     <div className={classes.container}>
       <div className={classes.header}>

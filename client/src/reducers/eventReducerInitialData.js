@@ -9,6 +9,7 @@ export const sampleData = {
   endDate: new Date("July 1, 2020"),
   status: "In Progress",
   private: false,
+  phase: "forming",
   creator: {
     id: "5f0031d1652e5a0019ce3150",
     name: "thewarriorofblue"

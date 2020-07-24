@@ -1,39 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Container,
-  makeStyles,
-  Paper,
-  Typography
-} from "@material-ui/core";
 import { useSelector } from "react-redux";
+import { Typography } from "@material-ui/core";
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    alignContent: "center",
-    height: "calc(100vh - 48px)"
-  },
-  paper: {
-    margin: theme.spacing(3, 0),
-    padding: theme.spacing(3)
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start"
-  },
-  coverImage: {
-    backgroundRepeat: "none",
-    backgroundPosition: "center",
-    backgroundSize: "cover",
-    width: "100%"
-  },
-  contentHeader: {
-    marginBottom: theme.spacing(3)
-  }
-}));
+import DefaultContainer from "./DefaultContainer";
+import { useStyles } from "./OverviewStyles";
 
 export default function Overview({ match: { params } }) {
   const classes = useStyles();
@@ -59,9 +29,9 @@ export default function Overview({ match: { params } }) {
             <Typography variant="h4" className={classes.contentHeader}>
               {title}
             </Typography>
-            <Button variant="contained" color="primary">
-              Register
-            </Button>
+            {/*<Button variant="contained" color="primary">*/}
+            {/*  Register*/}
+            {/*</Button>*/}
           </div>
           <div>
             <img src={image} alt="" className={classes.coverImage} />
@@ -75,13 +45,5 @@ export default function Overview({ match: { params } }) {
     }
   };
 
-  return (
-    <div className={classes.root}>
-      <Container maxWidth="lg">
-        <Paper variant="outlined" className={classes.paper}>
-          {renderContents()}
-        </Paper>
-      </Container>
-    </div>
-  );
+  return <DefaultContainer>{renderContents()}</DefaultContainer>;
 }

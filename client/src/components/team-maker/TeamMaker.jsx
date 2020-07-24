@@ -1,29 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
-import { makeStyles, Hidden, Paper, Tabs, Tab } from "@material-ui/core";
+import { Hidden, Paper, Tabs, Tab } from "@material-ui/core";
 
 import TeamSection from "./TeamSection";
 import PlayerSection from "./PlayerSection";
+import { setViewing } from "../../actions/metaActions";
 import { setPlayerOrder, setTeams } from "../../actions/eventActions";
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    backgroundColor: theme.palette.background.default,
-    display: "flex",
-    padding: "0 5% 0 5%",
-    [theme.breakpoints.down("xs")]: {
-      padding: "0 8px 0 8px",
-      justifyContent: "center"
-    },
-    justifyContent: "space-around",
-    height: "calc(100vh - 48px)"
-  },
-  tabs: {
-    borderRightStyle: "none",
-    borderLeftStyle: "none"
-  }
-}));
+import { useStyles } from "./TeamMakerStyles";
 
 export default function TeamMaker() {
   const classes = useStyles();
@@ -31,8 +15,13 @@ export default function TeamMaker() {
   const { playerOrder, players } = useSelector(state => state.event.player);
   const { teams } = useSelector(state => state.event.team);
   const { gameMode } = useSelector(state => state.event.meta);
-
   const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    dispatch(setViewing(true));
+
+    return () => dispatch(setViewing(false));
+  }, []);
 
   const calculateTotalMMR = members => {
     let output = 0;

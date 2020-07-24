@@ -1,8 +1,6 @@
 import React, { useContext, useState } from "react";
 import {
   makeStyles,
-  Container,
-  Paper,
   Typography,
   Grid,
   TextField,
@@ -12,21 +10,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../contexts";
+import DefaultContainer from "../components/DefaultContainer";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    alignContent: "center",
-    height: "calc(100vh - 48px)"
-  },
-  paper: {
-    margin: theme.spacing(3, 0),
-    padding: theme.spacing(3)
-  },
-  contentHeader: {
-    marginBottom: theme.spacing(3)
-  },
   form: {
     maxWidth: "700px"
   }
@@ -100,78 +86,70 @@ export default function NewEvent() {
   };
 
   return (
-    <div className={classes.root}>
-      <Container maxWidth="lg">
-        <Paper variant="outlined" className={classes.paper}>
-          <Typography variant="h4" className={classes.contentHeader}>
-            New Event
-          </Typography>
-          <Typography variant="body1">
-            You can create a new tournament here. Please input the following
-            fields.
-          </Typography>
-          <form
-            onSubmit={handleSubmit}
-            noValidate
-            autoComplete="off"
-            className={classes.form}
-          >
-            <Grid container justify="flex-start" spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  id="title"
-                  label="Event Name"
-                  value={data.title}
-                  onChange={handleChange}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  id="startDate"
-                  label="Event Start Date"
-                  type="datetime-local"
-                  value={data.startDate}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  id="endDate"
-                  label="Event End Date"
-                  type="datetime-local"
-                  value={data.endDate}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  id="description"
-                  label="Description"
-                  value={data.description}
-                  onChange={handleChange}
-                  multiline
-                  fullWidth
-                  rowsMax={6}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  onClick={handleSubmit}
-                  variant="contained"
-                  color="primary"
-                  style={{ marginRight: 8 }}
-                >
-                  Submit
-                </Button>
-                <Button onClick={handleReset} color="secondary">
-                  Reset
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-        </Paper>
-      </Container>
-    </div>
+    <DefaultContainer header="New Event">
+      <Typography variant="body1">
+        You can create a new tournament here. Please input the following fields.
+      </Typography>
+      <form
+        onSubmit={handleSubmit}
+        noValidate
+        autoComplete="off"
+        className={classes.form}
+      >
+        <Grid container justify="flex-start" spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              id="title"
+              label="Event Name"
+              value={data.title}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              id="startDate"
+              label="Event Start Date"
+              type="datetime-local"
+              value={data.startDate}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              id="endDate"
+              label="Event End Date"
+              type="datetime-local"
+              value={data.endDate}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="description"
+              label="Description"
+              value={data.description}
+              onChange={handleChange}
+              multiline
+              fullWidth
+              rowsMax={6}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              onClick={handleSubmit}
+              variant="contained"
+              color="primary"
+              style={{ marginRight: 8 }}
+            >
+              Submit
+            </Button>
+            <Button onClick={handleReset} color="secondary">
+              Reset
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+    </DefaultContainer>
   );
 }

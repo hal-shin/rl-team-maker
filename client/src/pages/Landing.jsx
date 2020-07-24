@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Container, Paper, Typography, Grid } from "@material-ui/core";
+import { Typography, Grid } from "@material-ui/core";
 
 import { useStyles } from "./LandingStyles";
 import { tournaments } from "../mocks";
-import { TournamentCard } from "../components";
+import { TournamentCard, DefaultContainer } from "../components";
 import { useAuthFetch } from "../hooks";
 import { UserContext } from "../contexts";
 
@@ -32,86 +32,84 @@ export default function Landing() {
           Create teams, generate brackets, and host tournaments.
         </Typography>
       </div>
-      <Container maxWidth="lg">
-        <Paper className={classes.paper} variant="outlined">
-          <Typography variant="h4" className={classes.contentHeader}>
-            Featured Tournaments
-          </Typography>
+      <DefaultContainer>
+        <Typography variant="h4" className={classes.contentHeader}>
+          Featured Tournaments
+        </Typography>
 
-          <Grid container spacing={3} className={classes.grid}>
-            {Object.keys(tournaments).map((id, index) => {
-              const event = { ...tournaments[id] };
-              return <TournamentCard key={index} event={event} />;
-            })}
-          </Grid>
+        <Grid container spacing={3} className={classes.grid}>
+          {Object.keys(tournaments).map((id, index) => {
+            const event = { ...tournaments[id] };
+            return <TournamentCard key={index} event={event} />;
+          })}
+        </Grid>
 
-          {user && user.events.hosting.length > 0 && (
-            <>
-              <Typography variant="h4" className={classes.contentHeader}>
-                Hosting
-              </Typography>
+        {user && user.events.hosting.length > 0 && (
+          <>
+            <Typography variant="h4" className={classes.contentHeader}>
+              Hosting
+            </Typography>
 
-              <Grid container spacing={3} className={classes.grid}>
-                {myTournamentsLoading
-                  ? "loading..."
-                  : myTournaments
-                  ? myTournaments.hosting.map((event, index) => (
-                      <TournamentCard key={index} event={event} />
-                    ))
-                  : ""}
-              </Grid>
-            </>
-          )}
+            <Grid container spacing={3} className={classes.grid}>
+              {myTournamentsLoading
+                ? "loading..."
+                : myTournaments
+                ? myTournaments.hosting.map((event, index) => (
+                    <TournamentCard key={index} event={event} />
+                  ))
+                : ""}
+            </Grid>
+          </>
+        )}
 
-          {user && user.events.participating.length > 0 && (
-            <>
-              <Typography variant="h4" className={classes.contentHeader}>
-                Participating
-              </Typography>
+        {user && user.events.participating.length > 0 && (
+          <>
+            <Typography variant="h4" className={classes.contentHeader}>
+              Participating
+            </Typography>
 
-              <Grid container spacing={3} className={classes.grid}>
-                {myTournamentsLoading
-                  ? "loading..."
-                  : myTournaments
-                  ? myTournaments.participating.map((event, index) => (
-                      <TournamentCard key={index} event={event} />
-                    ))
-                  : ""}
-              </Grid>
-            </>
-          )}
+            <Grid container spacing={3} className={classes.grid}>
+              {myTournamentsLoading
+                ? "loading..."
+                : myTournaments
+                ? myTournaments.participating.map((event, index) => (
+                    <TournamentCard key={index} event={event} />
+                  ))
+                : ""}
+            </Grid>
+          </>
+        )}
 
-          {user && user.events.liked.length > 0 && (
-            <>
-              <Typography variant="h4" className={classes.contentHeader}>
-                Liked Tournaments
-              </Typography>
+        {user && user.events.liked.length > 0 && (
+          <>
+            <Typography variant="h4" className={classes.contentHeader}>
+              Liked Tournaments
+            </Typography>
 
-              <Grid container spacing={3} className={classes.grid}>
-                {myTournamentsLoading
-                  ? "loading..."
-                  : myTournaments
-                  ? myTournaments.liked.map((event, index) => (
-                      <TournamentCard key={index} event={event} />
-                    ))
-                  : ""}
-              </Grid>
-            </>
-          )}
+            <Grid container spacing={3} className={classes.grid}>
+              {myTournamentsLoading
+                ? "loading..."
+                : myTournaments
+                ? myTournaments.liked.map((event, index) => (
+                    <TournamentCard key={index} event={event} />
+                  ))
+                : ""}
+            </Grid>
+          </>
+        )}
 
-          <Typography variant="h4" className={classes.contentHeader}>
-            All Tournaments
-          </Typography>
+        <Typography variant="h4" className={classes.contentHeader}>
+          All Tournaments
+        </Typography>
 
-          <Grid container spacing={3} className={classes.grid}>
-            {!allTournaments
-              ? "loading..."
-              : allTournaments.map((event, index) => (
-                  <TournamentCard key={index} event={event} />
-                ))}
-          </Grid>
-        </Paper>
-      </Container>
+        <Grid container spacing={3} className={classes.grid}>
+          {!allTournaments
+            ? "loading..."
+            : allTournaments.map((event, index) => (
+                <TournamentCard key={index} event={event} />
+              ))}
+        </Grid>
+      </DefaultContainer>
     </div>
   );
 }

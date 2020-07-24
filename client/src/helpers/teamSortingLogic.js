@@ -5,7 +5,9 @@ export const generateBlankTeamsAndTeamOrder = numberOfTeams => {
     newTeams[`team-${i}`] = {
       id: `team-${i}`,
       teamName: `Team ${i}`,
-      members: []
+      members: [],
+      games: [],
+      totalMMR: 0
     };
     newTeamOrder.push(`team-${i}`);
   }
@@ -63,6 +65,10 @@ export const generateBalancedTeams = (players, gameMode) => {
     for (let i = 1; i < numberOfTeams + 1; i++) {
       newTeams[`team-${i}`].members.push(workingPlayerOrder.shift());
       newTeams[`team-${i}`].members.push(workingPlayerOrder.pop());
+      newTeams[`team-${i}`].totalMMR = newTeams[`team-${i}`].members.reduce(
+        (acc, curr) => acc + players[curr].ranks.currentSeason[gameMode],
+        0
+      );
     }
     return [newTeams, newTeamOrder, workingPlayerOrder];
   } else {
@@ -73,6 +79,10 @@ export const generateBalancedTeams = (players, gameMode) => {
       );
       newTeams[`team-${i + 1}`].members.push(
         workingPlayerOrder[2 * numberOfTeams + i]
+      );
+      newTeams[`team-${i + 1}`].totalMMR = newTeams[`team-${i}`].members.reduce(
+        (acc, curr) => acc + players[curr].ranks.currentSeason[gameMode],
+        0
       );
     }
   }
@@ -92,6 +102,10 @@ export const generateCaptainsDraftTeams = (players, gameMode) => {
 
   for (let i = 1; i < numberOfTeams + 1; i++) {
     newTeams[`team-${i}`].members.push(workingPlayerOrder.shift());
+    newTeams[`team-${i}`].totalMMR = newTeams[`team-${i}`].members.reduce(
+      (acc, curr) => acc + players[curr].ranks.currentSeason[gameMode],
+      0
+    );
   }
   return [newTeams, newTeamOrder, workingPlayerOrder];
 };

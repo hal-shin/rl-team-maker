@@ -43,3 +43,25 @@ export const sortTeams = (newTeams, newTeamOrder, newPlayerOrder) => ({
 export const reset = () => ({
   type: "RESET"
 });
+
+export const setPhase = newPhase => ({
+  type: "SET_PHASE",
+  newPhase
+});
+
+export const setRoundRobin = () => ({
+  type: "SET_ROUND_ROBIN"
+});
+
+export const setNotes = (gameId, newNotes) => ({
+  type: "SET_NOTES",
+  gameId,
+  newNotes
+});
+
+export const setScore = (gameId, side, newScore) => ({
+  type: "SET_SCORE",
+  gameId,
+  side,
+  newScore
+});

@@ -58,7 +58,6 @@ export default function Admin({ match: { params } }) {
   }, [event, tournamentId]);
 
   const handleChange = event => {
-    console.log("Val:", event.target.name);
     setDraftEvent({ ...draftEvent, [event.target.name]: event.target.value });
   };
 

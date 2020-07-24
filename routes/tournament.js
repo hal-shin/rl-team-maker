@@ -78,6 +78,8 @@ app.post("/new", checkJwt, (req, res) => {
                 { query: "wundero", platform: "steam" }
               ]
             },
+            bracket: {},
+            phase: "forming",
             admins: [user._id]
           },
           (err, createdTourney) => {

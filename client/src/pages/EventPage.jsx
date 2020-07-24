@@ -49,7 +49,7 @@ export default function EventPage({ match }) {
             if (!data.message) dispatch(setEvent(data));
           });
       }
-      dispatch(setViewing(true));
+      // dispatch(setViewing(true));
     };
 
     if (!isLoading && tournamentId !== event._id) {

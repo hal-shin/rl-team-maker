@@ -58,7 +58,7 @@ export default function LeftDrawer() {
     setViewMode
   } = useContext(ThemeContext);
   const { isViewing } = useSelector(state => state.meta);
-  const { isAdmin } = useSelector(state => state.event);
+  const { isAdmin, phase } = useSelector(state => state.event);
 
   useEffect(() => {
     if (urlArray[1] !== "tournament" && isViewing) {
@@ -154,14 +154,16 @@ export default function LeftDrawer() {
                 icon={<People />}
                 text="Team Maker"
               />
-              <MenuItem
-                onClick={() =>
-                  history.push(`/tournament/${urlArray[2]}/bracket`)
-                }
-                icon={<Grade />}
-                text="Tournament Bracket"
-                // disabled
-              />
+              {(phase !== "forming" || isAdmin) && (
+                <MenuItem
+                  onClick={() =>
+                    history.push(`/tournament/${urlArray[2]}/bracket`)
+                  }
+                  icon={<Grade />}
+                  text="Tournament Bracket"
+                  // disabled
+                />
+              )}
               {isAdmin && (
                 <MenuItem
                   onClick={() =>
@@ -216,14 +218,6 @@ export default function LeftDrawer() {
       </List>
       <Divider />
       <List subheader={menuOpen ? <ListSubheader>Other</ListSubheader> : ""}>
-        {isViewing && (
-          <MenuItem
-            onClick={() => setOpen("host")}
-            disabled={Boolean(session.isViewer)}
-            icon={<MeetingRoom />}
-            text="Host"
-          />
-        )}
         <MenuItem
           onClick={() => setOpen("help")}
           disabled={Boolean(session.isViewer)}

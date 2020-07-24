@@ -7,8 +7,14 @@ import Overview from "./Overview";
 import Admin from "./Admin";
 import Dialogs from "./dialogs";
 import Snackbars from "./snackbars";
+import DefaultContainer from "./DefaultContainer";
+import Notes from "./Notes";
+import Score from "./Score";
 
 export {
+  DefaultContainer,
+  Notes,
+  Score,
   Board,
   LeftDrawer,
   Landing,

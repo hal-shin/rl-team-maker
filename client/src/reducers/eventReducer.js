@@ -1,5 +1,6 @@
 import { prepBlankTeamsAndTeamOrder } from "../helpers/teamSortingLogic";
 import { initialData } from "./eventReducerInitialData";
+import generateRoundRobin from "../helpers/roundRobin";
 
 const event = (state = initialData, action) => {
   switch (action.type) {
@@ -96,6 +97,58 @@ const event = (state = initialData, action) => {
           teamOrder: newTeamOrder
         }
       };
+
+    case "SET_PHASE":
+      return {
+        ...state,
+        phase: action.newPhase
+      };
+
+    case "SET_ROUND_ROBIN":
+      const [games, brackets, teamsWithGames] = generateRoundRobin(
+        state.team.teams
+      );
+      return {
+        ...state,
+        team: {
+          ...state.team,
+          teams: teamsWithGames
+        },
+        phase: "round-robin",
+        bracket: { roundRobin: brackets },
+        games
+      };
+
+    case "SET_NOTES":
+      return {
+        ...state,
+        games: {
+          ...state.games,
+          [action.gameId]: {
+            ...state.games[action.gameId],
+            notes: action.newNotes
+          }
+        }
+      };
+
+    case "SET_SCORE":
+      return {
+        ...state,
+        games: {
+          ...state.games,
+          [action.gameId]: {
+            ...state.games[action.gameId],
+            score: {
+              ...state.games[action.gameId].score,
+              overall: {
+                ...state.games[action.gameId].score.overall,
+                [action.side]: action.newScore
+              }
+            }
+          }
+        }
+      };
+
     default:
       return state;
   }

@@ -5,6 +5,7 @@ export const DialogContext = createContext();
 export function DialogProvider(props) {
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState(null);
   const [loading, setLoading] = useState("loading"); // only options are "loading" and "error"
   const [chatOpen, setChatOpen] = useState(null);
   const [openPlayerContextMenu, setOpenPlayerContextMenu] = useState({
@@ -13,6 +14,10 @@ export function DialogProvider(props) {
   });
   const [fetchedPlayer, setFetchedPlayer] = useState({});
   const [currentPlayerInfo, setCurrentPlayerInfo] = useState({});
+
+  const openSnackbar = message => {
+    setSnackbarMessage(message);
+  };
 
   return (
     <DialogContext.Provider
@@ -30,7 +35,10 @@ export function DialogProvider(props) {
         openPlayerContextMenu,
         setOpenPlayerContextMenu,
         currentPlayerInfo,
-        setCurrentPlayerInfo
+        setCurrentPlayerInfo,
+        snackbarMessage,
+        setSnackbarMessage,
+        openSnackbar
       }}
     >
       {props.children}
