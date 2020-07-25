@@ -3,9 +3,9 @@ import { MapInteractionCSS } from "react-map-interaction";
 import { makeStyles, Button, Typography } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 
-import Game from "./Game";
+import Game from "../../components/bracket/Game";
 import { setRoundRobin } from "../../actions/eventActions";
-import RoundRobin from "./RoundRobin";
+import RoundRobin from "../../components/bracket/RoundRobin";
 import { DialogContext } from "../../contexts";
 
 const useStyles = makeStyles({

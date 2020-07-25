@@ -9,8 +9,7 @@ import rootReducer from "./reducers/rootReducer";
 import {
   ThemeProvider,
   DialogProvider,
-  SocketProvider,
-  UserProvider
+  SocketProvider
 } from "./contexts";
 import App from "./App.jsx";
 import "./index.css";
@@ -25,15 +24,13 @@ ReactDOM.render(
       redirectUri={window.location.origin}
       audience={process.env.REACT_APP_AUTH0_IDENTIFIER}
     >
-      <UserProvider>
-        <ThemeProvider>
-          <DialogProvider>
-            <SocketProvider>
-              <App />
-            </SocketProvider>
-          </DialogProvider>
-        </ThemeProvider>
-      </UserProvider>
+      <ThemeProvider>
+        <DialogProvider>
+          <SocketProvider>
+            <App />
+          </SocketProvider>
+        </DialogProvider>
+      </ThemeProvider>
     </Auth0Provider>
   </Provider>,
   document.getElementById("root")

@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Hidden, Paper, Tabs, Tab } from "@material-ui/core";
 
-import TeamSection from "./TeamSection";
-import PlayerSection from "./PlayerSection";
+import TeamSection from "../../components/team-maker/TeamSection";
+import PlayerSection from "../../components/team-maker/PlayerSection";
 import { setViewing } from "../../actions/metaActions";
 import { setPlayerOrder, setTeams } from "../../actions/eventActions";
-import { useStyles } from "./TeamMakerStyles";
+import { useStyles } from "../../components/team-maker/TeamMakerStyles";
 
 export default function TeamMaker() {
   const classes = useStyles();
@@ -21,7 +21,7 @@ export default function TeamMaker() {
     dispatch(setViewing(true));
 
     return () => dispatch(setViewing(false));
-  }, []);
+  }, [dispatch]);
 
   const calculateTotalMMR = members => {
     let output = 0;

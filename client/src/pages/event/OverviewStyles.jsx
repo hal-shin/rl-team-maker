@@ -47,6 +47,9 @@ export const useStyles = makeStyles(theme => ({
   contentHeader: {
     marginBottom: theme.spacing(3)
   },
+  content: {
+    padding: theme.spacing(2)
+  },
   sidebar: {
     padding: theme.spacing(2)
   }

@@ -5,16 +5,19 @@ import { makeStyles, InputBase, TableCell } from "@material-ui/core";
 import { setScore } from "../actions/eventActions";
 
 const useStyles = makeStyles(theme => ({
-  scoreCell: {
+  scoreCell: disabled => ({
     width: 52,
-    cursor: "pointer",
+    cursor: `${disabled ? "default" : "pointer"}`,
     "&:hover": {
-      background:
-        theme.palette.type === "light"
+      background: `${
+        disabled
+          ? theme.palette.background.paper
+          : theme.palette.type === "light"
           ? theme.palette.grey[200]
           : theme.palette.grey[700]
+      }`
     }
-  },
+  }),
   input: {
     width: 20,
     padding: 0,
@@ -25,14 +28,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Score({ gameId, side, score }) {
-  const classes = useStyles();
+function Score({ gameId, side, score, disabled }) {
+  const classes = useStyles(disabled);
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [inputScore, setInputScore] = useState(score || "");
 
   const handleEdit = () => {
-    setIsEditing(true);
+    if (!disabled) {
+      setIsEditing(true);
+    }
   };
 
   const handleSave = () => {
@@ -45,7 +50,8 @@ function Score({ gameId, side, score }) {
   const handleChange = event => {
     if (
       event.target.value.length < 3 &&
-      (Boolean(Number(event.target.value)) || event.target.value === "")
+      ((Number(event.target.value) >= 0 && Number(event.target.value) <= 99) ||
+        event.target.value === "")
     ) {
       setInputScore(event.target.value);
     }

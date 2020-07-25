@@ -9,7 +9,6 @@ function removeEmptyTeams(teams) {
     }
   });
 
-
   return newTeams;
 }
 
@@ -32,7 +31,11 @@ export default function generateRoundRobin(initialTeams) {
       teamName: "Bye",
       members: [],
       totalMMR: "bye",
-      games: []
+      games: [],
+      score: {
+        wins: 0,
+        losses: 0
+      }
     };
     teams.push(bye);
     workingTeams["bye"] = { ...bye };

@@ -10,8 +10,9 @@ import {
   Button
 } from "@material-ui/core";
 
-import { DialogContext, UserContext } from "../contexts";
+import { DialogContext } from "../contexts";
 import { DefaultContainer, DraftEditor } from "../components";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -43,8 +44,8 @@ const initialData = {
 export default function NewEvent() {
   const classes = useStyles();
   const history = useHistory();
-  const { getAccessTokenSilently } = useAuth0();
-  const { user } = useContext(UserContext);
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { user } = useSelector(state => state);
   const { openMultiSnackbar } = useContext(DialogContext);
   const [data, setData] = useState(initialData);
   const [editorState, setEditorState] = useState(() =>
@@ -95,7 +96,9 @@ export default function NewEvent() {
     setData({ ...data, [event.target.id]: event.target.value });
   };
 
-  return (
+  return !isAuthenticated ? (
+    <div>You must be logged in to see this page.</div>
+  ) : (
     <DefaultContainer header="New Event" width="small">
       <div className={classes.centered}>
         <div className={classes.form}>

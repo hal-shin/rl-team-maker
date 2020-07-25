@@ -16,7 +16,12 @@ export default function AddNewTeam() {
       id: `team-${newTeamId}`,
       teamName: `Team ${newTeamId}`,
       members: [],
-      totalMMR: 0
+      games: [],
+      totalMMR: 0,
+      score: {
+        wins: 0,
+        losses: 0
+      }
     };
     newTeamOrder.push(`team-${newTeamId}`);
     dispatch(setTeams(newTeams));

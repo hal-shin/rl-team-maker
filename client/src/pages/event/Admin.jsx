@@ -3,9 +3,7 @@ import { useSelector } from "react-redux";
 import { useAuth0 } from "@auth0/auth0-react";
 import { EditorState, convertFromRaw } from "draft-js";
 import {
-  Container,
   makeStyles,
-  Paper,
   Grid,
   Typography,
   List,
@@ -14,8 +12,8 @@ import {
   ListItemSecondaryAction,
   Switch
 } from "@material-ui/core";
-import DraftEditor from "./DraftEditor";
-import { DefaultContainer } from "./index";
+import DraftEditor from "../../components/DraftEditor";
+import { DefaultContainer } from "../../components";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -83,7 +81,6 @@ export default function Admin({ match: { params } }) {
         </Typography>
       );
     } else {
-      console.log(draftEvent.admins);
       return (
         <div>
           <Grid container spacing={2}>

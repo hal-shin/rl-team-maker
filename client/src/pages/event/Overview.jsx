@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Typography, Grid, Divider } from "@material-ui/core";
 
-import DefaultContainer from "./DefaultContainer";
+import DefaultContainer from "../../components/DefaultContainer";
 import { Jumbotron, useStyles } from "./OverviewStyles";
-import DraftRenderer from "./DraftRenderer";
+import DraftRenderer from "../../components/DraftRenderer";
 
 export default function Overview({ match: { params } }) {
   const classes = useStyles();
   const { tournamentId } = params;
   const {
-    event: { _id, title, image, description }
+    event: { _id, title, image, description, admins }
   } = useSelector(state => state);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -36,17 +36,22 @@ export default function Overview({ match: { params } }) {
           </div>
           <Divider />
           <Grid container spacing={3}>
-            <Grid item xs={12} md={12}>
-              <DraftRenderer editorState={description} />
+            <Grid item xs={12} md={8}>
+              <div className={classes.content}>
+                <DraftRenderer editorState={description} />
+              </div>
             </Grid>
-            {/*<Grid item xs={12} md={4}>*/}
-            {/*  <div className={classes.sidebar}>*/}
-            {/*    <Typography variant="h5">Info</Typography>*/}
-            {/*    <Typography variant="h5">Attendees</Typography>*/}
-            {/*    <Typography variant="h5">Sidebar</Typography>*/}
-            {/*    <Typography variant="h5">Sidebar</Typography>*/}
-            {/*  </div>*/}
-            {/*</Grid>*/}
+            <Grid item xs={12} md={4}>
+              <div className={classes.sidebar}>
+                <Typography variant="h5">Admins</Typography>
+                {admins.map(admin => (
+                  <Typography key={admin.id}>{admin.name}</Typography>
+                ))}
+                <Typography variant="h5">Attendees</Typography>
+                <Typography variant="h5">Sidebar</Typography>
+                <Typography variant="h5">Sidebar</Typography>
+              </div>
+            </Grid>
           </Grid>
         </>
       );

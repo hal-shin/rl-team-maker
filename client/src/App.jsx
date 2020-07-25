@@ -3,12 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import clsx from "clsx";
 
 import { useStyles } from "./AppStyles";
-import {
-  DialogContext,
-  ThemeContext,
-  UserContext,
-  ChatProvider
-} from "./contexts";
+import { DialogContext, ThemeContext, ChatProvider } from "./contexts";
 import { TopAppBar, LeftDrawer, Board, Snackbars, Dialogs } from "./components";
 import {
   Landing,
@@ -20,13 +15,15 @@ import {
 } from "./pages";
 import { Chat, ChatSpeedDial } from "./components/chat";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useDispatch } from "react-redux";
+import { setUser } from "./actions/userActions";
 
 export default function App() {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const { isAuthenticated, getAccessTokenSilently, user } = useAuth0();
   const { setOpenPlayerContextMenu } = useContext(DialogContext);
   const { menuOpen } = useContext(ThemeContext);
-  const { setUser } = useContext(UserContext);
 
   useEffect(() => {
     const login = async () => {
@@ -45,10 +42,10 @@ export default function App() {
         const data = await res.json();
 
         if (res.status >= 200 && res.status < 300) {
-          setUser(data);
+          dispatch(setUser(data));
         }
       } catch (err) {
-        console.log("Could not login properly.");
+        console.log("Could not login properly.", err);
       }
     };
 

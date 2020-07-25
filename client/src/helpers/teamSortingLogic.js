@@ -7,7 +7,11 @@ export const generateBlankTeamsAndTeamOrder = numberOfTeams => {
       teamName: `Team ${i}`,
       members: [],
       games: [],
-      totalMMR: 0
+      totalMMR: 0,
+      score: {
+        wins: 0,
+        losses: 0
+      }
     };
     newTeamOrder.push(`team-${i}`);
   }

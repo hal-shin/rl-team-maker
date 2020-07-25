@@ -7,22 +7,26 @@ const _ = require("lodash");
 app.get("/", (req, res) => {
   const { tournamentId, userId } = req.query;
 
-  if (!tournamentId)
+  if (!tournamentId) {
+    console.log("No tournament ID was provided.");
     res.status(400).send({ message: "Please include tournament ID" });
+  }
   Tournament.findById(tournamentId, (err, foundTourney) => {
     if (!err) {
       if (!foundTourney)
         res.status(400).send({ message: "Tourney doesn't exist" });
 
-      if (userId && foundTourney.admins.includes(userId)) {
-        foundTourney._doc.isAdmin = true;
-      } else {
-        foundTourney._doc.isAdmin = false;
-      }
+      let isAdmin = false;
+      foundTourney.admins.forEach(admin => {
+        if (admin.id === userId) isAdmin = true;
+      });
+
+      foundTourney._doc.isAdmin = isAdmin;
 
       res.send(foundTourney);
     } else {
       console.log("Error:", err);
+      res.status(400).send({ message: "Could not found a tournament." });
     }
   });
 });
@@ -42,10 +46,8 @@ app.get("/all", (req, res) => {
 app.post("/new", checkJwt, (req, res) => {
   const { formData, user } = req.body;
 
-  if (!user)
-    return res.status(400).send({ message: "You must be logged in first." });
-  if (!formData)
-    return res.status(400).send({ message: "Form data is missing." });
+  if (!user) res.status(400).send({ message: "You must be logged in first." });
+  if (!formData) res.status(400).send({ message: "Form data is missing." });
 
   Tournament.findOne({ title: formData.title }, (err, foundTourney) => {
     if (err) {
@@ -85,7 +87,7 @@ app.post("/new", checkJwt, (req, res) => {
             admins: [{ id: user._id, name: user.username }]
           },
           (err, createdTourney) => {
-            if (err) return res.status(400).send({ message: err });
+            if (err) res.status(400).send({ message: err });
 
             User.findByIdAndUpdate(
               user._id,
@@ -95,19 +97,19 @@ app.post("/new", checkJwt, (req, res) => {
               (err, foundUser) => {
                 if (err) {
                   console.log(err);
-                  return res
+                  res
                     .status(400)
                     .send({ message: "couldn't add to host array" });
                 }
               }
             );
 
-            return res.send(createdTourney);
+            res.send(createdTourney);
           }
         );
       } else {
         // console.log("Found tourney:", foundTourney);
-        return res.status(400).send({ message: "Tournament already exists." });
+        res.status(400).send({ message: "Tournament already exists." });
       }
     }
   });
@@ -116,13 +118,16 @@ app.post("/new", checkJwt, (req, res) => {
 app.post("/update", checkJwt, (req, res) => {
   const { userid } = req.headers;
   const { event } = req.body;
+
   if (!userid) res.send(400).send({ message: "Please provide userid" });
   Tournament.findOneAndUpdate(
-    { _id: event._id, admins: { $in: userid } },
+    { _id: event._id, admins: { $elemMatch: { id: userid } } },
     event,
     { new: true },
     (err, updatedTourney) => {
-      // console.log("UPDATED TOURNEY:", updatedTourney);
+      if (err) {
+        console.log("Update failed", err);
+      }
       res.send(updatedTourney);
     }
   );

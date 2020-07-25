@@ -6,9 +6,9 @@ import { socket } from "../socket";
 import { SocketContext } from "../contexts/SocketContext";
 import { timeoutPromise } from "../helpers/playerFetchLogic";
 import { setStore } from "../actions/storeActions";
-import TeamMaker from "./team-maker/TeamMaker";
+import TeamMaker from "../pages/event/TeamMaker";
 import { ThemeContext } from "../contexts/ThemeContext";
-import TournamentBracket from "./bracket/TournamentBracket";
+import TournamentBracket from "../pages/event/TournamentBracket";
 
 var socketTimeout;
 

@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, Grid } from "@material-ui/core";
 
 import { useStyles } from "./LandingStyles";
 import { tournaments } from "../mocks";
 import { TournamentCard, DefaultContainer } from "../components";
 import { useAuthFetch } from "../hooks";
-import { UserContext } from "../contexts";
+import { useSelector } from "react-redux";
 
 export default function Landing() {
   const classes = useStyles();
-  const { user } = useContext(UserContext);
+  const { user } = useSelector(state => state);
   const [allTournaments, setAllTournaments] = useState(null);
   const {
     response: myTournaments,

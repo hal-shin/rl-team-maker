@@ -15,14 +15,15 @@ import {
 import { Favorite, Share } from "@material-ui/icons";
 
 import { useStyles } from "./TournamentCardStyles";
-import { DialogContext, UserContext } from "../contexts";
+import { DialogContext } from "../contexts";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useSelector } from "react-redux";
 
 export default function TournamentCard({ event }) {
   const classes = useStyles();
   const history = useHistory();
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
-  const { user, fetchUser } = useContext(UserContext);
+  const { user } = useSelector(state => state);
   const { openSnackbar, setSnackbarOpen } = useContext(DialogContext);
   const liked = user && user.events.liked.includes(event._id);
 
@@ -51,7 +52,6 @@ export default function TournamentCard({ event }) {
 
     if (data.success) {
       openSnackbar("Event liked!");
-      fetchUser();
     }
   };
 
@@ -72,7 +72,6 @@ export default function TournamentCard({ event }) {
 
     if (data.success) {
       openSnackbar("Event unliked!");
-      fetchUser();
     }
   };
 

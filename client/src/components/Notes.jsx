@@ -4,17 +4,20 @@ import { makeStyles, InputBase, TableCell } from "@material-ui/core";
 import { setNotes } from "../actions/eventActions";
 
 const useStyles = makeStyles(theme => ({
-  cell: {
+  cell: disabled => ({
     width: 139,
     overflow: "hidden",
-    cursor: "pointer",
+    cursor: `${disabled ? "default" : "pointer"}`,
     "&:hover": {
-      background:
-        theme.palette.type === "light"
+      background: `${
+        disabled
+          ? theme.palette.background.paper
+          : theme.palette.type === "light"
           ? theme.palette.grey[200]
           : theme.palette.grey[700]
+      }`
     }
-  },
+  }),
   input: {
     width: 107,
     padding: 0,
@@ -24,14 +27,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Notes({ gameId, notes }) {
-  const classes = useStyles();
+function Notes({ gameId, notes, disabled }) {
+  const classes = useStyles(disabled);
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [inputNotes, setInputNotes] = useState(notes || "");
 
   const handleEdit = () => {
-    setIsEditing(true);
+    if (!disabled) {
+      setIsEditing(true);
+    }
   };
 
   const handleSave = () => {

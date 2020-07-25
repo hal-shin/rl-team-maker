@@ -40,7 +40,9 @@ const tournamentSchema = new mongoose.Schema(
     meta: {
       gameMode: String,
       recentSearches: [Object]
-    }
+    },
+    games: Object,
+
   },
   { minimize: false }
 );

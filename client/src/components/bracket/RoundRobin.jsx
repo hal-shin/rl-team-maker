@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import {
   makeStyles,
   Paper,
@@ -50,7 +50,9 @@ export default function RoundRobin() {
                 <TableHead>
                   <TableRow className={classes.headerRow}>
                     <TableCell align="center" colSpan={7}>
-                      <Typography className={classes.headerText}>Round {roundIndex + 1}</Typography>
+                      <Typography className={classes.headerText}>
+                        Round {roundIndex + 1}
+                      </Typography>
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -76,11 +78,22 @@ export default function RoundRobin() {
                       <TableCell align="center">
                         {games[gameId].orange.teamName}
                       </TableCell>
-                      <Notes gameId={gameId} notes={games[gameId].notes} />
+                      <Notes
+                        gameId={gameId}
+                        notes={games[gameId].notes}
+                        disabled={
+                          games[gameId].blue.id === "bye" ||
+                          games[gameId].orange.id === "bye"
+                        }
+                      />
                       <Score
                         gameId={gameId}
                         score={games[gameId].score.overall.blue}
                         side="blue"
+                        disabled={
+                          games[gameId].blue.id === "bye" ||
+                          games[gameId].orange.id === "bye"
+                        }
                       />
                       <TableCell align="center" padding="none">
                         :
@@ -89,6 +102,10 @@ export default function RoundRobin() {
                         gameId={gameId}
                         score={games[gameId].score.overall.orange}
                         side="orange"
+                        disabled={
+                          games[gameId].blue.id === "bye" ||
+                          games[gameId].orange.id === "bye"
+                        }
                       />
                     </TableRow>
                   ))}
