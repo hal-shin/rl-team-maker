@@ -4,6 +4,7 @@ import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { makeStyles } from "@material-ui/core";
 
+import { socket } from "../socket";
 import {
   Overview,
   Admin,

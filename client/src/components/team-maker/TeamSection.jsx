@@ -2,14 +2,14 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Hidden, Typography } from "@material-ui/core";
 
-import TeamBoard from "./TeamBoard";
 import TeamMakerSettings from "./TeamMakerSettings";
 import AddNewTeam from "./AddNewTeam";
 import { useStyles } from "./TeamSectionStyles";
+import Team from "./Team";
 
 export default function TeamSection() {
   const classes = useStyles();
-  const teams = useSelector(state => state.event.team.teams);
+  const { teams, teamOrder } = useSelector(state => state.event.team);
   const { isAdmin } = useSelector(state => state.event);
 
   return (
@@ -23,7 +23,11 @@ export default function TeamSection() {
         </div>
         <Hidden mdDown>{isAdmin && <TeamMakerSettings />}</Hidden>
       </div>
-      <TeamBoard />
+      <div className={classes.teamBoard}>
+        {teamOrder.map(team => (
+          <Team key={team} id={team} />
+        ))}
+      </div>
     </div>
   );
 }

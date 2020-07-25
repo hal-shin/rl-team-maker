@@ -1,4 +1,3 @@
-import Board from "./Board";
 import Landing from "../pages/Landing";
 import LeftDrawer from "./LeftDrawer";
 import TopAppBar from "./TopAppBar";
@@ -19,7 +18,6 @@ export {
   DefaultContainer,
   Notes,
   Score,
-  Board,
   LeftDrawer,
   Landing,
   Overview,

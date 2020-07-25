@@ -4,7 +4,7 @@ import clsx from "clsx";
 
 import { useStyles } from "./AppStyles";
 import { DialogContext, ThemeContext, ChatProvider } from "./contexts";
-import { TopAppBar, LeftDrawer, Board, Snackbars, Dialogs } from "./components";
+import { TopAppBar, LeftDrawer, Snackbars, Dialogs } from "./components";
 import {
   Landing,
   Profile,
@@ -78,7 +78,6 @@ export default function App() {
           <div className={classes.drawerHeader} />
 
           <Switch>
-            <Route exact path="/session/:sessionUrl" render={() => <Board />} />
             <Route exact path="/profile/:userId" component={Profile} />
             <Route exact path="/tournament/new" component={NewEvent} />
             <Route path="/tournament/:tournamentId" component={EventPage} />

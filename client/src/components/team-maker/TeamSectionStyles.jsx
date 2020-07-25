@@ -31,5 +31,18 @@ export const useStyles = makeStyles(theme => ({
   buttonDiv: {
     display: "flex",
     alignItems: "center"
+  },
+  teamBoard: {
+    height: "calc(100% - 110px)",
+    display: "flex",
+    flexWrap: "wrap",
+    alignItems: "flex-start",
+    alignContent: "flex-start",
+    justifyContent: "flex-start",
+    overflowY: "scroll",
+    msOverflowStyle: "none", // scrollbar hider - do not remove
+    "&::-webkit-scrollbar": {
+      display: "none" // scrollbar hider - do not remove
+    }
   }
 }));
