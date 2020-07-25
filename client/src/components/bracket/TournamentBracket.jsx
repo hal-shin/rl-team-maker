@@ -19,7 +19,7 @@ const useStyles = makeStyles({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    paddingBottom: "15%"
+    paddingBottom: "15vh"
   },
   buttons: {
     display: "flex",

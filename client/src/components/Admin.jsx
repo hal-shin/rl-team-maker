@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useAuth0 } from "@auth0/auth0-react";
+import { EditorState, convertFromRaw } from "draft-js";
 import {
   Container,
   makeStyles,
@@ -9,11 +12,10 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
-  Switch,
-  TextField
+  Switch
 } from "@material-ui/core";
-import { useSelector } from "react-redux";
-import { useAuth0 } from "@auth0/auth0-react";
+import DraftEditor from "./DraftEditor";
+import { DefaultContainer } from "./index";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,10 +52,16 @@ export default function Admin({ match: { params } }) {
   const { tournamentId } = params;
   const [draftEvent, setDraftEvent] = useState(null);
   const [isPublic, setIsPublic] = useState(true);
+  const [editorState, setEditorState] = useState(null);
 
   useEffect(() => {
     if (event._id === tournamentId) {
       setDraftEvent({ ...event }); // potential cloning reference issue
+      setEditorState(
+        EditorState.createWithContent(
+          convertFromRaw(JSON.parse(event.description))
+        )
+      );
     }
   }, [event, tournamentId]);
 
@@ -75,53 +83,43 @@ export default function Admin({ match: { params } }) {
         </Typography>
       );
     } else {
+      console.log(draftEvent.admins);
       return (
-        <>
-          <div className={classes.header}>
-            <Typography variant="h4" className={classes.contentHeader}>
-              Admin
-            </Typography>
-          </div>
-          <div>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={4}></Grid>
-              <Grid item xs={12} md={8}>
-                <TextField
-                  id="event-description"
-                  label="Event Description"
-                  name="description"
-                  variant="outlined"
-                  value={draftEvent.description}
-                  onChange={handleChange}
-                  fullWidth
-                />
-              </Grid>
+        <div>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={4}>
+              <Typography>
+                <b>Admins</b>
+              </Typography>
+              {draftEvent.admins.map(admin => (
+                <Typography key={admin.id}>{admin.name}</Typography>
+              ))}
             </Grid>
-            <List className={classes.list}>
-              <ListItem divider>
-                <ListItemText
-                  id="event-private"
-                  primary="Make Event Public"
-                  secondary="Enabling this setting will make event visible to others"
-                />
-                <ListItemSecondaryAction>
-                  <Switch checked={isPublic} onChange={handleToggle} />
-                </ListItemSecondaryAction>
-              </ListItem>
-            </List>
-          </div>
-        </>
+            <Grid item xs={12} md={8}>
+              <DraftEditor
+                editorState={editorState}
+                setEditorState={setEditorState}
+              />
+            </Grid>
+          </Grid>
+          <List className={classes.list}>
+            <ListItem divider>
+              <ListItemText
+                id="event-private"
+                primary="Make Event Public"
+                secondary="Enabling this setting will make event visible to others"
+              />
+              <ListItemSecondaryAction>
+                <Switch checked={isPublic} onChange={handleToggle} />
+              </ListItemSecondaryAction>
+            </ListItem>
+          </List>
+        </div>
       );
     }
   };
 
   return (
-    <div className={classes.root}>
-      <Container maxWidth="lg">
-        <Paper variant="outlined" className={classes.paper}>
-          {renderContents()}
-        </Paper>
-      </Container>
-    </div>
+    <DefaultContainer header="Settings">{renderContents()}</DefaultContainer>
   );
 }

@@ -78,12 +78,14 @@ app.post("/new", checkJwt, (req, res) => {
                 { query: "wundero", platform: "steam" }
               ]
             },
-            bracket: {},
+            bracket: {
+              type: "undecided"
+            },
             phase: "forming",
-            admins: [user._id]
+            admins: [{ id: user._id, name: user.username }]
           },
           (err, createdTourney) => {
-            if (err) return console.log("Tourney creation failed.");
+            if (err) return res.status(400).send({ message: err });
 
             User.findByIdAndUpdate(
               user._id,
@@ -100,10 +102,7 @@ app.post("/new", checkJwt, (req, res) => {
               }
             );
 
-            return console.log(
-              "Tournament created successfully:",
-              createdTourney
-            );
+            return res.send(createdTourney);
           }
         );
       } else {

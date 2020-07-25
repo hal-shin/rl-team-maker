@@ -51,13 +51,13 @@ function ChatSpeedDial() {
         ref={buttonRef}
       >
         <SpeedDialAction
-          tooltipTitle="General Chat"
+          tooltipTitle="General"
           icon={<Person />}
           onClick={event => handleClick(event, "general")}
         />
         {_id && title && (
           <SpeedDialAction
-            tooltipTitle={`${title} General Chat`}
+            tooltipTitle={`${title} General`}
             icon={<Person />}
             onClick={event => handleClick(event, _id)}
           />

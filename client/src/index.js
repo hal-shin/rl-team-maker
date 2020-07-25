@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import { Auth0Provider } from "@auth0/auth0-react";
+import "draft-js/dist/Draft.css";
 
 import rootReducer from "./reducers/rootReducer";
 import {

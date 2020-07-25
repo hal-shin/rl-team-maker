@@ -20,9 +20,14 @@ const tournamentSchema = new mongoose.Schema(
       id: { type: String, required: true },
       name: { type: String, required: true }
     },
-    admins: [String],
+    admins: [
+      {
+        id: { type: String, required: true },
+        name: { type: String, required: true }
+      }
+    ],
     casters: [String],
-    bracket: [Object],
+    bracket: Object,
     registrants: [String],
     player: {
       players: mongoose.Schema.Types.Mixed,

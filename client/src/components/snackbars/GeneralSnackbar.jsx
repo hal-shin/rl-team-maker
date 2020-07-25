@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Snackbar, IconButton } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
-import { DialogContext } from "../contexts";
+import { DialogContext } from "../../contexts";
 
 export default function GeneralSnackbar() {
   const { snackbarMessage } = useContext(DialogContext);

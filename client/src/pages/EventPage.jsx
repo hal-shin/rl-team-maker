@@ -9,7 +9,6 @@ import TeamMaker from "../components/team-maker/TeamMaker";
 import TournamentBracket from "../components/bracket/TournamentBracket";
 import { sampleData } from "../reducers/eventReducerInitialData";
 import { setEvent } from "../actions/eventActions";
-import { setViewing } from "../actions/metaActions";
 import { UserContext } from "../contexts";
 
 const useStyles = makeStyles(theme => ({

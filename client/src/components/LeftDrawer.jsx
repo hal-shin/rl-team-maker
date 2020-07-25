@@ -20,7 +20,6 @@ import {
   ViewAgenda,
   Brightness4,
   Grade,
-  MeetingRoom,
   People,
   Help,
   Favorite,
@@ -161,7 +160,6 @@ export default function LeftDrawer() {
                   }
                   icon={<Grade />}
                   text="Tournament Bracket"
-                  // disabled
                 />
               )}
               {isAdmin && (
@@ -170,7 +168,7 @@ export default function LeftDrawer() {
                     history.push(`/tournament/${urlArray[2]}/admin`)
                   }
                   icon={<Settings />}
-                  text="Admin"
+                  text="Settings"
                 />
               )}
             </List>
@@ -216,15 +214,21 @@ export default function LeftDrawer() {
           text={isDarkMode ? "Light Mode" : "Dark Mode"}
         />
       </List>
-      <Divider />
-      <List subheader={menuOpen ? <ListSubheader>Other</ListSubheader> : ""}>
-        <MenuItem
-          onClick={() => setOpen("help")}
-          disabled={Boolean(session.isViewer)}
-          icon={<Help />}
-          text="Help"
-        />
-      </List>
+      {isViewing && (
+        <>
+          <Divider />
+          <List
+            subheader={menuOpen ? <ListSubheader>Other</ListSubheader> : ""}
+          >
+            <MenuItem
+              onClick={() => setOpen("help")}
+              disabled={Boolean(session.isViewer)}
+              icon={<Help />}
+              text="Help"
+            />
+          </List>
+        </>
+      )}
       <div className={classes.footer}>
         {menuOpen ? (
           <Typography variant="overline" align="center">

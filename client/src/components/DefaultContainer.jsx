@@ -17,11 +17,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function DefaultContainer({ header, children }) {
+export default function DefaultContainer({ width, header, children }) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <Container maxWidth="lg">
+      <Container maxWidth={width === "small" ? "md" : "lg"}>
         <Paper variant="outlined" className={classes.paper}>
           {header && (
             <Typography variant="h4" className={classes.contentHeader}>

@@ -1,4 +1,7 @@
 import React, { useContext, useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useHistory } from "react-router-dom";
+import { EditorState, convertToRaw } from "draft-js";
 import {
   makeStyles,
   Typography,
@@ -6,11 +9,9 @@ import {
   TextField,
   Button
 } from "@material-ui/core";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useHistory } from "react-router-dom";
 
-import { UserContext } from "../contexts";
-import DefaultContainer from "../components/DefaultContainer";
+import { DialogContext, UserContext } from "../contexts";
+import { DefaultContainer, DraftEditor } from "../components";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -36,8 +37,7 @@ const getDateAndTime = () => {
 const initialData = {
   title: "",
   startDate: getDateAndTime(),
-  endDate: getDateAndTime(),
-  description: ""
+  endDate: getDateAndTime()
 };
 
 export default function NewEvent() {
@@ -45,35 +45,45 @@ export default function NewEvent() {
   const history = useHistory();
   const { getAccessTokenSilently } = useAuth0();
   const { user } = useContext(UserContext);
+  const { openMultiSnackbar } = useContext(DialogContext);
   const [data, setData] = useState(initialData);
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
 
   const createEvent = async () => {
-    console.log("Create event triggered");
-    const accessToken = await getAccessTokenSilently();
+    try {
+      const sendData = { ...data };
+      sendData.description = JSON.stringify(
+        convertToRaw(editorState.getCurrentContent())
+      );
 
-    const resp = await fetch("/tournament/new", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`
-      },
-      body: JSON.stringify({ formData: data, user })
-    });
+      const accessToken = await getAccessTokenSilently();
 
-    console.log("Form response:", resp);
+      const resp = await fetch("/tournament/new", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({ formData: sendData, user })
+      });
 
-    const respData = await resp.json();
+      const respData = await resp.json();
 
-    if (resp.status >= 200 && resp.status <= 299) {
-      console.log("Event created successfully");
-      history.push("/");
-    } else {
-      console.log("Event creation failed:", respData.message);
+      if (resp.status >= 200 && resp.status <= 299) {
+        openMultiSnackbar("Event created successfully!", "success");
+        history.push("/");
+      } else {
+        openMultiSnackbar("Event creation failed.", "error");
+        console.log("Event creation failed:", respData.message);
+      }
+    } catch (err) {
+      console.log("Event creation failed:", err);
     }
   };
 
-  const handleSubmit = event => {
-    event.preventDefault();
+  const handleSubmit = () => {
     createEvent();
   };
 
@@ -86,70 +96,67 @@ export default function NewEvent() {
   };
 
   return (
-    <DefaultContainer header="New Event">
-      <Typography variant="body1">
-        You can create a new tournament here. Please input the following fields.
-      </Typography>
-      <form
-        onSubmit={handleSubmit}
-        noValidate
-        autoComplete="off"
-        className={classes.form}
-      >
-        <Grid container justify="flex-start" spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              id="title"
-              label="Event Name"
-              value={data.title}
-              onChange={handleChange}
-              fullWidth
-            />
+    <DefaultContainer header="New Event" width="small">
+      <div className={classes.centered}>
+        <div className={classes.form}>
+          <Typography variant="body1">
+            You can create a new tournament here. Please input the following
+            fields.
+          </Typography>
+          <Grid container justify="flex-start" spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                id="title"
+                label="Event Name"
+                value={data.title}
+                onChange={handleChange}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                id="startDate"
+                label="Event Start Date"
+                type="datetime-local"
+                value={data.startDate}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                id="endDate"
+                label="Event End Date"
+                type="datetime-local"
+                value={data.endDate}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h5" gutterBottom>
+                Description
+              </Typography>
+              <DraftEditor
+                editorState={editorState}
+                setEditorState={setEditorState}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button
+                onClick={handleSubmit}
+                variant="contained"
+                color="primary"
+                style={{ marginRight: 8 }}
+              >
+                Submit
+              </Button>
+              <Button onClick={handleReset} color="secondary">
+                Reset
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              id="startDate"
-              label="Event Start Date"
-              type="datetime-local"
-              value={data.startDate}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              id="endDate"
-              label="Event End Date"
-              type="datetime-local"
-              value={data.endDate}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="description"
-              label="Description"
-              value={data.description}
-              onChange={handleChange}
-              multiline
-              fullWidth
-              rowsMax={6}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              onClick={handleSubmit}
-              variant="contained"
-              color="primary"
-              style={{ marginRight: 8 }}
-            >
-              Submit
-            </Button>
-            <Button onClick={handleReset} color="secondary">
-              Reset
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
+        </div>
+      </div>
     </DefaultContainer>
   );
 }

@@ -23,7 +23,7 @@ export default function TournamentCard({ event }) {
   const history = useHistory();
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
   const { user, fetchUser } = useContext(UserContext);
-  const { setSnackbarOpen } = useContext(DialogContext);
+  const { openSnackbar, setSnackbarOpen } = useContext(DialogContext);
   const liked = user && user.events.liked.includes(event._id);
 
   const handleFavorite = () => {
@@ -49,7 +49,10 @@ export default function TournamentCard({ event }) {
 
     const data = await resp.json();
 
-    if (data.success) fetchUser();
+    if (data.success) {
+      openSnackbar("Event liked!");
+      fetchUser();
+    }
   };
 
   const unlike = async () => {
@@ -67,7 +70,10 @@ export default function TournamentCard({ event }) {
 
     const data = await resp.json();
 
-    if (data.success) fetchUser();
+    if (data.success) {
+      openSnackbar("Event unliked!");
+      fetchUser();
+    }
   };
 
   return (
@@ -92,10 +98,9 @@ export default function TournamentCard({ event }) {
             {event.title}
           </Typography>
           <Typography variant="body2" component="p">
-            {event.description ||
-              `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec
-              sagittis risus. Duis sit amet orci ante. Aliquam at lacus fermentum,
-              elementum odio in, ultrices urna.`}
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec
+            sagittis risus. Duis sit amet orci ante. Aliquam at lacus fermentum,
+            elementum odio in, ultrices urna.
           </Typography>
           <Typography variant="body2" component="p" color="textSecondary">
             {new Date(event.startDate).toDateString() +

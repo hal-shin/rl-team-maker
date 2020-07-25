@@ -1,4 +1,5 @@
-import {makeStyles} from "@material-ui/core";
+import React from "react";
+import { makeStyles } from "@material-ui/core";
 
 export const useStyles = makeStyles(theme => ({
   root: {
@@ -7,6 +8,27 @@ export const useStyles = makeStyles(theme => ({
     alignContent: "center",
     height: "calc(100vh - 48px)"
   },
+  jumbotron: props => ({
+    backgroundImage: `url("${props.image}")`,
+    backgroundRepeat: "none",
+    backgroundPosition: "center",
+    backgroundSize: "cover",
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 200,
+    [theme.breakpoints.up("sm")]: {
+      minHeight: 300
+    },
+    [theme.breakpoints.up("md")]: {
+      minHeight: 400
+    },
+    [theme.breakpoints.up("lg")]: {
+      minHeight: 460
+    }
+  }),
   paper: {
     margin: theme.spacing(3, 0),
     padding: theme.spacing(3)
@@ -24,5 +46,13 @@ export const useStyles = makeStyles(theme => ({
   },
   contentHeader: {
     marginBottom: theme.spacing(3)
+  },
+  sidebar: {
+    padding: theme.spacing(2)
   }
 }));
+
+export function Jumbotron(props) {
+  const classes = useStyles(props);
+  return <div className={classes.jumbotron} />;
+}

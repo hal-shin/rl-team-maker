@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React  from "react";
 import {
   makeStyles,
   Paper,
@@ -8,7 +8,8 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  TableBody
+  TableBody,
+  Typography
 } from "@material-ui/core";
 import DefaultContainer from "../DefaultContainer";
 import { useSelector } from "react-redux";
@@ -24,7 +25,10 @@ const useStyles = makeStyles(theme => ({
     minWidth: 500
   },
   headerRow: {
-    backgroundColor: theme.palette.primary[100]
+    backgroundColor: theme.palette.primary[600]
+  },
+  headerText: {
+    color: "white"
   }
 }));
 
@@ -46,7 +50,7 @@ export default function RoundRobin() {
                 <TableHead>
                   <TableRow className={classes.headerRow}>
                     <TableCell align="center" colSpan={7}>
-                      Round {roundIndex + 1}
+                      <Typography className={classes.headerText}>Round {roundIndex + 1}</Typography>
                     </TableCell>
                   </TableRow>
                   <TableRow>

@@ -10,8 +10,12 @@ import Snackbars from "./snackbars";
 import DefaultContainer from "./DefaultContainer";
 import Notes from "./Notes";
 import Score from "./Score";
+import DraftEditor from "./DraftEditor";
+import DraftRenderer from "./DraftRenderer";
 
 export {
+  DraftRenderer,
+  DraftEditor,
   DefaultContainer,
   Notes,
   Score,

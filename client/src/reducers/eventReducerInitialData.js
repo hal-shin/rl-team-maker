@@ -2,7 +2,8 @@ export const sampleData = {
   _id: "sample",
   url: "/tournament/sample",
   title: "Sample Event",
-  description: "This event is for sampling purposes.",
+  description:
+    '{"blocks":[{"key":"8kbcv","text":"Welcome to the Sample Event!","type":"header-two","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"b3cc5","text":"This page intended to show you the ropes of creating a new event and fiddling around with the core functionality of the tournament app!","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"4i2ip","text":"Here are some of the features available to the Tournament Organizer (TO):","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":47,"length":25,"style":"BOLD"}],"entityRanges":[],"data":{}},{"key":"f0eid","text":"Live Sessions - Automatic and immediate viewing of changes to the tournament.","type":"unordered-list-item","depth":0,"inlineStyleRanges":[{"offset":0,"length":13,"style":"BOLD"}],"entityRanges":[],"data":{}},{"key":"fmths","text":"Automatic MMR Fetch - Given a player\'s username, the app can scrape the player\'s ranks on the RL Tracker site (https://rocketleague.tracker.network/).","type":"unordered-list-item","depth":0,"inlineStyleRanges":[{"offset":0,"length":19,"style":"BOLD"}],"entityRanges":[],"data":{}},{"key":"ccdj1","text":"Team Formation Playground - You can test out different team setups through the interactive drag-and-drop team board.","type":"unordered-list-item","depth":0,"inlineStyleRanges":[{"offset":0,"length":25,"style":"BOLD"}],"entityRanges":[],"data":{}},{"key":"bar2d","text":"Automatic Team Formation - The interactive team board also always the TO to either balance the team automatically or set Captain\'s Draft by placing the highest MMR players into their respective teams.","type":"unordered-list-item","depth":0,"inlineStyleRanges":[{"offset":0,"length":25,"style":"BOLD"}],"entityRanges":[],"data":{}},{"key":"cks85","text":"Bracket Generation - Once teams are set, you can generate the tournament brackets. Currently, we only support round robin.","type":"unordered-list-item","depth":0,"inlineStyleRanges":[{"offset":0,"length":18,"style":"BOLD"}],"entityRanges":[],"data":{}},{"key":"7339u","text":"This application is still in development, and so more features are coming soon! If you have any feature requests, please feel free to email me at hal.shin@alumni.ubc.ca.","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
   image:
     "https://steamcdn-a.akamaihd.net/steam/apps/252950/header_alt_assets_11.jpg?t=1585155609",
   startDate: new Date("July 1, 2020"),
@@ -15,7 +16,7 @@ export const sampleData = {
     name: "thewarriorofblue"
   },
   registrants: {},
-  admin: ["5f0031d1652e5a0019ce3150"],
+  admins: [{ id: "12345678", name: "You" }],
   player: {
     players: {
       nuclearbacon235: {
