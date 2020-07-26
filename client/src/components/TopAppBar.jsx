@@ -14,13 +14,12 @@ import { Menu, MoreVert } from "@material-ui/icons";
 
 import logo from "../assets/logo.png";
 // import Chat from "./chat/Chat";
-import { SocketContext, DialogContext, ThemeContext } from "../contexts";
+import { DialogContext, ThemeContext } from "../contexts";
 import { useStyles } from "./TopAppBarStyles";
 
 export default function TopAppBar() {
   const classes = useStyles();
   const { loginWithRedirect, isLoading, user } = useAuth0();
-  const { session } = useContext(SocketContext);
   const { setOpen } = useContext(DialogContext);
   const { handleDrawerOpen, menuOpen, setAccountMenuEl } = useContext(
     ThemeContext
@@ -56,7 +55,6 @@ export default function TopAppBar() {
         <img src={logo} alt="application logo" className={classes.logo} />
         <Typography variant="h6" noWrap className={classes.header}>
           RL Tournament App
-          <span className={classes.buttonText}>{session.isHost && "LIVE"}</span>
         </Typography>
         {/*<Chat />*/}
 

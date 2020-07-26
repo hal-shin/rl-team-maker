@@ -63,9 +63,9 @@ export default function Admin({ match: { params } }) {
     }
   }, [event, tournamentId]);
 
-  const handleChange = event => {
-    setDraftEvent({ ...draftEvent, [event.target.name]: event.target.value });
-  };
+  // const handleChange = event => {
+  //   setDraftEvent({ ...draftEvent, [event.target.name]: event.target.value });
+  // };
 
   const handleToggle = () => {
     setIsPublic(!isPublic);

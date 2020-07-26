@@ -9,7 +9,6 @@ import rootReducer from "./reducers/rootReducer";
 import {
   ThemeProvider,
   DialogProvider,
-  SocketProvider
 } from "./contexts";
 import App from "./App.jsx";
 import "./index.css";
@@ -26,9 +25,7 @@ ReactDOM.render(
     >
       <ThemeProvider>
         <DialogProvider>
-          <SocketProvider>
             <App />
-          </SocketProvider>
         </DialogProvider>
       </ThemeProvider>
     </Auth0Provider>

@@ -1,6 +1,6 @@
-function convertObjectToArray(obj) {
-  return Object.keys(obj).map(key => Object.assign({}, obj[key]));
-}
+// function convertObjectToArray(obj) {
+//   return Object.keys(obj).map(key => Object.assign({}, obj[key]));
+// }
 
 export function populateScores(initialTeams, games) {
   const teams = Object.assign(initialTeams);
@@ -31,5 +31,4 @@ export function populateScores(initialTeams, games) {
   });
 
   return [teams]
-  console.log("New Teams:", teams);
 }

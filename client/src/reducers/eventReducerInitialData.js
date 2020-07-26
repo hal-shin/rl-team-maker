@@ -141,7 +141,7 @@ export const sampleData = {
 };
 
 export const initialData = {
-  id: "",
+  _id: "initial",
   url: "",
   title: "",
   description: "",

@@ -1,3 +1,8 @@
+export const setConnected = connected => ({
+  type: "SET_CONNECTED",
+  connected
+});
+
 export const setRoom = newRoom => ({
   type: "SET_ROOM",
   room: newRoom

@@ -13,14 +13,20 @@ import { DialogContext } from "../../contexts";
 import { socket } from "../../socket";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useDispatch, useSelector } from "react-redux";
-import { addMessage, joinRoom, setRoom } from "../../actions/chatActions";
+import {
+  addMessage,
+  joinRoom,
+  setConnected,
+  setRoom
+} from "../../actions/chatActions";
 
 export default function Chat() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useAuth0();
   const messagesEndRef = useRef(null);
-  const { room, rooms } = useSelector(state => state.chat);
+  const { room, rooms, connected } = useSelector(state => state.chat);
+  const messages = rooms[room];
   const { chatOpen, setChatOpen } = useContext(DialogContext);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -32,35 +38,44 @@ export default function Chat() {
   }, []);
 
   useEffect(() => {
+    const connectToChat = () => {
+      socket.emit("connect-chat", {
+        username: user["https://rl/username"],
+        room
+      });
+
+      if (!connected) {
+        socket.on("message", payload => {
+          const { room, message } = payload;
+          dispatch(addMessage({ room, message }));
+        });
+
+        dispatch(setConnected(true));
+      }
+    };
+
+    const initializeRoom = () => {
+      if (!rooms[room]) {
+        dispatch(joinRoom(room));
+        connectToChat();
+      } else {
+        rooms[room].connected ? setIsLoading(false) : connectToChat();
+      }
+    };
+
     if (isAuthenticated && room && chatOpen) initializeRoom();
-  }, [chatOpen, room]);
+  }, [chatOpen, room, dispatch, isAuthenticated, rooms, user, connected]);
 
   useEffect(() => {
     if (rooms[room]) {
       setIsLoading(false);
       scrollToBottom();
     }
-  }, [chatOpen, rooms, setIsLoading]);
+  }, [chatOpen, rooms, setIsLoading, room, scrollToBottom]);
 
   useEffect(() => {
     scrollToBottom();
-  }, [rooms[room], scrollToBottom]);
-
-  const initializeRoom = () => {
-    if (!rooms[room]) {
-      dispatch(joinRoom(room));
-      connectToChat();
-    } else {
-      rooms[room].connected ? setIsLoading(false) : connectToChat();
-    }
-  };
-
-  const connectToChat = () => {
-    socket.emit("connect-chat", {
-      username: user["https://rl/username"],
-      room
-    });
-  };
+  }, [messages, scrollToBottom]);
 
   const handleClose = () => {
     dispatch(setRoom(""));

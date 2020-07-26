@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 
-function removeEmptyTeams(teams) {
+export function removeEmptyTeams(teams) {
   const teamsArray = getArrayOfTeams(teams);
   const newTeams = {};
   teamsArray.forEach(team => {

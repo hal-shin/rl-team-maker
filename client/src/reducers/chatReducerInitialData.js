@@ -1,4 +1,5 @@
 export const initialData = {
   room: "",
-  rooms: {}
+  rooms: {},
+  connected: false
 };

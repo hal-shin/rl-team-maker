@@ -13,8 +13,12 @@ app.get("/", (req, res) => {
   }
   Tournament.findById(tournamentId, (err, foundTourney) => {
     if (!err) {
-      if (!foundTourney)
-        res.status(400).send({ message: "Tourney doesn't exist" });
+      if (!foundTourney) {
+        console.log("Here");
+        return res.status(404).send({ message: "Tourney doesn't exist" });
+      }
+
+      console.log("Found tourney:", foundTourney);
 
       let isAdmin = false;
       foundTourney.admins.forEach(admin => {
@@ -34,8 +38,9 @@ app.get("/", (req, res) => {
 app.get("/all", (req, res) => {
   Tournament.find({ private: false }, (err, foundTourneys) => {
     if (!err) {
-      if (!foundTourneys)
+      if (!foundTourneys) {
         res.status(404).send({ message: "No tourneys found" });
+      }
       res.send(foundTourneys);
     } else {
       res.status(500).send({ message: "Something went wrong" });
@@ -46,8 +51,10 @@ app.get("/all", (req, res) => {
 app.post("/new", checkJwt, (req, res) => {
   const { formData, user } = req.body;
 
-  if (!user) res.status(400).send({ message: "You must be logged in first." });
-  if (!formData) res.status(400).send({ message: "Form data is missing." });
+  if (!user)
+    return res.status(400).send({ message: "You must be logged in first." });
+  if (!formData)
+    return res.status(400).send({ message: "Form data is missing." });
 
   Tournament.findOne({ title: formData.title }, (err, foundTourney) => {
     if (err) {
@@ -87,7 +94,7 @@ app.post("/new", checkJwt, (req, res) => {
             admins: [{ id: user._id, name: user.username }]
           },
           (err, createdTourney) => {
-            if (err) res.status(400).send({ message: err });
+            if (err) return res.status(400).send({ message: err });
 
             User.findByIdAndUpdate(
               user._id,
@@ -119,7 +126,7 @@ app.post("/update", checkJwt, (req, res) => {
   const { userid } = req.headers;
   const { event } = req.body;
 
-  if (!userid) res.send(400).send({ message: "Please provide userid" });
+  if (!userid) return res.send(400).send({ message: "Please provide userid" });
   Tournament.findOneAndUpdate(
     { _id: event._id, admins: { $elemMatch: { id: userid } } },
     event,

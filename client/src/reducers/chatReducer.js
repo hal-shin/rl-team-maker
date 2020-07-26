@@ -2,6 +2,8 @@ import { initialData } from "./chatReducerInitialData";
 
 const chat = (state = initialData, action) => {
   switch (action.type) {
+    case "SET_CONNECTED":
+      return { ...state, connected: action.connected };
     case "JOIN_ROOM":
       if (!state.rooms[action.room]) {
         return {

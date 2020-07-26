@@ -1,10 +1,13 @@
 import React, { useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import { DialogContext } from "../../contexts/DialogContext";
-import { setPlayers, setPlayerOrder, setTeams } from "../../actions/eventActions";
-import { SocketContext } from "../../contexts/SocketContext";
+import { Menu, MenuItem } from "@material-ui/core";
+
+import { DialogContext } from "../../contexts";
+import {
+  setPlayers,
+  setPlayerOrder,
+  setTeams
+} from "../../actions/eventActions";
 
 const initialState = {
   mouseX: null,
@@ -15,13 +18,13 @@ export default function PlayerContextMenu() {
   const dispatch = useDispatch();
   const { players, playerOrder } = useSelector(state => state.event.player);
   const teams = useSelector(state => state.event.team.teams);
+  const { isAdmin } = useSelector(state => state.event);
   const {
     setOpen,
     openPlayerContextMenu,
     setOpenPlayerContextMenu,
     currentPlayerInfo
   } = useContext(DialogContext);
-  const { isViewer } = useContext(SocketContext);
 
   const handleClose = () => {
     setOpenPlayerContextMenu(initialState);
@@ -74,7 +77,7 @@ export default function PlayerContextMenu() {
         }
       >
         <MenuItem onClick={handleOpenPlayerInfo}>Info</MenuItem>
-        {!isViewer && (
+        {isAdmin && (
           <MenuItem color="secondary" onClick={handleDelete}>
             Delete
           </MenuItem>

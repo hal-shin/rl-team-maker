@@ -7,6 +7,7 @@ import Game from "../../components/bracket/Game";
 import { setRoundRobin } from "../../actions/eventActions";
 import RoundRobin from "../../components/bracket/RoundRobin";
 import { DialogContext } from "../../contexts";
+import {removeEmptyTeams} from "../../helpers/roundRobin";
 
 const useStyles = makeStyles({
   root: {
@@ -33,11 +34,12 @@ export default function TournamentBracket() {
   const { openSnackbar } = useContext(DialogContext);
   const {
     phase,
-    team: { teamOrder }
+    team: { teams }
   } = useSelector(state => state.event);
 
   const handleRoundRobin = () => {
-    if (teamOrder.length <= 2) {
+    const teamsObj = removeEmptyTeams(teams)
+    if (Object.keys(teamsObj).length <= 2) {
       openSnackbar("You must have at least 3 teams.");
       return;
     }

@@ -8,8 +8,6 @@ import BulkAddPlayers from "./BulkAddPlayers";
 import PlayerInfo from "./PlayerInfo";
 import Help from "./Help";
 import TeamError from "./TeamError";
-import Host from "./Host";
-import Join from "./Join";
 import AccountMenu from "./AccountMenu";
 
 export {
@@ -20,8 +18,6 @@ export {
   PlayerInfo,
   Help,
   TeamError,
-  Host,
-  Join,
   AccountMenu
 };
 
@@ -36,8 +32,6 @@ export default function Dialogs() {
       <BulkAddPlayers />
       <Help />
       <TeamError />
-      <Host />
-      <Join />
       <AccountMenu />
     </div>
   );

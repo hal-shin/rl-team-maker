@@ -13,7 +13,7 @@ function Results() {
 
   useEffect(() => {
     populateScores(teams, games);
-  }, []);
+  }, [teams, games]);
   return (
     <DefaultContainer header="Results">
       <Typography variant="h5">Standings</Typography>

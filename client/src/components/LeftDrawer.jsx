@@ -32,7 +32,7 @@ import {
   Poll
 } from "@material-ui/icons";
 
-import { ThemeContext, DialogContext, SocketContext } from "../contexts";
+import { ThemeContext, DialogContext } from "../contexts";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useStyles, useTooltipStyles } from "./LeftDrawerStyles";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,7 +47,6 @@ export default function LeftDrawer() {
   const location = useLocation();
   const urlArray = location.pathname.split("/");
   const { isAuthenticated } = useAuth0();
-  const { session } = useContext(SocketContext);
   const { setOpen } = useContext(DialogContext);
   const {
     handleDrawerClose,
@@ -232,7 +231,6 @@ export default function LeftDrawer() {
           >
             <MenuItem
               onClick={() => setOpen("help")}
-              disabled={Boolean(session.isViewer)}
               icon={<Help />}
               text="Help"
             />

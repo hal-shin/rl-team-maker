@@ -1,20 +1,38 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useAuth0 } from "@auth0/auth0-react";
 import { Typography, Grid } from "@material-ui/core";
 
-import { useStyles } from "./LandingStyles";
 import { tournaments } from "../mocks";
 import { TournamentCard, DefaultContainer } from "../components";
-import { useAuthFetch } from "../hooks";
-import { useSelector } from "react-redux";
+import { useStyles } from "./LandingStyles";
 
 export default function Landing() {
   const classes = useStyles();
+  const {
+    isAuthenticated,
+    getAccessTokenSilently,
+    user: authUser
+  } = useAuth0();
   const { user } = useSelector(state => state);
   const [allTournaments, setAllTournaments] = useState(null);
-  const {
-    response: myTournaments,
-    isLoading: myTournamentsLoading
-  } = useAuthFetch(`/user/tournaments`);
+  const [myTournaments, setMyTournaments] = useState(null);
+
+  useEffect(() => {
+    const getMyTourneys = async () => {
+      const accessToken = await getAccessTokenSilently();
+      const resp = await fetch("/user/tournaments", {
+        headers: {
+          userid: authUser.sub.slice(6),
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      const data = await resp.json();
+      setMyTournaments(data);
+    };
+
+    if (isAuthenticated) getMyTourneys();
+  }, [isAuthenticated, authUser, getAccessTokenSilently]);
 
   useEffect(() => {
     fetch("/tournament/all")
@@ -51,13 +69,11 @@ export default function Landing() {
             </Typography>
 
             <Grid container spacing={3} className={classes.grid}>
-              {myTournamentsLoading
+              {!myTournaments
                 ? "loading..."
-                : myTournaments
-                ? myTournaments.hosting.map((event, index) => (
+                : myTournaments.hosting.map((event, index) => (
                     <TournamentCard key={index} event={event} />
-                  ))
-                : ""}
+                  ))}
             </Grid>
           </>
         )}
@@ -69,13 +85,11 @@ export default function Landing() {
             </Typography>
 
             <Grid container spacing={3} className={classes.grid}>
-              {myTournamentsLoading
+              {!myTournaments
                 ? "loading..."
-                : myTournaments
-                ? myTournaments.participating.map((event, index) => (
+                : myTournaments.participating.map((event, index) => (
                     <TournamentCard key={index} event={event} />
-                  ))
-                : ""}
+                  ))}
             </Grid>
           </>
         )}
@@ -87,13 +101,11 @@ export default function Landing() {
             </Typography>
 
             <Grid container spacing={3} className={classes.grid}>
-              {myTournamentsLoading
+              {!myTournaments
                 ? "loading..."
-                : myTournaments
-                ? myTournaments.liked.map((event, index) => (
+                : myTournaments.liked.map((event, index) => (
                     <TournamentCard key={index} event={event} />
-                  ))
-                : ""}
+                  ))}
             </Grid>
           </>
         )}

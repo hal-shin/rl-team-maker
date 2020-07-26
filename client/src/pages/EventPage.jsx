@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
+import {
+  Switch,
+  Route,
+  Redirect,
+  useRouteMatch,
+  useHistory
+} from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { makeStyles } from "@material-ui/core";
 
@@ -33,6 +39,7 @@ export default function EventPage({ match }) {
   const {
     params: { tournamentId }
   } = match;
+  const history = useHistory();
   const {
     getAccessTokenSilently,
     isAuthenticated,
@@ -41,6 +48,7 @@ export default function EventPage({ match }) {
   } = useAuth0();
   const { event } = useSelector(state => state);
   const [isSaving, setIsSaving] = useState(false);
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
   useEffect(() => {
     const getTournamentData = () => {
@@ -53,15 +61,26 @@ export default function EventPage({ match }) {
         )
           .then(resp => resp.json())
           .then(data => {
-            if (!data.message) dispatch(setEvent(data));
-          });
+            if (!data.message) {
+              dispatch(setEvent(data));
+            } else {
+              history.push(`/tournament/event-not-found`);
+            }
+          })
+          .catch(err => console.log("Fetch failed...", err));
       }
     };
 
     if (!isLoading && tournamentId !== event._id) {
       getTournamentData();
     }
-  }, [tournamentId, dispatch, isLoading]);
+  }, [tournamentId, dispatch, isLoading, event._id, user]);
+
+  useEffect(() => {
+    if (tournamentId !== "sample") {
+      socket.emit("connect-event", tournamentId);
+    }
+  }, [tournamentId]);
 
   useEffect(() => {
     const updateTournament = () => {
@@ -84,18 +103,21 @@ export default function EventPage({ match }) {
         setIsSaving(false);
       }, 2000);
     };
-
-    if (
-      isAuthenticated &&
-      event.isAdmin &&
-      tournamentId !== "sample" &&
-      tournamentId === event._id
-    ) {
-      updateTournament();
+    if (isFirstRender && event._id !== "initial") {
+      setIsFirstRender(false);
+    } else {
+      if (
+        isAuthenticated &&
+        event.isAdmin &&
+        tournamentId !== "sample" &&
+        tournamentId === event._id
+      ) {
+        updateTournament();
+      }
     }
-
     return () => clearTimeout(saveTimeout);
-  }, [event]);
+    // eslint-disable-next-line
+  }, [event, getAccessTokenSilently, isAuthenticated, tournamentId, user]);
 
   return (
     <>

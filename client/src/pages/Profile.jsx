@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles, Container, Paper, Typography } from "@material-ui/core";
-import { useFetch } from "../hooks";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,7 +22,17 @@ export default function Profile({ match }) {
   const {
     params: { userId }
   } = match;
-  const { response, isLoading } = useFetch(`/user?userId=${userId}`);
+  const [response, setResponse] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`/user?userId=${userId}`)
+      .then(resp => resp.json())
+      .then(data => {
+        setResponse(data);
+        setIsLoading(false);
+      });
+  }, [userId]);
 
   const renderContent = () => {
     if (isLoading) {
