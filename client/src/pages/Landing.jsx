@@ -56,7 +56,7 @@ export default function Landing() {
   return (
     <div className={classes.root}>
       <div className={classes.jumbotron}>
-        <Typography variant="h2" className={`${classes.jumboHeader} typewriter`}>
+        <Typography variant="h2" className={`${classes.jumboHeader}`}>
           Rocket League Tournament App
         </Typography>
         <Typography variant="h6" className={classes.jumboSubheader}>

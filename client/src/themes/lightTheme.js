@@ -8,7 +8,7 @@ export const lightTheme = responsiveFontSizes(
       secondary: orange,
       type: "light",
       background: {
-        default: "rgba(204, 217, 229, 0.35)"
+        default: "rgb(237, 241, 245)"
       }
     },
     overrides: {
@@ -30,7 +30,7 @@ export const lightTheme = responsiveFontSizes(
       }
     },
     typography: {
-      fontFamily: "Open Sans, Roboto, sans-serif"
+      // fontFamily: "Open Sans, Roboto, sans-serif"
     }
   })
 );

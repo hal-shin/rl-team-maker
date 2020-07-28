@@ -35,7 +35,7 @@ export const useStyles = makeStyles(theme => ({
     color: "white",
     fontWeight: 700,
     fontFamily: "Comic Sans MS",
-    textShadow: "2px 4px 3px orange"
+    textShadow: "2px 4px 3px darkblue"
   },
   jumboSubheader: {
     padding: theme.spacing(0, 2),
