@@ -69,8 +69,9 @@ app.post("/new", checkJwt, (req, res) => {
     return res.status(400).send({ message: "Form data is missing." });
 
   Tournament.findOne({ title: formData.title }, (err, foundTourney) => {
-    if (err) {
+    if (err || foundTourney) {
       console.log(err);
+      res.status(401).send({ message: "Tournament name is taken." });
     } else {
       if (!foundTourney) {
         Tournament.create(

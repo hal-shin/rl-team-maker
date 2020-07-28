@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useHistory } from "react-router-dom";
 import { EditorState, convertToRaw } from "draft-js";
@@ -41,6 +41,8 @@ const initialData = {
   endDate: getDateAndTime()
 };
 
+const defaultError = { title: "" };
+
 export default function NewEvent() {
   const classes = useStyles();
   const history = useHistory();
@@ -51,6 +53,11 @@ export default function NewEvent() {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
+  const [error, setError] = useState(defaultError);
+
+  useEffect(() => {
+    setError(defaultError);
+  }, [data]);
 
   const createEvent = async () => {
     try {
@@ -75,6 +82,8 @@ export default function NewEvent() {
       if (resp.status >= 200 && resp.status <= 299) {
         openMultiSnackbar("Event created successfully!", "success");
         history.push("/");
+      } else if (resp.status === 401) {
+        setError({ ...error, title: "Tournament name is taken." });
       } else {
         openMultiSnackbar("Event creation failed.", "error");
         console.log("Event creation failed:", respData.message);
@@ -85,7 +94,14 @@ export default function NewEvent() {
   };
 
   const handleSubmit = () => {
-    createEvent();
+    if (data.title.length < 4) {
+      setError({
+        ...error,
+        title: "Event title must be more than 3 characters."
+      });
+    } else {
+      createEvent();
+    }
   };
 
   const handleReset = () => {
@@ -93,7 +109,13 @@ export default function NewEvent() {
   };
 
   const handleChange = event => {
-    setData({ ...data, [event.target.id]: event.target.value });
+    if (event.target.id === "title") {
+      if (/^[a-zA-Z0-9 !@#$%^&*()\-:/]*$/.test(event.target.value)) {
+        setData({ ...data, [event.target.id]: event.target.value });
+      }
+    } else {
+      setData({ ...data, [event.target.id]: event.target.value });
+    }
   };
 
   return !isAuthenticated ? (
@@ -113,6 +135,8 @@ export default function NewEvent() {
                 label="Event Name"
                 value={data.title}
                 onChange={handleChange}
+                helperText={error.title}
+                error={Boolean(error.title)}
                 fullWidth
               />
             </Grid>

@@ -24,7 +24,7 @@ export const useStyles = makeStyles(theme => ({
     maxWidth: 28
   },
   header: {
-    fontWeight: 400,
+    fontWeight: 500,
     flexGrow: 1,
     paddingLeft: 10
   },

@@ -11,26 +11,49 @@ const useStyles = makeStyles(theme => ({
   paper: {
     margin: theme.spacing(3, 0),
     padding: theme.spacing(3)
+
+  },
+  paperFullWidth: {
+    // margin: theme.spacing(0, 0, 3, 0),
+    padding: theme.spacing(3)
   },
   contentHeader: {
     marginBottom: theme.spacing(3)
   }
 }));
 
-export default function DefaultContainer({ width, header, children }) {
+export default function DefaultContainer({
+  fullWidth,
+  width,
+  header,
+  children
+}) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <Container maxWidth={width === "small" ? "md" : "lg"}>
-        <Paper variant="outlined" className={classes.paper}>
-          {header && (
-            <Typography variant="h4" className={classes.contentHeader}>
-              {header}
-            </Typography>
-          )}
-          {children}
+      {fullWidth ? (
+        <Paper elevation={0} className={classes.paperFullWidth}>
+          <Container maxWidth={width === "small" ? "sm" : "lg"}>
+            {header && (
+              <Typography variant="h4" className={classes.contentHeader}>
+                {header}
+              </Typography>
+            )}
+            {children}
+          </Container>
         </Paper>
-      </Container>
+      ) : (
+        <Container maxWidth={width === "small" ? "sm" : "lg"}>
+          <Paper elevation={0} className={classes.paper}>
+            {header && (
+              <Typography variant="h4" className={classes.contentHeader}>
+                {header}
+              </Typography>
+            )}
+            {children}
+          </Paper>
+        </Container>
+      )}
     </div>
   );
 }

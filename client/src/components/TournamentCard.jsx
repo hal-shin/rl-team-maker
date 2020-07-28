@@ -77,7 +77,7 @@ export default function TournamentCard({ event }) {
 
   return (
     <Grid item xs={12} sm={6} md={4} lg={3} className={classes.gridItem}>
-      <Card className={classes.card} variant="outlined">
+      <Card className={classes.card} elevation={3}>
         <CardHeader
           avatar={<Avatar className={classes.avatar}>{event.title[0]}</Avatar>}
           title={event.creator.name}

@@ -1,5 +1,5 @@
-import {makeStyles} from "@material-ui/core";
-import {red} from "@material-ui/core/colors";
+import { makeStyles } from "@material-ui/core";
+import { red } from "@material-ui/core/colors";
 
 export const useStyles = makeStyles(theme => ({
   gridItem: {
@@ -7,7 +7,8 @@ export const useStyles = makeStyles(theme => ({
     justifyContent: "center"
   },
   card: {
-    maxWidth: 345
+    maxWidth: 345,
+    background: "rgba(204, 217, 229, 0.35)"
   },
   media: {
     height: 140

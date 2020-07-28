@@ -71,6 +71,8 @@ export default function Admin({ match: { params } }) {
     }
   }, [event, tournamentId]);
 
+  console.log("Event", event);
+
   // const handleChange = event => {
   //   setDraftEvent({ ...draftEvent, [event.target.name]: event.target.value });
   // };
@@ -161,6 +163,17 @@ export default function Admin({ match: { params } }) {
               </ListItemSecondaryAction>
             </ListItem>
           </List>
+
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginRight: 8 }}
+          >
+            Save
+          </Button>
+          <Button variant="contained" color="secondary">
+            Clear
+          </Button>
         </div>
       );
     }
