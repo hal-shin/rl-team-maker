@@ -5,7 +5,7 @@ import generateRoundRobin from "../helpers/roundRobin";
 const event = (state = initialData, action) => {
   switch (action.type) {
     case "SET_EVENT":
-      return { ...action.newEvent };
+      return { ...state, ...action.newEvent };
 
     case "SET_STORE":
       return { ...action.newStore.event };

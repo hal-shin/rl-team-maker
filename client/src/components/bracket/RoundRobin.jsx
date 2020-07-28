@@ -36,7 +36,9 @@ export default function RoundRobin() {
   const classes = useStyles();
   const {
     games,
-    bracket: { roundRobin }
+    bracket: { roundRobin },
+    isAdmin,
+    team: { teams }
   } = useSelector(state => state.event);
 
   return (
@@ -70,18 +72,19 @@ export default function RoundRobin() {
                   {round.map((gameId, gameIndex) => (
                     <TableRow key={"game" + gameIndex}>
                       <TableCell align="center">
-                        {games[gameId].blue.teamName}
+                        {teams[games[gameId].blue.id].teamName}
                       </TableCell>
                       <TableCell align="center" padding="none">
                         -
                       </TableCell>
                       <TableCell align="center">
-                        {games[gameId].orange.teamName}
+                        {teams[games[gameId].orange.id].teamName}
                       </TableCell>
                       <Notes
                         gameId={gameId}
                         notes={games[gameId].notes}
                         disabled={
+                          !isAdmin ||
                           games[gameId].blue.id === "bye" ||
                           games[gameId].orange.id === "bye"
                         }
@@ -91,6 +94,7 @@ export default function RoundRobin() {
                         score={games[gameId].score.overall.blue}
                         side="blue"
                         disabled={
+                          !isAdmin ||
                           games[gameId].blue.id === "bye" ||
                           games[gameId].orange.id === "bye"
                         }
@@ -103,6 +107,7 @@ export default function RoundRobin() {
                         score={games[gameId].score.overall.orange}
                         side="orange"
                         disabled={
+                          !isAdmin ||
                           games[gameId].blue.id === "bye" ||
                           games[gameId].orange.id === "bye"
                         }

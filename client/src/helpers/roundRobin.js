@@ -34,7 +34,8 @@ export default function generateRoundRobin(initialTeams) {
       games: [],
       score: {
         wins: 0,
-        losses: 0
+        losses: 0,
+        differential: 0
       }
     };
     teams.push(bye);

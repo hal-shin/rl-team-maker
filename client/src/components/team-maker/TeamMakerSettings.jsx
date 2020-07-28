@@ -33,8 +33,11 @@ export default function TeamMakerSettings() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const isFirstRun = useRef(true);
-  const { players } = useSelector(state => state.event.player);
-  const gameMode = useSelector(state => state.event.meta.gameMode);
+  const {
+    player: { players },
+    meta: { gameMode },
+    phase
+  } = useSelector(state => state.event);
   const [gameModeSelector, setGameModeSelector] = useState("2v2");
   const { setOpen } = useContext(DialogContext);
 
@@ -93,6 +96,7 @@ export default function TeamMakerSettings() {
             id="game-mode-select"
             value={gameModeSelector}
             onChange={handleGameModeChange}
+            disabled={phase !== "forming"}
           >
             <MenuItem value="2v2">2v2</MenuItem>
             <MenuItem value="3v3">3v3</MenuItem>
@@ -104,6 +108,7 @@ export default function TeamMakerSettings() {
           variant="contained"
           color="primary"
           onClick={handleBalanceTeams}
+          disabled={phase !== "forming"}
         >
           Balance Teams
         </Button>
@@ -113,12 +118,18 @@ export default function TeamMakerSettings() {
           variant="contained"
           color="primary"
           onClick={handleCaptainsDraft}
+          disabled={phase !== "forming"}
         >
           Captain's Draft
         </Button>
       </div>
       <div className={classes.child}>
-        <Button variant="contained" color="secondary" onClick={handleReset}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleReset}
+          disabled={phase !== "forming"}
+        >
           Reset
         </Button>
       </div>

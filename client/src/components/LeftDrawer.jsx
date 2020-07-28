@@ -154,22 +154,22 @@ export default function LeftDrawer() {
                 text="Team Maker"
               />
               {((phase === "forming" && isAdmin) || phase !== "forming") && (
-                <>
-                  <MenuItem
-                    onClick={() =>
-                      history.push(`/tournament/${urlArray[2]}/bracket`)
-                    }
-                    icon={<Grade />}
-                    text="Tournament Bracket"
-                  />
-                  <MenuItem
-                    onClick={() =>
-                      history.push(`/tournament/${urlArray[2]}/results`)
-                    }
-                    icon={<Poll />}
-                    text="Results"
-                  />
-                </>
+                <MenuItem
+                  onClick={() =>
+                    history.push(`/tournament/${urlArray[2]}/bracket`)
+                  }
+                  icon={<Grade />}
+                  text="Tournament Bracket"
+                />
+              )}
+              {phase !== "forming" && (
+                <MenuItem
+                  onClick={() =>
+                    history.push(`/tournament/${urlArray[2]}/results`)
+                  }
+                  icon={<Poll />}
+                  text="Results"
+                />
               )}
               {isAdmin && (
                 <MenuItem

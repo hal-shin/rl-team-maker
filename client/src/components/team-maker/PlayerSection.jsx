@@ -11,9 +11,12 @@ import { useStyles } from "./PlayerSectionStyles";
 export default function PlayerSection() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { players, playerOrder } = useSelector(state => state.event.player);
-  const { gameMode } = useSelector(state => state.event.meta);
-  const { isAdmin } = useSelector(state => state.event);
+  const {
+    player: { players, playerOrder },
+    meta: { gameMode },
+    isAdmin,
+    phase
+  } = useSelector(state => state.event);
   const { setOpen } = useContext(DialogContext);
 
   const handleSortPlayerList = () => {
@@ -41,6 +44,7 @@ export default function PlayerSection() {
             variant="outlined"
             color="primary"
             onClick={() => setOpen("add-player")}
+            disabled={phase !== "forming"}
           >
             New
           </Button>

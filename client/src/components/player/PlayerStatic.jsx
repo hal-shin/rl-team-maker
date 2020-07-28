@@ -35,9 +35,11 @@ export default function PlayerStatic(props) {
   const classes = useStyles();
   const { player } = props;
 
+  console.log("Player:", player);
+
   const handleOpenSteam = () => {
-    if (player.steamUrl) {
-      window.open(player.steamUrl);
+    if (player.steamProfile) {
+      window.open(player.steamProfile);
     }
   };
 

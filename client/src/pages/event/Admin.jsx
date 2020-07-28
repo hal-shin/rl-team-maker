@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { EditorState, convertFromRaw } from "draft-js";
 import {
@@ -10,10 +11,12 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
-  Switch
+  Switch,
+  Button
 } from "@material-ui/core";
 import DraftEditor from "../../components/DraftEditor";
 import { DefaultContainer } from "../../components";
+import { DialogContext } from "../../contexts";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,15 +42,20 @@ const useStyles = makeStyles(theme => ({
   },
   list: {
     width: "100%"
+  },
+  deleteButton: {
+    backgroundColor: "red"
   }
 }));
 
 export default function Admin({ match: { params } }) {
   const classes = useStyles();
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const history = useHistory();
   const { event } = useSelector(state => state);
   const { isAdmin } = event;
   const { tournamentId } = params;
+  const { openMultiSnackbar } = useContext(DialogContext);
   const [draftEvent, setDraftEvent] = useState(null);
   const [isPublic, setIsPublic] = useState(true);
   const [editorState, setEditorState] = useState(null);
@@ -69,6 +77,32 @@ export default function Admin({ match: { params } }) {
 
   const handleToggle = () => {
     setIsPublic(!isPublic);
+  };
+
+  const handleDeleteEvent = async () => {
+    const confirmed = window.confirm("Are you sure? There's no going back!");
+
+    if (confirmed) {
+      try {
+        const accessToken = await getAccessTokenSilently();
+
+        const resp = await fetch(`/tournament?tournamentId=${event._id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
+
+        if (resp.ok) {
+          openMultiSnackbar("Event deleted successfully.", "success");
+          history.push("/");
+        } else {
+          openMultiSnackbar("Unable to delete event.", "error");
+        }
+      } catch (err) {
+        console.log("Something went wrong while deleting the event:", err);
+      }
+    }
   };
 
   const renderContents = () => {
@@ -108,6 +142,22 @@ export default function Admin({ match: { params } }) {
               />
               <ListItemSecondaryAction>
                 <Switch checked={isPublic} onChange={handleToggle} />
+              </ListItemSecondaryAction>
+            </ListItem>
+            <ListItem divider>
+              <ListItemText
+                id="delete-event"
+                primary="Delete Event"
+                secondary="WARNING: Action is permanent!"
+              />
+              <ListItemSecondaryAction>
+                <Button
+                  color="secondary"
+                  onClick={handleDeleteEvent}
+                  variant="contained"
+                >
+                  Delete
+                </Button>
               </ListItemSecondaryAction>
             </ListItem>
           </List>

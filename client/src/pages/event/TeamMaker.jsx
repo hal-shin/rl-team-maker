@@ -12,9 +12,11 @@ import { useStyles } from "../../components/team-maker/TeamMakerStyles";
 export default function TeamMaker() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { playerOrder, players } = useSelector(state => state.event.player);
-  const { teams } = useSelector(state => state.event.team);
-  const { gameMode } = useSelector(state => state.event.meta);
+  const {
+    player: { players, playerOrder },
+    team: { teams },
+    meta: { gameMode }
+  } = useSelector(state => state.event);
   const [value, setValue] = useState(0);
 
   useEffect(() => {
@@ -117,6 +119,10 @@ export default function TeamMaker() {
       const newTeams = { ...teams };
       newPlayerList.splice(destination.index, 0, draggableId);
       newTeams[source.droppableId].members.splice(source.index, 1);
+      newTeams[source.droppableId].totalMMR = calculateTotalMMR(
+        newTeams[source.droppableId].members
+      );
+
       dispatch(setPlayerOrder(newPlayerList));
       dispatch(setTeams(newTeams));
       return;

@@ -20,13 +20,13 @@ import { setTeams } from "../../actions/eventActions";
 import { useStyles, buttonStyles } from "./TeamStyles";
 
 export default function Team(props) {
-  const classes = useStyles(props);
+  const [isEditing, toggleIsEditing] = useToggle(false);
+  const classes = useStyles(isEditing);
   const dispatch = useDispatch();
   const { teams } = useSelector(state => state.event.team);
   const { players } = useSelector(state => state.event.player);
   const { isAdmin } = useSelector(state => state.event);
   const team = teams[props.id];
-  const [isEditing, toggleIsEditing] = useToggle(false);
   const [tempTeamName, setTempTeamName] = useState(team.teamName); // must come after team variable
   const [collapsed, setCollapsed] = useState(false);
 
@@ -170,7 +170,10 @@ export default function Team(props) {
         </Grid>
         <Grid item xs={6}>
           <Typography variant="body2" className={classes.footerText}>
-            AVERAGE: {Math.round(team.totalMMR / team.members.length) || 0}
+            AVERAGE:{" "}
+            {team.members.length !== 0
+              ? Math.round(team.totalMMR / team.members.length)
+              : 0}
           </Typography>
         </Grid>
       </Grid>

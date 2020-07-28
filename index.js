@@ -48,6 +48,7 @@ io.on("connection", client => {
 
   SocketLogic.session(io, client);
   SocketLogic.chat(io, client);
+  SocketLogic.event(io, client);
 });
 
 // Tracker route

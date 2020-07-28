@@ -18,8 +18,6 @@ app.get("/", (req, res) => {
         return res.status(404).send({ message: "Tourney doesn't exist" });
       }
 
-      console.log("Found tourney:", foundTourney);
-
       let isAdmin = false;
       foundTourney.admins.forEach(admin => {
         if (admin.id === userId) isAdmin = true;
@@ -31,6 +29,20 @@ app.get("/", (req, res) => {
     } else {
       console.log("Error:", err);
       res.status(400).send({ message: "Could not found a tournament." });
+    }
+  });
+});
+
+app.delete("/", checkJwt, (req, res) => {
+  const { tournamentId } = req.query;
+
+  Tournament.findByIdAndDelete(tournamentId, (err, docs) => {
+    if (err) {
+      console.log("Unable to delete tournament:", err);
+      res.status(400).send({ message: "Unable to delete tournament." });
+    } else {
+      console.log("Deleted:", docs);
+      res.send(docs);
     }
   });
 });

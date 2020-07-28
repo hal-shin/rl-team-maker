@@ -1,6 +1,7 @@
 const initialData = {
   tournamentId: "",
-  isViewing: false
+  isViewing: false,
+  connectedToEventSocket: false
 };
 
 const meta = (state = initialData, action) => {
@@ -9,6 +10,12 @@ const meta = (state = initialData, action) => {
       return {
         ...state,
         isViewing: action.newViewing
+      };
+
+    case "SET_CONNECTED_TO_EVENT_SOCKET":
+      return {
+        ...state,
+        connectedToEventSocket: action.connectedToEventSocket
       };
     default:
       return state;

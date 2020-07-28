@@ -58,7 +58,7 @@ export default function Player(props) {
   const { players, playerOrder } = useSelector(state => state.event.player);
   const gameMode = useSelector(state => state.event.meta.gameMode);
   const teams = useSelector(state => state.event.team.teams);
-  const { isAdmin } = useSelector(state => state.event);
+  const { isAdmin, phase } = useSelector(state => state.event);
   const { viewMode } = useContext(ThemeContext);
   const { setOpenPlayerContextMenu, setCurrentPlayerInfo } = useContext(
     DialogContext
@@ -250,7 +250,11 @@ export default function Player(props) {
   };
 
   return (
-    <Draggable draggableId={id} index={index} isDragDisabled={!isAdmin}>
+    <Draggable
+      draggableId={id}
+      index={index}
+      isDragDisabled={!isAdmin || phase !== "forming"}
+    >
       {provided => (
         <Card
           className={classes.root}

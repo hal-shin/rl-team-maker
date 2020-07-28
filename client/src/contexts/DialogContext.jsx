@@ -20,6 +20,7 @@ export function DialogProvider(props) {
   const [currentPlayerInfo, setCurrentPlayerInfo] = useState({});
 
   const openMultiSnackbar = (message, severity) => {
+    // severity options: 'error', 'warning', 'info', 'success'
     setMultiSnackbar({ message, severity });
   };
 

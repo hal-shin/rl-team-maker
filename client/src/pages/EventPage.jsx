@@ -20,6 +20,7 @@ import {
 } from "./event";
 import { sampleData } from "../reducers/eventReducerInitialData";
 import { setEvent } from "../actions/eventActions";
+import { setConnectedToEventSocket } from "../actions/metaActions";
 
 const useStyles = makeStyles(theme => ({
   save: {
@@ -47,6 +48,7 @@ export default function EventPage({ match }) {
     user
   } = useAuth0();
   const { event } = useSelector(state => state);
+  const { connectedToEventSocket } = useSelector(state => state.meta);
   const [isSaving, setIsSaving] = useState(false);
   const [isFirstRender, setIsFirstRender] = useState(true);
 
@@ -74,13 +76,31 @@ export default function EventPage({ match }) {
     if (!isLoading && tournamentId !== event._id) {
       getTournamentData();
     }
+    // eslint-disable-next-line
   }, [tournamentId, dispatch, isLoading, event._id, user]);
 
   useEffect(() => {
     if (tournamentId !== "sample") {
       socket.emit("connect-event", tournamentId);
     }
-  }, [tournamentId]);
+
+    if (!connectedToEventSocket) {
+      socket.on("event-update", payload => {
+        const updateEvent = { ...payload };
+        dispatch(setEvent(updateEvent));
+      });
+
+      socket.on("notification", payload => {
+        if (payload.severity === "general") {
+        }
+      });
+
+      dispatch(setConnectedToEventSocket(true));
+    }
+
+    return () => socket.emit("disconnect-event", tournamentId);
+    // eslint-disable-next-line
+  }, [tournamentId, dispatch]);
 
   useEffect(() => {
     const updateTournament = () => {
@@ -101,6 +121,11 @@ export default function EventPage({ match }) {
         });
 
         setIsSaving(false);
+
+        const sendEvent = { ...event };
+        delete sendEvent.isAdmin;
+
+        socket.emit("event-update", { event: sendEvent });
       }, 2000);
     };
     if (isFirstRender && event._id !== "initial") {

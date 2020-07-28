@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 
 export const useStyles = makeStyles(theme => ({
   root: {
@@ -14,11 +14,12 @@ export const useStyles = makeStyles(theme => ({
     background: theme.palette.background.paper,
     position: "relative"
   },
-  collapseIcon: {
+  collapseIcon: isEditing => ({
     position: "absolute",
     top: 0,
-    left: 0
-  },
+    left: 0,
+    display: `${isEditing ? "none" : "inherit"}`
+  }),
   teamName: {
     padding: "10px 0 5px 0",
     display: "flex",
