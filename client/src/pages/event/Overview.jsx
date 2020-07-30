@@ -36,22 +36,22 @@ export default function Overview({ match: { params } }) {
           </div>
           <Divider />
           <Grid container spacing={3}>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={12}>
               <div className={classes.content}>
                 <DraftRenderer editorState={description} />
               </div>
             </Grid>
-            <Grid item xs={12} md={4}>
-              <div className={classes.sidebar}>
-                <Typography variant="h5">Admins</Typography>
-                {admins.map(admin => (
-                  <Typography key={admin.id}>{admin.name}</Typography>
-                ))}
-                <Typography variant="h5">Attendees</Typography>
-                <Typography variant="h5">Sidebar</Typography>
-                <Typography variant="h5">Sidebar</Typography>
-              </div>
-            </Grid>
+            {/*<Grid item xs={12} md={4}>*/}
+            {/*  <div className={classes.sidebar}>*/}
+            {/*    <Typography variant="h5">Admins</Typography>*/}
+            {/*    {admins.map(admin => (*/}
+            {/*      <Typography key={admin.id}>{admin.name}</Typography>*/}
+            {/*    ))}*/}
+            {/*    <Typography variant="h5">Attendees</Typography>*/}
+            {/*    <Typography variant="h5">Sidebar</Typography>*/}
+            {/*    <Typography variant="h5">Sidebar</Typography>*/}
+            {/*  </div>*/}
+            {/*</Grid>*/}
           </Grid>
         </>
       );
