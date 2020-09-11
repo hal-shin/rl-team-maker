@@ -1,6 +1,7 @@
 // Web scraping
 const steamUrl = "https://steamcommunity.com/id/";
-const trackerUrl = "https://rocketleague.tracker.network/profile/";
+const trackerUrl =
+  "https://api.tracker.gg/api/v2/rocket-league/standard/profile/";
 const axios = require("axios");
 const cheerio = require("cheerio");
 
@@ -27,11 +28,11 @@ function fetchPlayerData(id, platform, callback) {
 
         // steam profile pic
         const steamHtml = steamRes.data;
-        const trackerHtml = trackerRes.data;
+        // const trackerHtml = trackerRes.data;
+        const playerData = trackerRes.data.data.segments;
 
         // tracker data
         const $steam = cheerio.load(steamHtml);
-        const $tracker = cheerio.load(trackerHtml);
 
         const profileImg = $steam(".playerAvatarAutoSizeInner > img").attr(
           "src"
@@ -49,74 +50,26 @@ function fetchPlayerData(id, platform, callback) {
           lastSeason: {}
         };
 
-        // check if playlist table is first or second
-        const playlistLocation =
-          $tracker(`#season-${currentSeason} > table:nth-child(2)`).length + 1;
-
-        const currSeasonRankTable = $tracker(
-          `#season-${currentSeason} > table:nth-child(${playlistLocation}) > tbody`
-        );
-
-        const lastSeasonRankTable = $tracker(
-          `#season-${currentSeason - 1} > table > tbody`
-        );
-
         const playlists = [
           ["Ranked Duel 1v1", "ones"],
           ["Ranked Doubles 2v2", "twos"],
           ["Ranked Standard 3v3", "threes"]
         ];
 
-        // Add current season ranks
-        for (let mode of playlists) {
-          const row = $tracker(
-            `#season-${currentSeason} > table:nth-child(${playlistLocation}) > tbody > tr:contains(${mode[0]})`
-          ).index();
-          try {
-            newPlayer.ranks.currentSeason[mode[1]] = parseInt(
-              currSeasonRankTable
-                .find(`tr:nth-child(${row + 1}) > td:nth-child(4)`)
-                .text()
-                .split("\n")[1]
-                .replace(/,/g, "")
+        playlists.forEach(playlist => {
+          const rightSegment = playerData.filter(segment => {
+            return (
+              segment.metadata.name === playlist[0] &&
+              segment.attributes.season === currentSeason
             );
-          } catch (err) {
-            newPlayer.ranks.currentSeason[mode[1]] = "0";
-          }
-        }
+          });
 
-        // Add last season ranks
-        for (let mode of playlists) {
-          const row = $tracker(
-            `#season-${currentSeason - 1} > table > tbody > tr:contains(${
-              mode[0]
-            })`
-          ).index();
-          try {
-            newPlayer.ranks.lastSeason[mode[1]] = parseInt(
-              lastSeasonRankTable
-                .find(`tr:nth-child(${row + 1}) > td:nth-child(3)`)
-                .text()
-                .split("\n")[1]
-                .replace(/,/g, "")
-            );
-          } catch (err) {
-            newPlayer.ranks.lastSeason[mode[1]] = "0";
-          }
-        }
+          newPlayer.ranks.currentSeason[playlist[1]] =
+            rightSegment[0].stats.rating.value;
+        });
 
-        if (
-          newPlayer.ranks.currentSeason.twos === undefined ||
-          newPlayer.ranks.currentSeason.twos === "0"
-        ) {
-          throw new Error("Rank not found.");
-        }
-
-        // mark player as verified by RL Tracker
         newPlayer.verified = true;
         newPlayer.success = true;
-
-        // console.log("Adding the following player:", newPlayer);
 
         callback(newPlayer);
       })

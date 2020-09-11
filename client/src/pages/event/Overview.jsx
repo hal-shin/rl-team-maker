@@ -4,7 +4,7 @@ import { Typography, Grid, Divider } from "@material-ui/core";
 
 import DefaultContainer from "../../components/DefaultContainer";
 import { Jumbotron, useStyles } from "./OverviewStyles";
-import DraftRenderer from "../../components/DraftRenderer";
+import { DraftRenderer } from "../../components";
 
 export default function Overview({ match: { params } }) {
   const classes = useStyles();
